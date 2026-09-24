@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Luniva - Fertility Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #08040f; /* Deep Stardust-like purple-black */
+            --text-main: #f3e8ff;
+            --text-muted: #6b7280;
+            --accent-pink: #ec4899;
+            --accent-purple: #a855f7;
+            --dial-radius: clamp(120px, 32vmin, 280px); /* Slightly smaller to make room for graph */
+            --item-radius: clamp(14px, 4vmin, 24px);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            touch-action: none; /* Prevent browser scroll/pull-to-refresh */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-color);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 2.5s ease-in-out;
+            cursor: pointer;
+        }
+        
+        .moon-loader {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
+        }
+        .moon-loader::after {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-color: var(--bg-color);
+            border-radius: 50%;
+            animation: eclipse 3s infinite ease-in-out;
+        }
+        @keyframes eclipse {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(10%); }
+            100% { transform: translateX(100%); }
+        }
+
+        #app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            padding: 1.5rem 1rem;
+            box-sizing: border-box;
+        }
+
+        #header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 1rem auto;
+            z-index: 10;
+        }
+
+        .icon-btn {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s, text-shadow 0.3s;
+        }
+        .icon-btn:active {
+            color: var(--accent-pink);
+            text-shadow: 0 0 10px var(--accent-pink);
+        }
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .month-nav {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: clamp(1.1rem, 4vmin, 1.5rem);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .nav-arrow {
+            padding: 10px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.3s, text-shadow 0.3s;
+            font-weight: 300;
+        }
+        .nav-arrow:active {
+            color: var(--accent-pink);
+            text-shadow: 0 0 10px var(--accent-pink);
+        }
+
+        #dial-wrapper {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            touch-action: none;
+        }
+
+        #dial {
+            position: absolute;
+            width: calc(var(--dial-radius) * 2);
+            height: calc(var(--dial-radius) * 2);
+            border-radius: 50%;
+            transform-origin: center center;
+            will-change: transform;
+        }
+
+        .day-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: calc(var(--item-radius) * 2);
+            height: calc(var(--item-radius) * 2);
+            margin-top: calc(var(--item-radius) * -1);
+            margin-left: calc(var(--item-radius) * -1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(0.7rem, 2vmin, 0.95rem);
+            font-weight: 600;
+            color: var(--text-muted);
+            will-change: transform;
+            transition: color 0.3s, text-shadow 0.3s, font-size 0.3s;
+        }
+
+        .day-item.selected {
+            font-weight: 700;
+            z-index: 10;
+        }
+        
+        .day-item svg {
+            width: clamp(12px, 3vmin, 18px);
+            height: clamp(12px, 3vmin, 18px);
+            margin-top: 4px;
+            fill: currentColor;
+            transition: transform 0.3s;
+        }
+        .day-item.selected svg { transform: scale(1.3); }
+
+        #center-info {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: calc(var(--dial-radius) * 1.5);
+            height: calc(var(--dial-radius) * 1.5);
+            border-radius: 50%;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        #center-bg-moon {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: -1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #center-bg-moon svg {
+            width: 85%;
+            height: 85%;
+            fill: var(--text-main);
+        }
+
+        #info-date {
+            font-size: clamp(4rem, 14vmin, 6.5rem);
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.25rem;
+            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        #info-phase {
+            font-size: clamp(0.85rem, 2.5vmin, 1.1rem);
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Upgraded Cinematic Fertility Badge */
+        .fertile-badge {
+            font-size: clamp(0.7rem, 2vmin, 0.95rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            transition: all 0.3s ease-out;
+            border: 1px solid transparent;
+        }
+        .fertile-badge.fertile {
+            color: var(--accent-pink);
+            background: rgba(236, 72, 153, 0.15);
+            border-color: rgba(236, 72, 153, 0.4);
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), inset 0 0 10px rgba(236, 72, 153, 0.1);
+        }
+        .fertile-badge.not-fertile {
+            color: var(--text-muted);
+            background: rgba(107, 114, 128, 0.1);
+            border-color: rgba(107, 114, 128, 0.2);
+            box-shadow: none;
+        }
+
+        #graph-container {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            height: clamp(80px, 12vh, 120px);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+        #graph-labels {
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        #hormone-graph {
+            width: 100%;
+            flex: 1;
+            overflow: visible;
+        }
+        .graph-path {
+            fill: none;
+            stroke-width: 2;
+            vector-effect: non-scaling-stroke;
+            stroke-linecap: round;
+        }
+        .path-estrogen { stroke: var(--accent-pink); filter: drop-shadow(0 0 5px rgba(236, 72, 153, 0.5)); }
+        .path-lh { stroke: #ffffff; filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5)); }
+        .path-progesterone { stroke: var(--accent-purple); filter: drop-shadow(0 0 5px rgba(168, 85, 247, 0.5)); }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="moon-loader"></div>
+        <h1 class="text-4xl font-bold tracking-widest mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">LUNIVA</h1>
+        <p class="text-gray-400 font-light tracking-wide text-lg mt-2">Welcome, Sunna</p>
+    </div>
+
+    <div id="app-container">
+        <div id="header">
+            <!-- Hamburger Menu -->
+            <div class="icon-btn" id="menu-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </div>
+            
+            <div class="month-nav">
+                <div class="nav-arrow" id="btn-prev">&lt;</div>
+                <div id="month-year-display">August 2026</div>
+                <div class="nav-arrow" id="btn-next">&gt;</div>
+            </div>
+
+            <!-- Reset / Home Menu -->
+            <div class="icon-btn" id="reset-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+            </div>
+        </div>
+
+        <div id="dial-wrapper">
+            <div id="center-info">
+                <div id="center-bg-moon"></div>
+                <div id="info-date">26</div>
+                <div id="info-phase">Full Moon</div>
+                <div id="info-fertility" class="fertile-badge not-fertile">NOT FERTILE</div>
+            </div>
+            <div id="dial"></div>
+        </div>
+
+        <div id="graph-container">
+            <div id="graph-labels">
+                <span style="color: var(--accent-pink)">Estrogen</span>
+                <span style="color: white; text-shadow: 0 0 5px white;">LH</span>
+                <span style="color: var(--accent-purple)">Progesterone</span>
+            </div>
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none" id="hormone-graph">
+                <!-- Estrogen (Pink) Curve -->
+                <path class="graph-path path-estrogen" d="M 0 35 C 15 35, 30 5, 40 5 C 45 5, 50 30, 60 30 C 70 30, 75 15, 85 15 C 95 15, 100 35, 100 35" />
+                <!-- LH (White) Spike -->
+                <path class="graph-path path-lh" d="M 0 38 L 40 38 C 45 38, 47 5, 50 5 C 53 5, 55 38, 60 38 L 100 38" />
+                <!-- Progesterone (Purple) Curve -->
+                <path class="graph-path path-progesterone" d="M 0 37 L 50 37 C 60 37, 70 5, 80 5 C 90 5, 95 37, 100 37" />
+                <!-- Dynamic Day Indicator Line -->
+                <line id="graph-indicator" x1="50" y1="0" x2="50" y2="40" stroke="rgba(255,255,255,0.6)" stroke-width="1" stroke-dasharray="2 2"/>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        const moonSVGs = {
+            'New Moon': '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" fill="none"/>',
+            'Waxing Crescent': '<path d="M12 2A10 10 0 1 0 12 22 6 10 0 1 1 12 2Z" fill="currentColor"/>',
+            'First Quarter': '<path d="M12 2A10 10 0 1 0 12 22 V2Z" fill="currentColor"/>',
+            'Waxing Gibbous': '<path d="M12 2A10 10 0 1 0 12 22 6 10 0 0 0 12 2Z" fill="currentColor"/>',
+            'Full Moon': '<circle cx="12" cy="12" r="10" fill="currentColor"/>',
+            'Waning Gibbous': '<path d="M12 2A10 10 0 1 1 12 22 6 10 0 0 1 12 2Z" fill="currentColor"/>',
+            'Last Quarter': '<path d="M12 2A10 10 0 1 1 12 22 V2Z" fill="currentColor"/>',
+            'Waning Crescent': '<path d="M12 2A10 10 0 1 1 12 22 6 10 0 1 0 12 2Z" fill="currentColor"/>'
+        };
+        const getMoonSVG = (phase) => `<svg viewBox="0 0 24 24">${moonSVGs[phase]}</svg>`;
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        let currentMonth = 7; // August
+        let currentYear = 2026;
+        let selectedDay = 26;
+        
+        let currentRotation = 0; 
+        let isDragging = false;
+        let velocity = 0;
+        let lastDragAngle = 0;
+        let lastDragTime = 0;
+        let animationFrameId = null;
+
+        const dial = document.getElementById('dial');
+        const dialWrapper = document.getElementById('dial-wrapper');
+        const headerText = document.getElementById('month-year-display');
+        const loader = document.getElementById('loader');
+        const fertilityBadge = document.getElementById('info-fertility');
+        const graphIndicator = document.getElementById('graph-indicator');
+
+        // Loader dismiss on click
+        loader.addEventListener('click', () => {
+            loader.style.opacity = '0';
+            loader.style.pointerEvents = 'none';
+            setTimeout(() => { if(loader.style.opacity === '0') loader.style.display = 'none'; }, 2500);
+        });
+
+        // App Reset Logic
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            cancelAnimationFrame(animationFrameId);
+            velocity = 0;
+            isDragging = false;
+            
+            loader.style.display = 'flex';
+            loader.offsetHeight; // Force reflow
+            loader.style.opacity = '1';
+            loader.style.pointerEvents = 'auto';
+
+            currentMonth = 7;
+            currentYear = 2026;
+            selectedDay = 26;
+            
+            setTimeout(() => { renderDial(); }, 500);
+        });
+
+        function getDaysInMonth(month, year) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+
+        function calculateDayData(day, month, year) {
+            // STRICT PLOT OVERRIDES (JS months are 0-indexed: April=3, July=6, August=7)
+            if (year === 2026) {
+                if (month === 3 && day === 30) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
+                if (month === 6 && day === 27) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
+                if (month === 7 && day === 26) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
+            }
+
+            let fertile = false;
+            let color = '#6b7280'; // Base gray
+
+            // Fertile Gradient Window: Days 12-18
+            if (day >= 12 && day <= 18) {
+                fertile = true;
+                let distanceToPeak = Math.abs(15 - day); 
+                let intensity = 1 - (distanceToPeak / 3.5); // Peak at 15
+                
+                let r = Math.floor(107 + (236 - 107) * intensity);
+                let g = Math.floor(114 + (72 - 114) * intensity);
+                let b = Math.floor(128 + (153 - 128) * intensity);
+                color = `rgb(${r}, ${g}, ${b})`;
+            }
+
+            const phases = Object.keys(moonSVGs);
+            let phaseIndex = (day + (month * 2)) % 8;
+            
+            return {
+                phase: phases[phaseIndex],
+                fertile: fertile,
+                color: color
+            };
+        }
+
+        function renderDial() {
+            headerText.innerText = `${monthNames[currentMonth]} ${currentYear}`;
+            dial.innerHTML = '';
+            
+            const daysCount = getDaysInMonth(currentMonth, currentYear);
+            const angleStep = 360 / daysCount;
+
+            for (let i = 1; i <= daysCount; i++) {
+                const data = calculateDayData(i, currentMonth, currentYear);
+                const angle = (i - 1) * angleStep; 
+                
+                const el = document.createElement('div');
+                el.className = 'day-item';
+                el.dataset.day = i;
+                el.dataset.baseAngle = angle;
+                el.dataset.phase = data.phase;
+                el.dataset.fertile = data.fertile;
+                el.dataset.color = data.color;
+
+                el.style.color = data.color;
+                
+                el.innerHTML = `
+                    <span>${i}</span>
+                    ${getMoonSVG(data.phase)}
+                `;
+                dial.appendChild(el);
+            }
+
+            currentRotation = -((selectedDay - 1) * angleStep);
+            updateVisuals();
+        }
+
+        function updateVisuals() {
+            dial.style.transform = `rotate(${currentRotation}deg)`;
+
+            // Counter-rotation to keep items horizontal
+            const items = document.querySelectorAll('.day-item');
+            items.forEach(item => {
+                const baseAngle = parseFloat(item.dataset.baseAngle);
+                const absoluteRotation = baseAngle + currentRotation;
+                item.style.transform = `rotate(${baseAngle}deg) translateY(calc(var(--dial-radius) * -1)) rotate(${-absoluteRotation}deg)`;
+            });
+
+            // Find Top Active Day
+            const daysCount = getDaysInMonth(currentMonth, currentYear);
+            const angleStep = 360 / daysCount;
+            let normalizedRotation = -currentRotation % 360;
+            if (normalizedRotation < 0) normalizedRotation += 360;
+            
+            let activeIndex = Math.round(normalizedRotation / angleStep);
+            if (activeIndex === daysCount) activeIndex = 0;
+            selectedDay = activeIndex + 1;
+
+            // Highlight Active Dial Item
+            items.forEach(el => {
+                const isSelected = parseInt(el.dataset.day) === selectedDay;
+                if(isSelected) {
+                    el.classList.add('selected');
+                    el.style.color = '#ffffff';
+                    el.style.textShadow = `0 0 15px ${el.dataset.color}`;
+                    el.style.transform += ' scale(1.45)';
+                } else {
+                    el.classList.remove('selected');
+                    el.style.color = el.dataset.color;
+                    el.style.textShadow = el.dataset.fertile === 'true' ? `0 0 8px ${el.dataset.color}` : 'none';
+                }
+            });
+
+            // Update Center Info and Badge
+            const activeData = calculateDayData(selectedDay, currentMonth, currentYear);
+            document.getElementById('info-date').innerText = selectedDay;
+            document.getElementById('info-phase').innerText = activeData.phase;
+            document.getElementById('center-bg-moon').innerHTML = getMoonSVG(activeData.phase);
+            
+            if (activeData.fertile) {
+                fertilityBadge.innerText = 'HIGH FERTILITY';
+                fertilityBadge.className = 'fertile-badge fertile';
+            } else {
+                fertilityBadge.innerText = 'NOT FERTILE';
+                fertilityBadge.className = 'fertile-badge not-fertile';
+            }
+
+            // Sync Graph Indicator Line
+            // Map day 1 -> 0%, last day -> 100%
+            const percentage = ((selectedDay - 1) / (daysCount - 1)) * 100;
+            graphIndicator.setAttribute('x1', percentage);
+            graphIndicator.setAttribute('x2', percentage);
+        }
+
+        function getEventAngle(e) {
+            const rect = dialWrapper.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const clientX = e.clientX ?? (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY ?? (e.touches && e.touches[0].clientY);
+            return Math.atan2(clientY - centerY, clientX - centerX) * (180 / Math.PI);
+        }
+
+        function onPointerDown(e) {
+            isDragging = true;
+            cancelAnimationFrame(animationFrameId);
+            velocity = 0;
+            lastDragAngle = getEventAngle(e);
+            lastDragTime = performance.now();
+            dialWrapper.style.cursor = 'grabbing';
+            if(e.pointerId) dialWrapper.setPointerCapture(e.pointerId);
+        }
+
+        function onPointerMove(e) {
+            if (!isDragging) return;
+            e.preventDefault(); 
+            const currentAngle = getEventAngle(e);
+            const currentTime = performance.now();
+            
+            let delta = currentAngle - lastDragAngle;
+            delta = ((delta + 540) % 360) - 180;
+            currentRotation += delta;
+            updateVisuals();
+            
+            const dt = Math.max(1, currentTime - lastDragTime);
+            velocity = delta / dt;
+            lastDragAngle = currentAngle;
+            lastDragTime = currentTime;
+        }
+
+        function onPointerUp(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            dialWrapper.style.cursor = 'grab';
+            if(e.pointerId) dialWrapper.releasePointerCapture(e.pointerId);
+
+            let lastFrameTime = performance.now();
+            function physicsLoop(time) {
+                const dt = Math.max(1, time - lastFrameTime);
+                lastFrameTime = time;
+
+                if (Math.abs(velocity) > 0.05) {
+                    currentRotation += velocity * dt;
+                    velocity *= 0.94; // Friction
+                    updateVisuals();
+                    animationFrameId = requestAnimationFrame(physicsLoop);
+                } else {
+                    snapToNearestDay(); // Velocity low, initiate snap
+                }
+            }
+            animationFrameId = requestAnimationFrame(physicsLoop);
+        }
+
+        function snapToNearestDay() {
+            const daysCount = getDaysInMonth(currentMonth, currentYear);
+            const angleStep = 360 / daysCount;
+            const targetRotation = Math.round(currentRotation / angleStep) * angleStep;
+            
+            function snapLoop() {
+                const diff = targetRotation - currentRotation;
+                if (Math.abs(diff) > 0.1) {
+                    currentRotation += diff * 0.15; // Lerp factor
+                    updateVisuals();
+                    animationFrameId = requestAnimationFrame(snapLoop);
+                } else {
+                    currentRotation = targetRotation;
+                    updateVisuals();
+                }
+            }
+            animationFrameId = requestAnimationFrame(snapLoop);
+        }
+
+        dialWrapper.addEventListener('pointerdown', onPointerDown);
+        window.addEventListener('pointermove', onPointerMove, {passive: false});
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointercancel', onPointerUp);
+
+        function changeMonth(delta) {
+            cancelAnimationFrame(animationFrameId);
+            velocity = 0;
+            currentMonth += delta;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+            selectedDay = 15;
+            renderDial();
+        }
+
+        document.getElementById('btn-prev').addEventListener('click', () => changeMonth(-1));
+        document.getElementById('btn-next').addEventListener('click', () => changeMonth(1));
+
+        let globalSwipeStartX = 0;
+        let globalSwipeStartY = 0;
+
+        window.addEventListener('touchstart', e => {
+            if (e.target.closest('#dial-wrapper')) return;
+            globalSwipeStartX = e.touches[0].clientX;
+            globalSwipeStartY = e.touches[0].clientY;
+        }, {passive: true});
+
+        window.addEventListener('touchend', e => {
+            if (e.target.closest('#dial-wrapper')) return;
+            const deltaX = e.changedTouches[0].clientX - globalSwipeStartX;
+            const deltaY = e.changedTouches[0].clientY - globalSwipeStartY;
+            if (Math.abs(deltaX) > 60 && Math.abs(deltaY) < 40) {
+                if (deltaX > 0) changeMonth(-1); 
+                else changeMonth(1); 
+            }
+        });
+
+        dialWrapper.style.cursor = 'grab';
+        renderDial();
+    </script>
+</body>
+</html>
