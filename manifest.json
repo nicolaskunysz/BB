@@ -1,0 +1,17 @@
+{
+  "short_name": "BB Props",
+  "name": "BB Graphics Screen Props",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#111112",
+  "theme_color": "#111112",
+  "display": "standalone",
+  "orientation": "portrait"
+}
