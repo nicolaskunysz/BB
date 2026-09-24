@@ -52,8 +52,9 @@
             margin-bottom: 2rem;
             box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
         }
-        .moon-loader::after {
-            content: '';
+        
+        /* Fixed animation element replacing pseudo-element */
+        .moon-shadow {
             position: absolute;
             top: -10%;
             left: -10%;
@@ -63,6 +64,7 @@
             border-radius: 50%;
             animation: eclipse 3s infinite ease-in-out;
         }
+        
         @keyframes eclipse {
             0% { transform: translateX(-100%); }
             50% { transform: translateX(10%); }
@@ -231,7 +233,6 @@
             font-weight: 600;
         }
         
-        /* Upgraded Cinematic Fertility Badge */
         .fertile-badge {
             font-size: clamp(0.7rem, 2vmin, 0.95rem);
             font-weight: 700;
@@ -293,7 +294,9 @@
 <body>
 
     <div id="loader">
-        <div class="moon-loader"></div>
+        <div class="moon-loader">
+            <div class="moon-shadow" id="moon-shadow"></div>
+        </div>
         <h1 class="text-4xl font-bold tracking-widest mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">LUNIVA</h1>
         <p class="text-gray-400 font-light tracking-wide text-lg mt-2">Welcome, Sunna</p>
     </div>
@@ -380,6 +383,7 @@
         const dialWrapper = document.getElementById('dial-wrapper');
         const headerText = document.getElementById('month-year-display');
         const loader = document.getElementById('loader');
+        const moonShadow = document.getElementById('moon-shadow');
         const fertilityBadge = document.getElementById('info-fertility');
         const graphIndicator = document.getElementById('graph-indicator');
 
@@ -396,8 +400,13 @@
             velocity = 0;
             isDragging = false;
             
+            // Show Loader and Fix Animation Restart
             loader.style.display = 'flex';
-            loader.offsetHeight; // Force reflow
+            moonShadow.style.animation = 'none'; // stop animation
+            void moonShadow.offsetWidth; // force reflow (CRITICAL FIX)
+            moonShadow.style.animation = 'eclipse 3s infinite ease-in-out'; // restart animation
+            
+            loader.offsetHeight; // Force reflow for opacity transition
             loader.style.opacity = '1';
             loader.style.pointerEvents = 'auto';
 
