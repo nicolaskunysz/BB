@@ -1,4 +1,21 @@
 {
+  "short_name": "Luna App",
+  "name": "Luna Cycle Tracker",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "./luniva.html", 
+  "background_color": "#0b0a0d",
+  "theme_color": "#0b0a0d",
+  "display": "standalone",
+  "orientation": "portrait"
+}
+{
   "short_name": "BB Props",
   "name": "BB Graphics Screen Props",
   "icons": [
