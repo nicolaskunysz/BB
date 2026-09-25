@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
 <!-- Links the installation parameters to your phones -->
 <link rel="manifest" href="./manifest.json">
     <!-- FORCES IPHONE TO DISPLAY YOUR ICON -->
@@ -126,8 +126,8 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: clamp(1.1rem, 4vmin, 1.5rem);
-            font-weight: 600;
+            font-size: clamp(1.6rem, 6vmin, 2.2rem);
+            font-weight: 700;
             white-space: nowrap;
         }
 
@@ -226,42 +226,43 @@
         }
 
         #info-date {
-            font-size: clamp(4rem, 14vmin, 6.5rem);
+            font-size: clamp(5.5rem, 18vmin, 8.5rem);
             font-weight: 700;
             line-height: 1;
-            margin-bottom: 0.25rem;
-            text-shadow: 0 0 20px rgba(255,255,255,0.1);
+            margin-bottom: 0;
+            text-shadow: 0 0 20px rgba(255,255,255,0.2);
         }
         #info-phase {
             font-size: clamp(0.85rem, 2.5vmin, 1.1rem);
             color: var(--text-main);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 0.75rem;
+            margin-bottom: 0.5rem;
             font-weight: 600;
+            margin-top: -5px;
         }
         
         .fertile-badge {
-            font-size: clamp(0.7rem, 2vmin, 0.95rem);
-            font-weight: 700;
+            font-size: clamp(0.75rem, 2.5vmin, 1.05rem);
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 6px 16px;
+            padding: 8px 20px;
             border-radius: 9999px;
             transition: all 0.3s ease-out;
             border: 1px solid transparent;
         }
         .fertile-badge.fertile {
-            color: var(--accent-pink);
-            background: rgba(236, 72, 153, 0.15);
-            border-color: rgba(236, 72, 153, 0.4);
-            box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), inset 0 0 10px rgba(236, 72, 153, 0.1);
+            color: #ffffff;
+            background: linear-gradient(135deg, #f43f5e, #e11d48);
+            border-color: #be123c;
+            box-shadow: 0 0 25px rgba(225, 29, 72, 0.7), inset 0 0 10px rgba(255, 255, 255, 0.3);
         }
         .fertile-badge.not-fertile {
-            color: var(--text-muted);
-            background: rgba(107, 114, 128, 0.1);
-            border-color: rgba(107, 114, 128, 0.2);
-            box-shadow: none;
+            color: #ffffff;
+            background: linear-gradient(135deg, #a855f7, #7e22ce);
+            border-color: #6b21a8;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.6), inset 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         #graph-container {
@@ -522,7 +523,7 @@
                     el.classList.add('selected');
                     el.style.color = '#ffffff';
                     el.style.textShadow = `0 0 15px ${el.dataset.color}`;
-                    el.style.transform += ' scale(1.45)';
+                    el.style.transform += ' scale(1.9)';
                 } else {
                     el.classList.remove('selected');
                     el.style.color = el.dataset.color;
