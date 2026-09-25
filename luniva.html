@@ -21,7 +21,7 @@
             --text-muted: #6b7280;
             --accent-pink: #ec4899;
             --accent-purple: #a855f7;
-            /* Expanded dial radius with responsive upper bounds to prevent viewport overflow */
+            /* Dial radius tuned for optimal clearance with larger scale */
             --dial-radius: clamp(140px, 37vmin, 310px);
             --item-radius: clamp(14px, 4vmin, 24px);
         }
@@ -184,7 +184,7 @@
 
         .day-item.selected {
             font-weight: 700;
-            z-index: 10;
+            z-index: 20;
         }
         
         .day-item svg {
@@ -194,7 +194,6 @@
             fill: currentColor;
             transition: transform 0.3s;
         }
-        .day-item.selected svg { transform: scale(1.3); }
 
         #center-info {
             position: absolute;
@@ -208,7 +207,8 @@
             border-radius: 50%;
             z-index: 5;
             pointer-events: none;
-            overflow: hidden;
+            /* Allow circular purple drop shadow filter to extend outward smoothly */
+            overflow: visible;
         }
 
         #center-bg-moon {
@@ -219,12 +219,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.4));
+            border-radius: 50%;
+            /* Uncropped circular glow filter */
+            filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.55));
         }
         #center-bg-moon svg {
             width: 100%;
             height: 100%;
             display: block;
+            border-radius: 50%;
+            overflow: hidden;
         }
 
         #info-date {
@@ -372,7 +376,7 @@
                 <image href="https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?q=80&w=600&auto=format&fit=crop" x="0" y="0" width="24" height="24" preserveAspectRatio="xMidYMid slice" />
             </pattern>
 
-            <filter id="penumbra-blur" x="-30%" y="-30%" width="160%" height="160%">
+            <filter id="penumbra-blur" x="-50%" y="-50%" width="200%" height="200%">
                 <feGaussianBlur stdDeviation="0.8" />
             </filter>
         </defs>`;
@@ -556,14 +560,15 @@
             if (activeIndex === daysCount) activeIndex = 0;
             selectedDay = activeIndex + 1;
 
-            // Highlight Active Dial Item
+            // Highlight Active Dial Item with bigger scale (2.8x)
             items.forEach(el => {
                 const isSelected = parseInt(el.dataset.day) === selectedDay;
                 if(isSelected) {
                     el.classList.add('selected');
                     el.style.color = '#ffffff';
                     el.style.textShadow = `0 0 15px ${el.dataset.color}`;
-                    el.style.transform += ' scale(1.9)';
+                    /* Magnification increased to 2.8x */
+                    el.style.transform += ' scale(2.8)';
                 } else {
                     el.classList.remove('selected');
                     el.style.color = el.dataset.color;
