@@ -21,7 +21,8 @@
             --text-muted: #6b7280;
             --accent-pink: #ec4899;
             --accent-purple: #a855f7;
-            --dial-radius: clamp(120px, 32vmin, 280px); /* Slightly smaller to make room for graph */
+            /* Expanded dial radius with responsive upper bounds to prevent viewport overflow */
+            --dial-radius: clamp(140px, 37vmin, 310px);
             --item-radius: clamp(14px, 4vmin, 24px);
         }
 
@@ -84,7 +85,7 @@
             flex-direction: column;
             height: 100vh;
             width: 100vw;
-            padding: 1.5rem 1rem;
+            padding: 1.25rem 1rem 1rem 1rem;
             box-sizing: border-box;
         }
 
@@ -94,7 +95,7 @@
             align-items: center;
             width: 100%;
             max-width: 500px;
-            margin: 0 auto 1rem auto;
+            margin: 0 auto 0.5rem auto;
             z-index: 10;
         }
 
@@ -202,8 +203,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            width: calc(var(--dial-radius) * 1.5);
-            height: calc(var(--dial-radius) * 1.5);
+            width: calc(var(--dial-radius) * 1.35);
+            height: calc(var(--dial-radius) * 1.35);
             border-radius: 50%;
             z-index: 5;
             pointer-events: none;
@@ -227,7 +228,7 @@
         }
 
         #info-date {
-            font-size: clamp(5.5rem, 18vmin, 8.5rem);
+            font-size: clamp(4.5rem, 16vmin, 7.5rem);
             font-weight: 700;
             line-height: 1;
             margin-bottom: 0;
