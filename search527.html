@@ -159,93 +159,139 @@
             </div>
         </div>
 
-        <!-- Search Results List -->
-        <div class="flex flex-col items-center w-full flex-1 pt-8 pb-24 bg-gray-50/30">
-            <div class="w-full max-w-2xl px-4">
+        <!-- Search Results Grid Layout -->
+        <div class="flex-1 w-full flex justify-center pt-8 pb-24 bg-gray-50/30">
+            <!-- 3-Column Grid to ensure the main column stays perfectly centered -->
+            <div class="w-full max-w-7xl px-4 grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)_260px] gap-8">
                 
-                <p class="text-gray-500 text-sm mb-8 text-left">About 1,240,000 results (0.42 seconds)</p>
+                <!-- LEFT SPACER (Empty column to keep main results perfectly centered) -->
+                <div class="hidden lg:block"></div>
 
-                <!-- RESULT 1: LAWYER PROFILE -->
-                <div class="mb-10 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center mb-1">
-                        <p class="text-sm text-gray-900 line-clamp-1">https://www.legalregistry.is › professionals › tomas-vignisson</p>
-                    </div>
-                    <a href="#" class="text-xl text-blue-800 hover:underline font-medium block mb-2">Tomas Vignisson - Family Lawyer Profile</a>
-                    <p class="text-sm text-gray-700 leading-relaxed">
-                        Dedicated <strong>Family lawyer</strong> serving the greater metropolitan area for over 15 years. Contact the firm for consultations regarding custody, adoption, and family estate planning. Recognized by the National Bar Association for excellence in litigation.
-                    </p>
-                </div>
-
-                <!-- RESULT 2: CHARITY WORK -->
-                <div class="mb-10 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
-                    <div class="flex items-center mb-1">
-                        <p class="text-sm text-gray-900 line-clamp-1">https://www.tvfoundation.org › about-us</p>
-                    </div>
-                    <a href="#" class="text-xl text-blue-800 hover:underline font-medium block mb-2">Charity Work - Tomas Vignisson Foundation</a>
-                    <p class="text-sm text-gray-700 leading-relaxed">
-                        An overview of the extensive <strong>charity work</strong> and child advocacy programs funded and organized by Tomas Vignisson. Focusing on foster care reform, educational grants, and pro-bono legal representation for underprivileged families.
-                    </p>
-                </div>
-
-                <!-- RESULT 3: IMAGE RESULT (TOMAS & BOBO) -->
-                <div class="mb-10 cursor-pointer group bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" onclick="openImageModal()">
-                    <div class="flex items-center mb-1">
-                        <p class="text-sm text-gray-900 line-clamp-1">https://www.nationalnews.com › local › court-appearances</p>
-                    </div>
-                    <h3 class="text-xl text-blue-800 group-hover:underline font-medium block mb-3">High Profile Custody Battle Concludes Outside District Court</h3>
+                <!-- MAIN RESULTS COLUMN (Centered) -->
+                <div class="w-full max-w-2xl mx-auto flex flex-col">
                     
-                    <div class="flex flex-col sm:flex-row mt-2 gap-4">
-                        <div class="w-full sm:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
-                            <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE THUMBNAIL IMAGE HERE 🎬 🎬 🎬 -->
-                            <img src="assets/tomas-bobo.jpg" onerror="this.src='https://placehold.co/400x300/333333/ffffff?text=Tomas+%26+Bobo\nThumbnail'" alt="Tomas and Bobo outside court thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-700 leading-relaxed">
-                                <span class="text-gray-500">Oct 12 — </span> A photograph of <strong>Tomas</strong> outside court beside <strong>BOBO</strong> moments after the landmark ruling. The renowned lawyer was seen celebrating the verdict with clients after a grueling three-week trial...
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                    <p class="text-gray-500 text-sm mb-8 text-left">About 1,240,000 results (0.42 seconds)</p>
 
-                <!-- RESULT 4: VIDEO RESULT -->
-                <div class="mb-8 cursor-pointer group bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" onclick="openVideoModal()">
-                    <div class="flex items-center mb-1">
-                        <p class="text-sm text-gray-900 line-clamp-1">https://www.video-stream-net.com › watch</p>
+                    <!-- RESULT 1: CHARITY WORK (Text Only) -->
+                    <div class="mb-10 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-1">
+                            <p class="text-sm text-gray-900 line-clamp-1">https://www.tvfoundation.org › about-us</p>
+                        </div>
+                        <a href="#" class="text-xl text-blue-800 hover:underline font-medium block mb-2">Tomas Vignisson - Charity Work & Foundation</a>
+                        <p class="text-sm text-gray-700 leading-relaxed">
+                            An overview of the extensive <strong>charity work</strong> and child advocacy programs funded and organized by Tomas Vignisson. Focusing on foster care reform, educational grants, and pro-bono legal representation for underprivileged families.
+                        </p>
                     </div>
-                    <h3 class="text-xl text-blue-800 group-hover:underline font-medium block mb-3">Tomas Vignisson Award Acceptance Speech</h3>
-                    
-                    <div class="flex flex-col sm:flex-row mt-2 gap-4">
-                        <div class="w-full sm:w-48 h-32 bg-black rounded-lg overflow-hidden flex-shrink-0 relative flex items-center justify-center shadow-inner">
-                            <img src="https://placehold.co/400x300/1a1a1a/cccccc?text=Tomas+at+Podium" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300">
-                            <!-- Play Button Overlay -->
-                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div class="w-12 h-12 bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/50 group-hover:scale-110 group-hover:border-white transition-all duration-300">
-                                    <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                                </div>
+
+                    <!-- RESULT 2: FAMILY LAWYER + IMAGE (Tomas & Bobo) -->
+                    <div class="mb-10 cursor-pointer group bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" onclick="openImageModal()">
+                        <div class="flex items-center mb-1">
+                            <p class="text-sm text-gray-900 line-clamp-1">https://www.legalregistry.is › professionals › tomas-vignisson</p>
+                        </div>
+                        <h3 class="text-xl text-blue-800 group-hover:underline font-medium block mb-3">Tomas Vignisson - Family Lawyer & Landmark Case</h3>
+                        
+                        <div class="flex flex-col sm:flex-row mt-2 gap-4">
+                            <div class="w-full sm:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
+                                <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE THUMBNAIL IMAGE HERE: assets/tomas-bobo.jpg 🎬 🎬 🎬 -->
+                                <img src="assets/tomas-bobo.jpg" onerror="this.src='https://placehold.co/400x300/333333/ffffff?text=Tomas+%26+Bobo\nThumbnail'" alt="Tomas and Bobo outside court thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    Dedicated <strong>Family lawyer</strong> serving the greater metropolitan area. <span class="text-gray-500">Oct 12 — </span> A photograph of Tomas outside court beside <strong>BOBO</strong> moments after the landmark ruling. The renowned lawyer was seen celebrating the verdict with clients.
+                                </p>
                             </div>
                         </div>
-                        <div>
-                            <p class="text-sm text-gray-700 leading-relaxed">
-                                <span class="text-gray-500">Uploaded 2 months ago — </span> Watch <strong>Tomas Vignisson</strong> accept the Lifetime Achievement Award. Listen to his speech discussing his early years...
-                            </p>
+                    </div>
+
+                    <!-- RESULT 3: VIDEO RESULT -->
+                    <div class="mb-10 cursor-pointer group bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" onclick="openVideoModal()">
+                        <div class="flex items-center mb-1">
+                            <p class="text-sm text-gray-900 line-clamp-1">https://www.video-stream-net.com › watch</p>
                         </div>
+                        <h3 class="text-xl text-blue-800 group-hover:underline font-medium block mb-3">Tomas Vignisson at the Podium</h3>
+                        
+                        <div class="flex flex-col sm:flex-row mt-2 gap-4">
+                            <div class="w-full sm:w-48 h-32 bg-black rounded-lg overflow-hidden flex-shrink-0 relative flex items-center justify-center shadow-inner">
+                                <img src="https://placehold.co/400x300/1a1a1a/cccccc?text=Tomas+at+Podium" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300">
+                                <!-- Play Button Overlay -->
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <div class="w-12 h-12 bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/50 group-hover:scale-110 group-hover:border-white transition-all duration-300">
+                                        <svg class="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-700 leading-relaxed">
+                                    <span class="text-gray-500">Uploaded 2 months ago — </span> Watch <strong>Tomas Vignisson</strong> accept the Lifetime Achievement Award. Listen to his speech discussing his early years...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RESULT 4: LEGAL ARTICLES -->
+                    <div class="mb-10 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-1">
+                            <p class="text-sm text-gray-900 line-clamp-1">https://www.law-journal-daily.com › articles › vignisson</p>
+                        </div>
+                        <a href="#" class="text-xl text-blue-800 hover:underline font-medium block mb-2">The Vignisson Method: Approaches to Custody Disputes</a>
+                        <p class="text-sm text-gray-700 leading-relaxed">
+                            A comprehensive breakdown of the strategies utilized by senior litigator Tomas Vignisson during high-stakes family court battles. This academic review highlights recent precedent-setting judgments...
+                        </p>
+                    </div>
+
+                    <!-- RESULT 5: LOCAL NEWS -->
+                    <div class="mb-10 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex items-center mb-1">
+                            <p class="text-sm text-gray-900 line-clamp-1">https://www.metronews.com › local › civic-leaders</p>
+                        </div>
+                        <a href="#" class="text-xl text-blue-800 hover:underline font-medium block mb-2">Local Civic Leader Nominated for Humanitarian Award</a>
+                        <p class="text-sm text-gray-700 leading-relaxed">
+                            Following a historic year of philanthropy, prominent attorney Tomas Vignisson has been officially shortlisted for the city's annual civic leadership prize. Read the full community response here.
+                        </p>
+                    </div>
+
+                    <!-- FOOTER RESET BUTTON -->
+                    <div class="w-full flex justify-center mt-6 mb-8 pt-8 border-t border-gray-200">
+                        <!-- 🎬 🎬 🎬 PROP MASTER: MORE RESULTS BUTTON TRIGGERS RESET FOR NEXT TAKE 🎬 🎬 🎬 -->
+                        <button onclick="resetApp()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-medium transition-colors shadow-sm focus:outline-none flex items-center gap-2">
+                            More results
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+                    </div>
+                    
+                </div>
+
+                <!-- RIGHT SIDEBAR: Sponsored Ads (Moved from the left side) -->
+                <div class="hidden lg:block space-y-6 pt-1">
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Sponsored</p>
+                    
+                    <!-- Ad 1: Tomas's Tailoring -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer">
+                        <p class="text-[11px] font-medium text-gray-500 mb-1 flex items-center gap-1">
+                            <span class="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center text-[8px] font-bold text-gray-600">T</span>
+                            tomas-tailoring.com
+                        </p>
+                        <h4 class="text-blue-800 text-base font-medium hover:underline leading-tight mb-2">Tomas's Tailoring - Professional Attire</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Bespoke suits, alterations, and professional styling for the modern executive.</p>
+                    </div>
+
+                    <!-- Ad 2: Vignisson Real Estate -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer">
+                        <p class="text-[11px] font-medium text-gray-500 mb-1 flex items-center gap-1">
+                            <span class="w-4 h-4 bg-gray-200 rounded-full flex items-center justify-center text-[8px] font-bold text-gray-600">V</span>
+                            vignisson-realestate.net
+                        </p>
+                        <h4 class="text-blue-800 text-base font-medium hover:underline leading-tight mb-2">Vignisson Real Estate - Commercial Properties</h4>
+                        <p class="text-sm text-gray-600 leading-relaxed">Premium commercial properties and leasing management across the metropolitan area.</p>
                     </div>
                 </div>
 
-                <!-- FOOTER RESET BUTTON -->
-                <div class="w-full flex justify-center mt-12 mb-8 pt-8 border-t border-gray-200">
-                    <button onclick="resetApp()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-medium transition-colors shadow-sm focus:outline-none flex items-center gap-2">
-                        More results
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                </div>
-                
             </div>
         </div>
     </div>
 
     <!-- ==================== IMAGE MODAL ==================== -->
-    <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeImageModal()">
+    <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeImageModal()">
         <!-- 80vw Modal -->
         <div class="relative w-[80vw] max-w-5xl h-[80vh] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden ring-1 ring-white/20" onclick="event.stopPropagation()">
             <button onclick="closeImageModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-black/80 text-white rounded-full p-2.5 z-10 transition-colors shadow-lg">
@@ -264,7 +310,7 @@
     </div>
 
     <!-- ==================== VIDEO MODAL ==================== -->
-    <div id="video-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeVideoModal()">
+    <div id="video-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeVideoModal()">
         <!-- 80vw Modal with aspect ratio -->
         <div class="relative w-[80vw] max-w-5xl aspect-video bg-black shadow-2xl rounded-xl overflow-hidden ring-1 ring-white/30" onclick="event.stopPropagation()">
             <button onclick="closeVideoModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600 text-white rounded-full p-2.5 z-50 transition-colors shadow-lg">
@@ -342,7 +388,6 @@
         // Apply lock to both inputs
         applyTypingLock(homeInput);
         applyTypingLock(resultsInput);
-
 
         // --- APPLICATION LOGIC ---
         function performSearch() {
