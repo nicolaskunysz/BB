@@ -6,6 +6,7 @@
     <title>Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -17,9 +18,9 @@
         .dot-logo-large {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 6px;
-            width: 64px;
-            height: 64px;
+            gap: 8px;
+            width: 72px;
+            height: 72px;
         }
         .dot-logo-small {
             display: grid;
@@ -34,11 +35,6 @@
         .dot-3 { background-color: #fbbc05; }
         .dot-4 { background-color: #34a853; }
 
-        /* Subtitles styling for video player */
-        .subtitle-text {
-            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-        }
-
         /* Prevents body scroll when modals are open */
         .no-scroll { overflow: hidden; }
     </style>
@@ -49,10 +45,23 @@
     <div id="screen-home" class="flex-1 flex flex-col items-center justify-center w-full h-full relative">
         
         <!-- Top Right Icons (Home) -->
-        <div class="absolute top-4 right-6 flex items-center space-x-4 text-gray-600">
-            <!-- 9-Dot Menu -->
+        <div class="absolute top-4 right-6 flex items-center space-x-5 text-gray-600">
+            <!-- 🎬 🎬 🎬 MATHEMATICALLY PERFECT 9-DOT MENU 🎬 🎬 🎬 -->
             <button class="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Apps">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0-8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM6 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0-8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm12 10c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0-8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <!-- Top Row -->
+                    <circle cx="5" cy="5" r="2"></circle>
+                    <circle cx="12" cy="5" r="2"></circle>
+                    <circle cx="19" cy="5" r="2"></circle>
+                    <!-- Middle Row -->
+                    <circle cx="5" cy="12" r="2"></circle>
+                    <circle cx="12" cy="12" r="2"></circle>
+                    <circle cx="19" cy="12" r="2"></circle>
+                    <!-- Bottom Row -->
+                    <circle cx="5" cy="19" r="2"></circle>
+                    <circle cx="12" cy="19" r="2"></circle>
+                    <circle cx="19" cy="19" r="2"></circle>
+                </svg>
             </button>
             <!-- Settings Gear -->
             <button class="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Settings">
@@ -64,7 +73,7 @@
             </div>
         </div>
 
-        <div class="mb-8 select-none">
+        <div class="mb-10 select-none">
             <!-- Generic 4-Dot Logo -->
             <div class="dot-logo-large">
                 <div class="dot dot-1"></div>
@@ -75,10 +84,10 @@
         </div>
         
         <div class="w-full max-w-2xl px-4 relative">
-            <div class="flex items-center border border-gray-300 rounded-full px-5 py-3.5 shadow-sm hover:shadow-md transition-shadow focus-within:shadow-md">
+            <div class="flex items-center border border-gray-300 rounded-full px-5 py-3.5 shadow-sm hover:shadow-md transition-shadow focus-within:shadow-md bg-white">
                 <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 
-                <!-- 🎬 🎬 🎬 PROP MASTER: EMPTY INPUT READY FOR ACTOR TO TYPE 🎬 🎬 🎬 -->
+                <!-- Blank Search input -->
                 <input type="text" id="home-input" class="flex-1 outline-none text-xl text-gray-800 bg-transparent" autofocus autocomplete="off" spellcheck="false" value="">
             </div>
         </div>
@@ -91,9 +100,20 @@
         <div class="flex flex-col items-center border-b border-gray-200 pt-6 pb-0 w-full shadow-sm z-10 bg-white relative">
             
             <!-- Top Right Icons (Results) -->
-            <div class="absolute top-4 right-6 flex items-center space-x-4 text-gray-600 hidden sm:flex">
+            <div class="absolute top-4 right-6 flex items-center space-x-5 text-gray-600 hidden sm:flex">
                 <button class="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Apps">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0-8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM6 16c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0-8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm12 10c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2zm0-2c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0-8c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                    <!-- MATHEMATICALLY PERFECT 9-DOT MENU SVG -->
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <circle cx="5" cy="5" r="2"></circle>
+                        <circle cx="12" cy="5" r="2"></circle>
+                        <circle cx="19" cy="5" r="2"></circle>
+                        <circle cx="5" cy="12" r="2"></circle>
+                        <circle cx="12" cy="12" r="2"></circle>
+                        <circle cx="19" cy="12" r="2"></circle>
+                        <circle cx="5" cy="19" r="2"></circle>
+                        <circle cx="12" cy="19" r="2"></circle>
+                        <circle cx="19" cy="19" r="2"></circle>
+                    </svg>
                 </button>
                 <button class="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Settings">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
@@ -103,9 +123,10 @@
                 </div>
             </div>
 
-            <div class="flex items-center w-full max-w-4xl px-4 mb-4">
+            <!-- Centered Search Box in Header -->
+            <div class="flex flex-col sm:flex-row items-center w-full max-w-4xl px-4 mb-4 justify-center">
                 <!-- Clickable Logo to Reset -->
-                <div class="mr-6 cursor-pointer select-none flex-shrink-0" onclick="resetApp()" title="Reset Search">
+                <div class="mb-4 sm:mb-0 sm:mr-6 cursor-pointer select-none flex-shrink-0" onclick="resetApp()" title="Reset Search">
                     <div class="dot-logo-small">
                         <div class="dot dot-1"></div>
                         <div class="dot dot-2"></div>
@@ -115,9 +136,9 @@
                 </div>
                 
                 <!-- Search Input Bar -->
-                <div class="flex-1 relative">
-                    <div class="flex items-center border border-gray-300 rounded-full px-4 py-2.5 shadow-sm hover:shadow-md focus-within:shadow-md bg-white">
-                        <input type="text" id="results-input" class="flex-1 outline-none text-base text-gray-800 bg-transparent" autocomplete="off" spellcheck="false">
+                <div class="w-full sm:flex-1 relative max-w-2xl">
+                    <div class="flex items-center border border-gray-300 rounded-full px-4 py-2.5 shadow-sm hover:shadow-md focus-within:shadow-md bg-white w-full">
+                        <input type="text" id="results-input" class="flex-1 outline-none text-base text-gray-800 bg-transparent w-full" autocomplete="off" spellcheck="false">
                         <div class="flex items-center space-x-3 border-l pl-3 border-gray-200">
                             <svg class="w-5 h-5 text-blue-500 cursor-pointer hover:text-blue-600" onclick="resetApp()" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                         </div>
@@ -125,8 +146,8 @@
                 </div>
             </div>
 
-            <!-- Navigation Tabs (Centered) -->
-            <div class="flex space-x-8 text-sm text-gray-500 pt-2 w-full max-w-4xl px-4">
+            <!-- Navigation Tabs -->
+            <div class="flex space-x-8 text-sm text-gray-500 pt-2 w-full max-w-2xl px-4 justify-center sm:justify-start">
                 <div class="border-b-4 border-blue-500 text-blue-600 pb-3 font-medium flex items-center">
                     All
                 </div>
@@ -144,19 +165,16 @@
 
         <!-- Search Results List (Centered Column) -->
         <div class="flex flex-col items-center w-full flex-1 pt-8 pb-24 bg-gray-50/30">
-            <div class="w-full max-w-3xl px-6">
+            <div class="w-full max-w-2xl px-4">
                 
-                <p class="text-gray-500 text-sm mb-8 text-center md:text-left">About 1,240,000 results (0.42 seconds)</p>
+                <p class="text-gray-500 text-sm mb-8 text-left">About 1,240,000 results (0.42 seconds)</p>
 
                 <!-- RESULT 1: LAWYER PROFILE -->
                 <div class="mb-10 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                     <div class="flex items-center mb-1">
-                        <!-- 🎬 🎬 🎬 PROP MASTER: EDIT TEXT URL HERE 🎬 🎬 🎬 -->
                         <p class="text-sm text-gray-900 line-clamp-1">https://www.legalregistry.is › professionals › tomas-vignisson</p>
                     </div>
-                    <!-- 🎬 🎬 🎬 PROP MASTER: EDIT TITLE HERE 🎬 🎬 🎬 -->
                     <a href="#" class="text-xl text-blue-800 hover:underline font-medium block mb-2">Tomas Vignisson - Family Lawyer Profile</a>
-                    <!-- 🎬 🎬 🎬 PROP MASTER: EDIT DESCRIPTION HERE 🎬 🎬 🎬 -->
                     <p class="text-sm text-gray-700 leading-relaxed">
                         Dedicated <strong>Family lawyer</strong> serving the greater metropolitan area for over 15 years. Contact the firm for consultations regarding custody, adoption, and family estate planning. Recognized by the National Bar Association for excellence in litigation.
                     </p>
@@ -165,19 +183,15 @@
                 <!-- RESULT 2: CHARITY WORK -->
                 <div class="mb-10 bg-white p-5 rounded-xl shadow-sm border border-gray-100">
                     <div class="flex items-center mb-1">
-                        <!-- 🎬 🎬 🎬 PROP MASTER: EDIT TEXT URL HERE 🎬 🎬 🎬 -->
                         <p class="text-sm text-gray-900 line-clamp-1">https://www.tvfoundation.org › about-us</p>
                     </div>
-                    <!-- 🎬 🎬 🎬 PROP MASTER: EDIT TITLE HERE 🎬 🎬 🎬 -->
                     <a href="#" class="text-xl text-blue-800 hover:underline font-medium block mb-2">Charity Work - Tomas Vignisson Foundation</a>
-                    <!-- 🎬 🎬 🎬 PROP MASTER: EDIT DESCRIPTION HERE 🎬 🎬 🎬 -->
                     <p class="text-sm text-gray-700 leading-relaxed">
                         An overview of the extensive <strong>charity work</strong> and child advocacy programs funded and organized by Tomas Vignisson. Focusing on foster care reform, educational grants, and pro-bono legal representation for underprivileged families.
                     </p>
                 </div>
 
                 <!-- RESULT 3: IMAGE RESULT (TOMAS & BOBO) -->
-                <!-- Note the group class here, which triggers the hover scale effect on the child image container -->
                 <div class="mb-10 cursor-pointer group bg-white p-5 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow" onclick="openImageModal()">
                     <div class="flex items-center mb-1">
                         <p class="text-sm text-gray-900 line-clamp-1">https://www.nationalnews.com › local › court-appearances</p>
@@ -185,15 +199,14 @@
                     <h3 class="text-xl text-blue-800 group-hover:underline font-medium block mb-3">High Profile Custody Battle Concludes Outside District Court</h3>
                     
                     <div class="flex flex-col sm:flex-row mt-2 gap-4">
-                        <!-- Image Container with Hover Scale effect -->
                         <div class="w-full sm:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
-                            <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE THUMBNAIL IMAGE URL HERE 🎬 🎬 🎬 -->
-                            <!-- Simply change the 'src' attribute to your local image file e.g., src="./images/tomas_bobo_thumb.jpg" -->
+                            <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE THUMBNAIL IMAGE HERE 🎬 🎬 🎬 -->
+                            <!-- Simply change 'src' below to src="assets/tomas-bobo.jpg" -->
                             <img src="https://placehold.co/400x300/333333/ffffff?text=Tomas+%26+Bobo\nThumbnail" alt="Tomas and Bobo outside court thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         </div>
                         <div>
                             <p class="text-sm text-gray-700 leading-relaxed">
-                                <span class="text-gray-500">Oct 12 — </span> A photograph of <strong>Tomas</strong> outside court beside <strong>BOBO</strong> moments after the landmark ruling. The renowned lawyer was seen celebrating the verdict with clients after a grueling three-week trial that captured national attention...
+                                <span class="text-gray-500">Oct 12 — </span> A photograph of <strong>Tomas</strong> outside court beside <strong>BOBO</strong> moments after the landmark ruling. The renowned lawyer was seen celebrating the verdict with clients after a grueling three-week trial...
                             </p>
                         </div>
                     </div>
@@ -208,8 +221,8 @@
                     
                     <div class="flex flex-col sm:flex-row mt-2 gap-4">
                         <div class="w-full sm:w-48 h-32 bg-black rounded-lg overflow-hidden flex-shrink-0 relative flex items-center justify-center shadow-inner">
-                            <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE VIDEO THUMBNAIL URL HERE 🎬 🎬 🎬 -->
-                            <!-- Change 'src' to your local thumbnail e.g., src="./images/video_thumb.jpg" -->
+                            <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE VIDEO THUMBNAIL IMAGE HERE 🎬 🎬 🎬 -->
+                            <!-- Simply change 'src' below to your thumbnail image -->
                             <img src="https://placehold.co/400x300/1a1a1a/cccccc?text=Tomas+at+Podium" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300">
                             
                             <!-- Play Button Overlay -->
@@ -221,7 +234,7 @@
                         </div>
                         <div>
                             <p class="text-sm text-gray-700 leading-relaxed">
-                                <span class="text-gray-500">Uploaded 2 months ago — </span> Watch <strong>Tomas Vignisson</strong> accept the Lifetime Achievement Award. Listen to his speech: "As many of you know, I didn’t have what you’d call an easy childhood..."
+                                <span class="text-gray-500">Uploaded 2 months ago — </span> Watch <strong>Tomas Vignisson</strong> accept the Lifetime Achievement Award. Listen to his speech discussing his early years...
                             </p>
                         </div>
                     </div>
@@ -229,7 +242,7 @@
 
                 <!-- FOOTER RESET BUTTON -->
                 <div class="w-full flex justify-center mt-12 mb-8 pt-8 border-t border-gray-200">
-                    <!-- Clicking this resets the app for the next take -->
+                    <!-- Clicking this instantly resets the app back to the blank search screen -->
                     <button onclick="resetApp()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-medium transition-colors shadow-sm focus:outline-none flex items-center gap-2">
                         More results
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -241,200 +254,121 @@
     </div>
 
     <!-- ==================== IMAGE MODAL ==================== -->
-    <!-- bg-black/60 backdrop-blur-sm keeps the background search results slightly visible -->
-    <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeImageModal()">
+    <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeImageModal()">
         
-        <!-- Modal Content Container (Restricted to 80% width/height so background shows around edges) -->
-        <div class="relative w-[90vw] sm:w-[80vw] max-w-5xl h-[80vh] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden ring-1 ring-white/20" onclick="event.stopPropagation()">
+        <!-- Modal exactly 80% screen width and height -->
+        <div class="relative w-[80vw] h-[80vh] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden ring-1 ring-black/10" onclick="event.stopPropagation()">
             
             <!-- Close Button -->
-            <button onclick="closeImageModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-black/80 text-white rounded-full p-2.5 z-10 transition-colors shadow-lg">
+            <button onclick="closeImageModal()" class="absolute top-4 right-4 bg-black/60 hover:bg-black/90 text-white rounded-full p-2 z-10 transition-colors shadow-lg">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
             <!-- Image Container -->
-            <div class="w-full h-full bg-[#111] flex items-center justify-center">
-                <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE FULL SIZE IMAGE URL HERE 🎬 🎬 🎬 -->
-                <!-- Change 'src' to your high-res local image file e.g., src="./images/tomas_bobo_full.jpg" -->
+            <div class="w-full h-full bg-[#f8f9fa] flex items-center justify-center relative">
+                <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE FULL SIZE IMAGE PATH HERE 🎬 🎬 🎬 -->
+                <!-- Example: src="assets/tomas-bobo.jpg" -->
                 <img src="https://placehold.co/1200x800/333333/ffffff?text=FULL+SIZE+PHOTO:\nTomas+%26+Bobo+Outside+Court" alt="Tomas and Bobo full picture" class="max-w-full max-h-full object-contain">
             </div>
             
-            <!-- Caption Box -->
             <div class="p-4 bg-white border-t border-gray-200 text-sm text-gray-700 flex-shrink-0">
-                Photograph of Tomas outside court beside BOBO.
+                A photograph of Tomas outside court beside BOBO.
             </div>
         </div>
     </div>
 
 
     <!-- ==================== VIDEO MODAL ==================== -->
-    <div id="video-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeVideoModal()">
+    <div id="video-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeVideoModal()">
         
-        <!-- Modal Content Container (Restricted to 80% width) -->
-        <div class="relative w-[95vw] sm:w-[80vw] max-w-5xl aspect-video bg-black shadow-2xl rounded-xl overflow-hidden ring-1 ring-white/30" onclick="event.stopPropagation()">
+        <!-- Modal exactly 80% width with video aspect ratio -->
+        <div class="relative w-[80vw] aspect-video bg-black shadow-2xl rounded-xl overflow-hidden ring-1 ring-white/30" onclick="event.stopPropagation()">
             
             <!-- Close Button -->
-            <button onclick="closeVideoModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600 text-white rounded-full p-2.5 z-50 transition-colors shadow-lg">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600 text-white rounded-full p-2 z-50 transition-colors shadow-lg">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE THIS DIV WITH ACTUAL <video> ELEMENT FOR PRODUCTION 🎬 🎬 🎬 -->
-            <!-- Remove the div below and uncomment the video tag. Adjust path to your .mp4 file -->
-            <!-- <video src="./videos/tomas_speech.mp4" autoplay controls class="w-full h-full object-cover"></video> -->
+            <!-- 🎬 🎬 🎬 PROP MASTER: UNCOMMENT AND REPLACE VIDEO ELEMENT FOR PRODUCTION 🎬 🎬 🎬 -->
+            <!-- Uncomment the video tag below and point src to your asset folder: src="assets/award-speech.mp4" -->
+            <!-- <video id="actual-video-element" src="assets/award-speech.mp4" autoplay controls class="w-full h-full object-cover"></video> -->
             
-            <div class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800">
+            <!-- (Placeholder for previewing if video isn't linked yet) -->
+            <div id="video-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800">
                 <svg class="w-16 h-16 text-zinc-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 <p class="text-zinc-500 text-xl md:text-2xl font-light tracking-wide">[ VIDEO PLAYBACK: Tomas at Podium ]</p>
-                <p class="text-zinc-600 text-sm mt-2">(Prop Master: Replace with actual &lt;video&gt; element)</p>
-            </div>
-
-            <!-- Subtitles Layer -->
-            <div id="subtitles-container" class="absolute bottom-12 left-0 w-full flex justify-center px-8 transition-opacity duration-500 opacity-0 pointer-events-none z-40">
-                <div class="bg-black/75 backdrop-blur-sm px-6 py-3 rounded-lg text-center max-w-3xl">
-                    <p id="subtitle-text" class="text-yellow-400 text-xl md:text-3xl font-medium subtitle-text tracking-wide leading-relaxed"></p>
-                </div>
-            </div>
-
-            <!-- Fake Player Controls (for visual realism if using the placeholder) -->
-            <div class="absolute bottom-0 left-0 w-full h-12 bg-gradient-to-t from-black/90 to-transparent flex items-center px-6 z-30 pointer-events-none">
-                <div class="w-full flex items-center space-x-4">
-                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
-                    <div class="flex-1 h-1.5 bg-gray-600/80 rounded-full overflow-hidden">
-                        <div class="w-1/4 h-full bg-red-600"></div>
-                    </div>
-                    <span class="text-white text-xs font-mono">0:12 / 2:45</span>
-                </div>
+                <p class="text-zinc-600 text-sm mt-2 font-mono">Prop Master: Use &lt;video src="assets/award-speech.mp4"&gt;</p>
             </div>
         </div>
     </div>
 
-    <!-- ==================== JAVASCRIPT ==================== -->
     <script>
         // DOM Elements
         const screenHome = document.getElementById('screen-home');
         const screenResults = document.getElementById('screen-results');
-        
         const homeInput = document.getElementById('home-input');
         const resultsInput = document.getElementById('results-input');
-        
         const imageModal = document.getElementById('image-modal');
         const videoModal = document.getElementById('video-modal');
-        
-        const subtitlesContainer = document.getElementById('subtitles-container');
-        const subtitleText = document.getElementById('subtitle-text');
 
-        // 🎬 🎬 🎬 PROP MASTER: EDIT SUBTITLES HERE 🎬 🎬 🎬
-        // The script lines exactly as requested. Adjust timing below in startSubtitles() if needed.
-        const scriptLines = [
-            "As many of you know, I didn’t have",
-            "what you’d call an easy childhood.",
-            "Most of my early years were spent in foster homes-"
-        ];
-        let subtitleInterval;
-        let lineIndex = 0;
-
-        // Perform Search Function (Transitions from Home to Results)
+        // Transition from Home to Results
         function performSearch() {
-            // Only proceed if actor typed something
-            if(homeInput.value.trim() === "") return;
-
-            // Copy text to results screen input to maintain continuity
+            if(homeInput.value.trim() === "") return; // Ensure text was typed
             resultsInput.value = homeInput.value;
-            
-            // Swap visibility
             screenHome.classList.add('hidden');
             screenHome.classList.remove('flex');
-            
             screenResults.classList.remove('hidden');
             screenResults.classList.add('flex');
-
-            // Ensure page is at the top
             window.scrollTo(0, 0);
         }
 
-        // Reset App Function (Triggered by 'More results' footer or Logo click)
-        // This is your safety net for rapid scene retakes!
+        // Instantly reset the app back to initial state
         function resetApp() {
-            // Ensure Modals are closed
             closeImageModal();
             closeVideoModal();
-
-            // Swap visibility back to Home
             screenResults.classList.add('hidden');
             screenResults.classList.remove('flex');
-            
             screenHome.classList.remove('hidden');
             screenHome.classList.add('flex');
-            
-            // Clear inputs for the next take
             homeInput.value = "";
             resultsInput.value = "";
-            
-            // Refocus on the home input so the actor can immediately start typing again
             setTimeout(() => homeInput.focus(), 50);
         }
 
-        // Event Listeners for Keyboard 'Enter'
+        // Keyboard "Enter" listeners
         homeInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') performSearch();
         });
-
         resultsInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') performSearch();
         });
 
-        // ------------------ IMAGE MODAL LOGIC ------------------
+        // Modal Controls
         function openImageModal() {
             imageModal.classList.remove('hidden');
             document.body.classList.add('no-scroll');
         }
-
         function closeImageModal() {
             imageModal.classList.add('hidden');
             document.body.classList.remove('no-scroll');
         }
 
-        // ------------------ VIDEO MODAL LOGIC ------------------
         function openVideoModal() {
             videoModal.classList.remove('hidden');
             document.body.classList.add('no-scroll');
-            
-            // Delay subtitle start for a moment to simulate video buffering/starting
-            setTimeout(startSubtitles, 800);
+            // 🎬 PROP MASTER: Trigger real video playback here if needed
+            // const vid = document.getElementById('actual-video-element');
+            // if (vid) vid.play();
         }
-
         function closeVideoModal() {
             videoModal.classList.add('hidden');
             document.body.classList.remove('no-scroll');
-            stopSubtitles();
+            // 🎬 PROP MASTER: Pause real video here if needed
+            // const vid = document.getElementById('actual-video-element');
+            // if (vid) { vid.pause(); vid.currentTime = 0; }
         }
 
-        // Simple Subtitle Animator Logic
-        function startSubtitles() {
-            subtitlesContainer.classList.remove('opacity-0');
-            lineIndex = 0;
-            subtitleText.innerHTML = scriptLines[0];
-            
-            // Cycle through the script array
-            subtitleInterval = setInterval(() => {
-                lineIndex++;
-                if (lineIndex < scriptLines.length) {
-                    subtitleText.innerHTML = scriptLines[lineIndex];
-                } else {
-                    clearInterval(subtitleInterval);
-                    // Optional: Fade out subtitles at the end
-                    setTimeout(() => subtitlesContainer.classList.add('opacity-0'), 2000);
-                }
-            }, 2800); // Wait 2.8 seconds per line (Adjust as needed for pacing)
-        }
-
-        function stopSubtitles() {
-            clearInterval(subtitleInterval);
-            subtitlesContainer.classList.add('opacity-0');
-            subtitleText.innerHTML = "";
-        }
-
-        // Add Escape key listener to close modals instantly
+        // Global Escape Key Listener for Modals
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
                 if (!imageModal.classList.contains('hidden')) closeImageModal();
@@ -442,7 +376,7 @@
             }
         });
 
-        // Focus the search bar immediately on initial page load
+        // Autofocus on load
         window.onload = function() {
             homeInput.focus();
         };
