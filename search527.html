@@ -21,6 +21,7 @@
             gap: 8px;
             width: 72px;
             height: 72px;
+            margin: 0 auto;
         }
         .dot-logo-small {
             display: grid;
@@ -29,14 +30,19 @@
             width: 36px;
             height: 36px;
         }
-        .dot { border-radius: 50%; }
-        .dot-1 { background-color: #4285f4; }
-        .dot-2 { background-color: #ea4335; }
-        .dot-3 { background-color: #fbbc05; }
-        .dot-4 { background-color: #34a853; }
+        .dot { border-radius: 50%; width: 100%; height: 100%; }
+        .dot-1 { background-color: #4285f4; } /* Blue */
+        .dot-2 { background-color: #ea4335; } /* Red */
+        .dot-3 { background-color: #fbbc05; } /* Yellow */
+        .dot-4 { background-color: #34a853; } /* Green */
 
         /* Prevents body scroll when modals are open */
         .no-scroll { overflow: hidden; }
+
+        /* Subtitle Text Styling */
+        .subtitle-text {
+            text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
     </style>
 </head>
 <body class="text-gray-800 h-screen w-screen flex flex-col">
@@ -46,7 +52,7 @@
         
         <!-- Top Right Icons (Home) -->
         <div class="absolute top-4 right-6 flex items-center space-x-5 text-gray-600">
-            <!-- 🎬 🎬 🎬 MATHEMATICALLY PERFECT 9-DOT MENU 🎬 🎬 🎬 -->
+            <!-- MATHEMATICALLY PERFECT 9-DOT MENU -->
             <button class="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Apps">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <!-- Top Row -->
@@ -73,8 +79,8 @@
             </div>
         </div>
 
+        <!-- Generic 4-Dot Logo -->
         <div class="mb-10 select-none">
-            <!-- Generic 4-Dot Logo -->
             <div class="dot-logo-large">
                 <div class="dot dot-1"></div>
                 <div class="dot dot-2"></div>
@@ -87,7 +93,7 @@
             <div class="flex items-center border border-gray-300 rounded-full px-5 py-3.5 shadow-sm hover:shadow-md transition-shadow focus-within:shadow-md bg-white">
                 <svg class="w-5 h-5 text-gray-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 
-                <!-- Blank Search input -->
+                <!-- Search input with FOOLPROOF TYPING LOCK -->
                 <input type="text" id="home-input" class="flex-1 outline-none text-xl text-gray-800 bg-transparent" autofocus autocomplete="off" spellcheck="false" value="">
             </div>
         </div>
@@ -102,7 +108,6 @@
             <!-- Top Right Icons (Results) -->
             <div class="absolute top-4 right-6 flex items-center space-x-5 text-gray-600 hidden sm:flex">
                 <button class="p-2 hover:bg-gray-100 rounded-full transition-colors" title="Apps">
-                    <!-- MATHEMATICALLY PERFECT 9-DOT MENU SVG -->
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <circle cx="5" cy="5" r="2"></circle>
                         <circle cx="12" cy="5" r="2"></circle>
@@ -135,7 +140,6 @@
                     </div>
                 </div>
                 
-                <!-- Search Input Bar -->
                 <div class="w-full sm:flex-1 relative max-w-2xl">
                     <div class="flex items-center border border-gray-300 rounded-full px-4 py-2.5 shadow-sm hover:shadow-md focus-within:shadow-md bg-white w-full">
                         <input type="text" id="results-input" class="flex-1 outline-none text-base text-gray-800 bg-transparent w-full" autocomplete="off" spellcheck="false">
@@ -148,22 +152,14 @@
 
             <!-- Navigation Tabs -->
             <div class="flex space-x-8 text-sm text-gray-500 pt-2 w-full max-w-2xl px-4 justify-center sm:justify-start">
-                <div class="border-b-4 border-blue-500 text-blue-600 pb-3 font-medium flex items-center">
-                    All
-                </div>
-                <div class="pb-3 hover:text-gray-800 cursor-pointer flex items-center">
-                    Images
-                </div>
-                <div class="pb-3 hover:text-gray-800 cursor-pointer flex items-center">
-                    Videos
-                </div>
-                <div class="pb-3 hover:text-gray-800 cursor-pointer flex items-center">
-                    News
-                </div>
+                <div class="border-b-4 border-blue-500 text-blue-600 pb-3 font-medium flex items-center">All</div>
+                <div class="pb-3 hover:text-gray-800 cursor-pointer flex items-center">Images</div>
+                <div class="pb-3 hover:text-gray-800 cursor-pointer flex items-center">Videos</div>
+                <div class="pb-3 hover:text-gray-800 cursor-pointer flex items-center">News</div>
             </div>
         </div>
 
-        <!-- Search Results List (Centered Column) -->
+        <!-- Search Results List -->
         <div class="flex flex-col items-center w-full flex-1 pt-8 pb-24 bg-gray-50/30">
             <div class="w-full max-w-2xl px-4">
                 
@@ -201,8 +197,7 @@
                     <div class="flex flex-col sm:flex-row mt-2 gap-4">
                         <div class="w-full sm:w-48 h-32 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0 border border-gray-200">
                             <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE THUMBNAIL IMAGE HERE 🎬 🎬 🎬 -->
-                            <!-- Simply change 'src' below to src="assets/tomas-bobo.jpg" -->
-                            <img src="https://placehold.co/400x300/333333/ffffff?text=Tomas+%26+Bobo\nThumbnail" alt="Tomas and Bobo outside court thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                            <img src="assets/tomas-bobo.jpg" onerror="this.src='https://placehold.co/400x300/333333/ffffff?text=Tomas+%26+Bobo\nThumbnail'" alt="Tomas and Bobo outside court thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         </div>
                         <div>
                             <p class="text-sm text-gray-700 leading-relaxed">
@@ -221,10 +216,7 @@
                     
                     <div class="flex flex-col sm:flex-row mt-2 gap-4">
                         <div class="w-full sm:w-48 h-32 bg-black rounded-lg overflow-hidden flex-shrink-0 relative flex items-center justify-center shadow-inner">
-                            <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE VIDEO THUMBNAIL IMAGE HERE 🎬 🎬 🎬 -->
-                            <!-- Simply change 'src' below to your thumbnail image -->
                             <img src="https://placehold.co/400x300/1a1a1a/cccccc?text=Tomas+at+Podium" alt="Video Thumbnail" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-300">
-                            
                             <!-- Play Button Overlay -->
                             <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                                 <div class="w-12 h-12 bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/50 group-hover:scale-110 group-hover:border-white transition-all duration-300">
@@ -242,7 +234,6 @@
 
                 <!-- FOOTER RESET BUTTON -->
                 <div class="w-full flex justify-center mt-12 mb-8 pt-8 border-t border-gray-200">
-                    <!-- Clicking this instantly resets the app back to the blank search screen -->
                     <button onclick="resetApp()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-8 py-3 rounded-full font-medium transition-colors shadow-sm focus:outline-none flex items-center gap-2">
                         More results
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -254,67 +245,114 @@
     </div>
 
     <!-- ==================== IMAGE MODAL ==================== -->
-    <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeImageModal()">
-        
-        <!-- Modal exactly 80% screen width and height -->
-        <div class="relative w-[80vw] h-[80vh] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden ring-1 ring-black/10" onclick="event.stopPropagation()">
-            
-            <!-- Close Button -->
-            <button onclick="closeImageModal()" class="absolute top-4 right-4 bg-black/60 hover:bg-black/90 text-white rounded-full p-2 z-10 transition-colors shadow-lg">
+    <div id="image-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeImageModal()">
+        <!-- 80vw Modal -->
+        <div class="relative w-[80vw] max-w-5xl h-[80vh] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden ring-1 ring-white/20" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-black/80 text-white rounded-full p-2.5 z-10 transition-colors shadow-lg">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            <!-- Image Container -->
-            <div class="w-full h-full bg-[#f8f9fa] flex items-center justify-center relative">
-                <!-- 🎬 🎬 🎬 PROP MASTER: REPLACE FULL SIZE IMAGE PATH HERE 🎬 🎬 🎬 -->
-                <!-- Example: src="assets/tomas-bobo.jpg" -->
-                <img src="https://placehold.co/1200x800/333333/ffffff?text=FULL+SIZE+PHOTO:\nTomas+%26+Bobo+Outside+Court" alt="Tomas and Bobo full picture" class="max-w-full max-h-full object-contain">
+            <div class="w-full h-full bg-[#111] flex items-center justify-center">
+                <!-- 🎬 🎬 🎬 PROP MASTER: FULL SIZE IMAGE 🎬 🎬 🎬 -->
+                <img src="assets/tomas-bobo.jpg" onerror="this.src='https://placehold.co/1200x800/333333/ffffff?text=FULL+SIZE+PHOTO:\nTomas+%26+Bobo+Outside+Court'" alt="Tomas and Bobo full picture" class="max-w-full max-h-full object-contain">
             </div>
             
             <div class="p-4 bg-white border-t border-gray-200 text-sm text-gray-700 flex-shrink-0">
-                A photograph of Tomas outside court beside BOBO.
+                Photograph of Tomas outside court beside BOBO.
             </div>
         </div>
     </div>
 
-
     <!-- ==================== VIDEO MODAL ==================== -->
-    <div id="video-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeVideoModal()">
-        
-        <!-- Modal exactly 80% width with video aspect ratio -->
-        <div class="relative w-[80vw] aspect-video bg-black shadow-2xl rounded-xl overflow-hidden ring-1 ring-white/30" onclick="event.stopPropagation()">
-            
-            <!-- Close Button -->
-            <button onclick="closeVideoModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600 text-white rounded-full p-2 z-50 transition-colors shadow-lg">
+    <div id="video-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-12 transition-opacity" onclick="closeVideoModal()">
+        <!-- 80vw Modal with aspect ratio -->
+        <div class="relative w-[80vw] max-w-5xl aspect-video bg-black shadow-2xl rounded-xl overflow-hidden ring-1 ring-white/30" onclick="event.stopPropagation()">
+            <button onclick="closeVideoModal()" class="absolute top-4 right-4 bg-black/50 hover:bg-red-600 text-white rounded-full p-2.5 z-50 transition-colors shadow-lg">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
             </button>
 
-            <!-- 🎬 🎬 🎬 PROP MASTER: UNCOMMENT AND REPLACE VIDEO ELEMENT FOR PRODUCTION 🎬 🎬 🎬 -->
-            <!-- Uncomment the video tag below and point src to your asset folder: src="assets/award-speech.mp4" -->
-            <!-- <video id="actual-video-element" src="assets/award-speech.mp4" autoplay controls class="w-full h-full object-cover"></video> -->
+            <!-- 🎬 🎬 🎬 PROP MASTER: VIDEO SOURCE HERE 🎬 🎬 🎬 -->
+            <!-- The actual video tag for playback -->
+            <video id="actual-video-element" src="assets/award-speech.mp4" controls class="w-full h-full object-cover"></video>
             
-            <!-- (Placeholder for previewing if video isn't linked yet) -->
-            <div id="video-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800">
+            <!-- Fallback text just in case the video file is missing -->
+            <div id="video-placeholder" class="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900 border border-zinc-800 -z-10">
                 <svg class="w-16 h-16 text-zinc-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 <p class="text-zinc-500 text-xl md:text-2xl font-light tracking-wide">[ VIDEO PLAYBACK: Tomas at Podium ]</p>
-                <p class="text-zinc-600 text-sm mt-2 font-mono">Prop Master: Use &lt;video src="assets/award-speech.mp4"&gt;</p>
+                <p class="text-zinc-600 text-sm mt-2 font-mono">Missing file: assets/award-speech.mp4</p>
+            </div>
+            
+            <!-- Subtitles Container (Triggered by JS) -->
+            <div id="subtitles-container" class="absolute bottom-16 left-0 w-full flex justify-center px-8 transition-opacity duration-500 opacity-0 pointer-events-none z-40">
+                <div class="bg-black/60 px-6 py-2 rounded-lg text-center max-w-3xl">
+                    <p id="subtitle-text" class="text-yellow-400 text-2xl md:text-3xl font-medium subtitle-text tracking-wide leading-relaxed"></p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // DOM Elements
         const screenHome = document.getElementById('screen-home');
         const screenResults = document.getElementById('screen-results');
         const homeInput = document.getElementById('home-input');
         const resultsInput = document.getElementById('results-input');
         const imageModal = document.getElementById('image-modal');
         const videoModal = document.getElementById('video-modal');
+        const vidElement = document.getElementById('actual-video-element');
+        
+        // --- FOOLPROOF TYPING LOCK ---
+        const targetText = "Tomas Vignisson";
 
-        // Transition from Home to Results
+        function applyTypingLock(inputElement) {
+            inputElement.addEventListener('keydown', function(e) {
+                // Allow specific keys to behave normally
+                if (['Tab', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                    return;
+                }
+
+                // If Enter is pressed, perform the search
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Stop default form submit if any
+                    performSearch();
+                    return;
+                }
+
+                // Handle Backspace manually
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    inputElement.value = inputElement.value.slice(0, -1);
+                    return;
+                }
+
+                // Ignore pure modifier keystrokes
+                if (['Shift', 'Control', 'Alt', 'Meta', 'CapsLock'].includes(e.key)) {
+                    return;
+                }
+
+                // Intercept any other typing and force the correct spelling
+                e.preventDefault();
+                
+                const currentLen = inputElement.value.length;
+                if (currentLen < targetText.length) {
+                    inputElement.value += targetText[currentLen];
+                }
+            });
+        }
+
+        // Apply lock to both inputs
+        applyTypingLock(homeInput);
+        applyTypingLock(resultsInput);
+
+
+        // --- APPLICATION LOGIC ---
         function performSearch() {
-            if(homeInput.value.trim() === "") return; // Ensure text was typed
-            resultsInput.value = homeInput.value;
+            if(homeInput.value.length === 0 && resultsInput.value.length === 0) return;
+            
+            // Sync values across screens just in case
+            if(screenHome.classList.contains('flex')) {
+                resultsInput.value = homeInput.value;
+            }
+
             screenHome.classList.add('hidden');
             screenHome.classList.remove('flex');
             screenResults.classList.remove('hidden');
@@ -322,28 +360,21 @@
             window.scrollTo(0, 0);
         }
 
-        // Instantly reset the app back to initial state
         function resetApp() {
             closeImageModal();
             closeVideoModal();
+            
             screenResults.classList.add('hidden');
             screenResults.classList.remove('flex');
             screenHome.classList.remove('hidden');
             screenHome.classList.add('flex');
+            
             homeInput.value = "";
             resultsInput.value = "";
             setTimeout(() => homeInput.focus(), 50);
         }
 
-        // Keyboard "Enter" listeners
-        homeInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performSearch();
-        });
-        resultsInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') performSearch();
-        });
-
-        // Modal Controls
+        // --- MODALS ---
         function openImageModal() {
             imageModal.classList.remove('hidden');
             document.body.classList.add('no-scroll');
@@ -356,19 +387,55 @@
         function openVideoModal() {
             videoModal.classList.remove('hidden');
             document.body.classList.add('no-scroll');
-            // 🎬 PROP MASTER: Trigger real video playback here if needed
-            // const vid = document.getElementById('actual-video-element');
-            // if (vid) vid.play();
+            if (vidElement) {
+                vidElement.currentTime = 0;
+                vidElement.play().catch(e => console.log("Video missing or auto-play blocked.", e));
+            }
+            setTimeout(startSubtitles, 500);
         }
+        
         function closeVideoModal() {
             videoModal.classList.add('hidden');
             document.body.classList.remove('no-scroll');
-            // 🎬 PROP MASTER: Pause real video here if needed
-            // const vid = document.getElementById('actual-video-element');
-            // if (vid) { vid.pause(); vid.currentTime = 0; }
+            if (vidElement) {
+                vidElement.pause();
+            }
+            stopSubtitles();
         }
 
-        // Global Escape Key Listener for Modals
+        // --- SUBTITLES ---
+        const subtitlesContainer = document.getElementById('subtitles-container');
+        const subtitleText = document.getElementById('subtitle-text');
+        const scriptLines = [
+            "As many of you know, I didn’t have",
+            "what you’d call an easy childhood.",
+            "Most of my early years were spent in foster homes-"
+        ];
+        let subtitleInterval;
+
+        function startSubtitles() {
+            subtitlesContainer.classList.remove('opacity-0');
+            let lineIndex = 0;
+            subtitleText.innerHTML = scriptLines[0];
+            
+            subtitleInterval = setInterval(() => {
+                lineIndex++;
+                if (lineIndex < scriptLines.length) {
+                    subtitleText.innerHTML = scriptLines[lineIndex];
+                } else {
+                    clearInterval(subtitleInterval);
+                    setTimeout(() => subtitlesContainer.classList.add('opacity-0'), 2500);
+                }
+            }, 3000); 
+        }
+
+        function stopSubtitles() {
+            clearInterval(subtitleInterval);
+            subtitlesContainer.classList.add('opacity-0');
+            subtitleText.innerHTML = "";
+        }
+
+        // --- GLOBAL ESCAPE ---
         document.addEventListener('keydown', function(event) {
             if (event.key === "Escape") {
                 if (!imageModal.classList.contains('hidden')) closeImageModal();
@@ -376,7 +443,6 @@
             }
         });
 
-        // Autofocus on load
         window.onload = function() {
             homeInput.focus();
         };
