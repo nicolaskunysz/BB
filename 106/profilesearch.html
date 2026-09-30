@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - Fictional Social Media</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-y: scroll;
+        }
+        .text-primary { color: #050505; }
+        .text-secondary { color: #65676b; }
+        
+        .search-input-active:focus-within {
+            box-shadow: 0 0 0 2px #cbe4ff;
+        }
+
+        .btn-gray {
+            background-color: #e4e6eb;
+            color: #050505;
+            transition: background-color 0.2s ease;
+        }
+        .btn-gray:hover {
+            background-color: #d8dadf;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #e4e6eb;
+        }
+
+        /* Hover effect for all search results to allow natural highlighting by the actor */
+        .search-result-item {
+            transition: all 0.2s ease-in-out;
+            border: 1px solid transparent;
+            text-decoration: none; /* For links */
+            color: inherit; /* For links */
+        }
+        .search-result-item:hover {
+            background-color: #f3f4f6; /* Light gray background */
+            border-color: #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transform: scale(1.01);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full h-[60px] bg-gradient-to-r from-[#1b74e4] to-[#0a49a8] shadow-md flex items-center justify-between px-3 sm:px-4 z-50">
+        
+        <!-- Left side: Search only (Logo removed as requested) -->
+        <div class="flex items-center gap-2 flex-1 md:w-[320px] md:flex-none">
+            <!-- Real Interactive Search Bar -->
+            <div id="searchContainer" class="search-input-active relative flex items-center bg-white rounded-full px-3 py-2 w-full max-w-[280px] transition-all duration-200 shadow-inner">
+                <i class="fa-solid fa-magnifying-glass text-gray-500 mr-2 text-sm"></i>
+                <!-- Input where actor will manually type -->
+                <input type="text" id="searchInput" placeholder="Search social..." class="bg-transparent border-none outline-none w-full text-gray-900 placeholder-gray-500 text-[15px]">
+            </div>
+        </div>
+
+        <!-- Center: Navigation Icons (Hidden on small screens) -->
+        <div class="hidden md:flex flex-1 justify-center max-w-[600px]">
+            <div class="flex gap-1 w-full justify-between px-10">
+                <div class="w-24 h-14 flex items-center justify-center border-b-4 border-white text-white cursor-pointer rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-house text-xl"></i>
+                </div>
+                <div class="w-24 h-14 flex items-center justify-center border-b-4 border-transparent text-white/70 cursor-pointer rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-tv text-xl"></i>
+                </div>
+                <div class="w-24 h-14 flex items-center justify-center border-b-4 border-transparent text-white/70 cursor-pointer rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-store text-xl"></i>
+                </div>
+                <div class="w-24 h-14 flex items-center justify-center border-b-4 border-transparent text-white/70 cursor-pointer rounded-lg hover:bg-white/10 transition-colors">
+                    <i class="fa-solid fa-users text-xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right side: Profile and Icons -->
+        <div class="flex items-center justify-end gap-2 sm:gap-3 flex-1 md:w-[320px] md:flex-none">
+            <div class="w-10 h-10 bg-white/20 rounded-full hidden sm:flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors">
+                <i class="fa-solid fa-plus text-lg"></i>
+            </div>
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors">
+                <i class="fa-brands fa-facebook-messenger text-lg"></i>
+            </div>
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors relative">
+                <i class="fa-solid fa-bell text-lg"></i>
+                <div class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#1b74e4]"></div>
+            </div>
+            
+            <!-- User Profile (Reset Button) -->
+            <div class="w-10 h-10 rounded-full overflow-hidden sm:ml-2 border-2 border-white/50 cursor-pointer flex-shrink-0 shadow-sm hover:border-white transition-colors" onclick="resetSearch()" title="Click to Reset Search">
+                <!-- ====================================================================== -->
+                <!-- !!! EDIT HERE: ADD TOP RIGHT LOGGED-IN USER PROFILE IMAGE URL HERE !!! -->
+                <!-- Replace the URL in the src="" attribute below with your image link     -->
+                <!-- ====================================================================== -->
+                <img src="https://placehold.co/150x150/cccccc/ffffff?text=S" alt="Current User" class="w-full h-full object-cover">
+                <!-- ====================================================================== -->
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-[76px] max-w-[1920px] mx-auto flex justify-between px-2 sm:px-4 gap-4">
+        
+        <!-- Left Sidebar: Populated Navigation Menu (Hidden on mobile/tablet) -->
+        <aside class="w-[320px] p-2 hidden xl:block h-[calc(100vh-76px)] sticky top-[76px] overflow-y-auto">
+            
+            <!-- User Profile Quick Link -->
+            <div class="flex items-center p-2 rounded-lg sidebar-item cursor-pointer mb-2">
+                <div class="w-9 h-9 rounded-full overflow-hidden mr-3">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: ADD SIDEBAR USER PROFILE IMAGE URL HERE !!!             -->
+                    <!-- Replace the URL in the src="" attribute below with your image link     -->
+                    <!-- ====================================================================== -->
+                    <img src="https://placehold.co/150x150/cccccc/ffffff?text=S" alt="Current User" class="w-full h-full object-cover">
+                    <!-- ====================================================================== -->
+                </div>
+                <span class="font-semibold text-[15px] text-primary">Chief Arnar</span>
+            </div>
+
+            <!-- Standard Menu Links -->
+            <ul class="space-y-1">
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-house text-[#1b74e4] text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Home</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-user-group text-[#1b74e4] text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Friends</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-users text-[#1b74e4] text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Groups</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-store text-[#1b74e4] text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Marketplace</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-tv text-[#1b74e4] text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Watch</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-clock-rotate-left text-[#1b74e4] text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Memories</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-bookmark text-purple-500 text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Saved</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-flag text-orange-500 text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Pages</span></a></li>
+                <li><a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium"><i class="fa-solid fa-calendar-day text-red-500 text-xl w-9 text-center"></i> <span class="ml-2 text-[15px]">Events</span></a></li>
+            </ul>
+            
+            <div class="border-b border-gray-300 mx-2 my-4"></div>
+            <h3 class="font-semibold text-[16px] text-gray-500 px-2 mb-2">Your Shortcuts</h3>
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium">
+                        <div class="w-8 h-8 rounded bg-gray-300 mr-3 overflow-hidden">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: ADD RPD SHORTCUT IMAGE URL HERE !!!                     -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/100x100/e2e8f0/475569?text=RPD" alt="RPD" class="w-full h-full object-cover">
+                        </div> 
+                        <span class="text-[14px]">Reykjavík Police Department</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center p-2 rounded-lg sidebar-item text-primary font-medium">
+                        <div class="w-8 h-8 rounded bg-gray-300 mr-3 overflow-hidden">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: ADD HIKE SHORTCUT IMAGE URL HERE !!!                    -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/100x100/e2e8f0/475569?text=Hike" alt="Hike" class="w-full h-full object-cover">
+                        </div> 
+                        <span class="text-[14px]">Icelandic Hiking Group</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <section class="flex-1 max-w-[680px] w-full min-w-0 mx-auto pb-12">
+            
+            <!-- INITIAL STATE: Blank / Prompt (Lowered via mt-24) -->
+            <div id="initialState" class="flex flex-col items-center justify-center h-[60vh] mt-24 transition-opacity duration-300">
+                <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm border border-gray-100">
+                    <i class="fa-solid fa-magnifying-glass text-gray-300 text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-400 text-center px-4 mb-3">Find friends, businesses, anything or anyone you love</h3>
+                <p class="text-gray-500 text-center px-4">Type a name in the search bar above to get started.</p>
+            </div>
+
+            <!-- LOADING STATE: Spinner (Hidden by default) -->
+            <div id="loadingState" class="hidden flex-col items-center justify-center h-[50vh] mt-10">
+                <i class="fa-solid fa-circle-notch fa-spin text-[#1b74e4] text-5xl mb-4"></i>
+                <p class="text-gray-600 font-semibold text-lg">Searching...</p>
+            </div>
+
+            <!-- RESULTS STATE (Hidden by default) -->
+            <div id="resultsState" class="hidden mt-6">
+                <h2 class="font-bold text-2xl mb-4 text-primary px-2 sm:px-0">Search Results</h2>
+                
+                <div class="bg-white rounded-xl shadow-sm p-3 sm:p-4 mb-4 border border-gray-200">
+                    <h3 class="font-bold text-lg text-primary mb-3 px-2 sm:px-0 border-b pb-2 border-gray-100">People</h3>
+
+                    <!-- Result 1: Arnar Jónsson -->
+                    <div class="flex items-center justify-between p-2 rounded-lg search-result-item mb-1 cursor-pointer">
+                        <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <div class="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: ADD PROFILE IMAGE URL FOR ARNAR JÓNSSON !!!             -->
+                                <!-- ====================================================================== -->
+                                <img src="https://placehold.co/150x150/94a3b8/ffffff?text=AJ" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="truncate">
+                                <h4 class="font-semibold text-[17px] text-primary leading-tight truncate">Arnar Jónsson</h4>
+                                <p class="text-secondary text-[13px] mt-1 truncate">Lives in Akureyri, Iceland</p>
+                            </div>
+                        </div>
+                        <div class="ml-2 flex-shrink-0">
+                            <button class="btn-gray p-2 sm:px-3 sm:py-1.5 rounded-md font-semibold text-[14px] flex items-center justify-center">
+                                <i class="fa-solid fa-user-plus text-[15px] sm:text-[13px] sm:mr-1.5"></i> <span class="hidden sm:inline">Add Friend</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Result 2: Arnar Sigurðsson -->
+                    <div class="flex items-center justify-between p-2 rounded-lg search-result-item mb-1 cursor-pointer">
+                        <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <div class="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: ADD PROFILE IMAGE URL FOR ARNAR SIGURÐSSON !!!          -->
+                                <!-- ====================================================================== -->
+                                <img src="https://placehold.co/150x150/64748b/ffffff?text=AS" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="truncate">
+                                <h4 class="font-semibold text-[17px] text-primary leading-tight truncate">Arnar Sigurðsson</h4>
+                                <p class="text-secondary text-[13px] mt-1 truncate">Studied at University of Iceland</p>
+                            </div>
+                        </div>
+                        <div class="ml-2 flex-shrink-0">
+                            <button class="btn-gray p-2 sm:px-3 sm:py-1.5 rounded-md font-semibold text-[14px] flex items-center justify-center">
+                                <i class="fa-solid fa-user-plus text-[15px] sm:text-[13px] sm:mr-1.5"></i> <span class="hidden sm:inline">Add Friend</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ==================================================================================================== -->
+                    <!-- ==================================================================================================== -->
+                    <!-- !!! KEY PLOT ELEMENT BELOW: ESTHER'S PROFILE RESULT (CLICKABLE LINK) !!!                             -->
+                    <!-- EDIT HER NAME, MARRIAGE SUBTEXT, IMAGE URL, AND THE HTML LINK (href="") DIRECTLY BELOW               -->
+                    <!-- ==================================================================================================== -->
+                    
+                    <a href="estherprofile.html" class="block p-2 rounded-lg search-result-item mb-1 cursor-pointer w-full">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                                <div class="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
+                                    <!-- ====================================================================== -->
+                                    <!-- !!! EDIT HERE: ADD PROFILE IMAGE URL FOR ESTHER !!!                    -->
+                                    <!-- ====================================================================== -->
+                                    <img src="https://placehold.co/150x150/9ca3af/ffffff?text=E" alt="Esther Profile" class="w-full h-full object-cover">
+                                </div>
+                                <div class="truncate">
+                                    <!-- ====================================================================== -->
+                                    <!-- !!! EDIT HERE: CHANGE ESTHER'S NAME TEXT BELOW !!!                     -->
+                                    <!-- ====================================================================== -->
+                                    <h4 class="font-semibold text-[17px] text-primary leading-tight truncate">Esther</h4>
+                                    
+                                    <!-- Crucial Plot Subtext - Clearly Visible -->
+                                    <p class="text-[13px] text-gray-800 font-medium flex items-center gap-1 mt-1 truncate">
+                                        <i class="fa-solid fa-heart text-red-500 text-[11px] mr-1 drop-shadow-sm"></i> 
+                                        Married to <span class="font-bold text-black ml-0.5">Arnar Viglundsson</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="ml-2 flex-shrink-0">
+                                <!-- Even though it's a link, we style the button to look like the others to prevent suspicion -->
+                                <div class="btn-gray p-2 sm:px-3 sm:py-1.5 rounded-md font-semibold text-[14px] flex items-center justify-center pointer-events-none">
+                                    <i class="fa-solid fa-user-plus text-[15px] sm:text-[13px] sm:mr-1.5"></i> 
+                                    <span class="hidden sm:inline">Add Friend</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <!-- ==================================================================================================== -->
+                    <!-- ==================================================================================================== -->
+                    <!-- END OF ESTHER'S RESULT BLOCK                                                                         -->
+                    <!-- ==================================================================================================== -->
+                    <!-- ==================================================================================================== -->
+
+                    <!-- Result 4: Arnar Þór -->
+                    <div class="flex items-center justify-between p-2 rounded-lg search-result-item mb-1 cursor-pointer">
+                        <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <div class="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: ADD PROFILE IMAGE URL FOR ARNAR ÞÓR !!!                 -->
+                                <!-- ====================================================================== -->
+                                <img src="https://placehold.co/150x150/475569/ffffff?text=AT" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="truncate">
+                                <h4 class="font-semibold text-[17px] text-primary leading-tight truncate">Arnar Þór</h4>
+                                <p class="text-secondary text-[13px] mt-1 truncate">Works at Reykjavík Energy</p>
+                            </div>
+                        </div>
+                        <div class="ml-2 flex-shrink-0">
+                            <button class="btn-gray p-2 sm:px-3 sm:py-1.5 rounded-md font-semibold text-[14px] flex items-center justify-center">
+                                <i class="fa-solid fa-user-plus text-[15px] sm:text-[13px] sm:mr-1.5"></i> <span class="hidden sm:inline">Add Friend</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Result 5: Arnar Pétursson -->
+                    <div class="flex items-center justify-between p-2 rounded-lg search-result-item mb-1 cursor-pointer">
+                        <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <div class="w-[60px] h-[60px] rounded-full overflow-hidden flex-shrink-0 border border-gray-100">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: ADD PROFILE IMAGE URL FOR ARNAR PÉTURSSON !!!           -->
+                                <!-- ====================================================================== -->
+                                <img src="https://placehold.co/150x150/334155/ffffff?text=AP" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="truncate">
+                                <h4 class="font-semibold text-[17px] text-primary leading-tight truncate">Arnar Pétursson</h4>
+                                <p class="text-secondary text-[13px] mt-1 truncate">Self-employed</p>
+                            </div>
+                        </div>
+                        <div class="ml-2 flex-shrink-0">
+                            <button class="btn-gray p-2 sm:px-3 sm:py-1.5 rounded-md font-semibold text-[14px] flex items-center justify-center">
+                                <i class="fa-solid fa-user-plus text-[15px] sm:text-[13px] sm:mr-1.5"></i> <span class="hidden sm:inline">Add Friend</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary Section to push content down (NO VIGLUNDSSON HERE) -->
+                <div class="bg-white rounded-xl shadow-sm p-3 sm:p-4 mb-6 border border-gray-200">
+                    <h3 class="font-bold text-lg text-primary mb-3 px-2 sm:px-0 border-b pb-2 border-gray-100">People Also Searched For</h3>
+
+                    <!-- Extra Result 1: Business -->
+                    <div class="flex items-center justify-between p-2 rounded-lg search-result-item mb-1 cursor-pointer">
+                        <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <div class="w-[50px] h-[50px] rounded-md overflow-hidden flex-shrink-0 border border-gray-100">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: ADD PROFILE IMAGE URL FOR ARNAR'S BAKERY !!!            -->
+                                <!-- ====================================================================== -->
+                                <img src="https://placehold.co/150x150/e2e8f0/475569?text=BAKE" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="truncate">
+                                <h4 class="font-semibold text-[16px] text-primary leading-tight truncate">Arnar's Bakery</h4>
+                                <p class="text-secondary text-[12px] mt-0.5 truncate">Bakery · Reykjavík</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extra Result 2: Business -->
+                    <div class="flex items-center justify-between p-2 rounded-lg search-result-item cursor-pointer">
+                        <div class="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+                            <div class="w-[50px] h-[50px] rounded-md overflow-hidden flex-shrink-0 border border-gray-100">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: ADD PROFILE IMAGE URL FOR ARNAR AUTO REPAIR !!!         -->
+                                <!-- ====================================================================== -->
+                                <img src="https://placehold.co/150x150/cbd5e1/475569?text=AUTO" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                            <div class="truncate">
+                                <h4 class="font-semibold text-[16px] text-primary leading-tight truncate">Arnar Auto Repair</h4>
+                                <p class="text-secondary text-[12px] mt-0.5 truncate">Auto Repair Shop · Kópavogur</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Discreet Footer -->
+                <div class="text-center mt-8 pb-10">
+                    <div class="flex flex-wrap justify-center gap-x-3 gap-y-1 text-[13px] text-gray-500 mb-2">
+                        <a href="#" class="hover:underline">Privacy</a>
+                        <span>·</span>
+                        <a href="#" class="hover:underline">Terms</a>
+                        <span>·</span>
+                        <a href="#" class="hover:underline">Advertising</a>
+                        <span>·</span>
+                        <a href="#" class="hover:underline">Ad Choices</a>
+                        <span>·</span>
+                        <a href="#" class="hover:underline">Cookies</a>
+                        <span>·</span>
+                        <a href="#" class="hover:underline">More</a>
+                    </div>
+                    <p class="text-gray-400 text-[12px]">FictionalSocial © 2026</p>
+                </div>
+            </div>
+
+        </section>
+        
+        <!-- Right side empty space for layout balance on large screens -->
+        <div class="w-[320px] hidden xl:block"></div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const initialState = document.getElementById('initialState');
+            const loadingState = document.getElementById('loadingState');
+            const resultsState = document.getElementById('resultsState');
+            
+            // Focus the input immediately for convenience
+            searchInput.focus();
+
+            // Listen for the Enter key on the input field
+            searchInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' && searchInput.value.trim() !== '') {
+                    // Prevent default form submission behavior just in case
+                    event.preventDefault();
+                    
+                    // Hide the blank state or existing results
+                    initialState.classList.add('hidden');
+                    resultsState.classList.add('hidden');
+                    
+                    // Show the cinematic loading spinner
+                    loadingState.classList.remove('hidden');
+                    loadingState.classList.add('flex'); // Ensure flex is applied for centering
+                    
+                    // Remove focus from input to hide mobile keyboard
+                    searchInput.blur();
+                    
+                    // Wait 800ms before showing results
+                    setTimeout(() => {
+                        // Hide loader
+                        loadingState.classList.add('hidden');
+                        loadingState.classList.remove('flex');
+                        
+                        // Reveal results
+                        resultsState.classList.remove('hidden');
+                        
+                        // Scroll to top of results smoothly
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }, 800);
+                }
+            });
+        });
+
+        // Global Helper function to reset back to initial state (Called by Top Right Profile Pic)
+        function resetSearch() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('initialState').classList.remove('hidden');
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('loadingState').classList.remove('flex');
+            document.getElementById('resultsState').classList.add('hidden');
+            document.getElementById('searchInput').focus();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
