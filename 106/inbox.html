@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inbox</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Custom scrollbars for a sleek, dark UI */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151; 
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #030712; /* Deep, moody background */
+        }
+
+        /* Prevent text selection on UI elements */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Active email styling */
+        .email-row {
+            border-left: 3px solid transparent;
+            transition: all 0.15s ease-in-out;
+        }
+        .email-row.active {
+            background-color: #111827; /* gray-900 */
+            border-left-color: #3b82f6; /* blue-500 */
+        }
+
+        /* Loading spinner */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        /* Utility for hiding scrollbar on mobile but keeping functionality */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden text-gray-300 flex flex-col antialiased">
+
+    <!-- Header -->
+    <header class="h-14 bg-[#0a0a0a] border-b border-gray-800 flex items-center justify-between px-4 shrink-0 no-select z-30">
+        <div class="flex items-center space-x-3">
+            <button id="mobile-menu-btn" class="md:hidden p-1 text-gray-400 hover:text-white rounded">
+                <i class="ph ph-list text-2xl"></i>
+            </button>
+            
+            <!-- ========================================================================= -->
+            <!-- ADD YOUR LOGO IMAGE LINK IN THE SRC ATTRIBUTE BELOW                       -->
+            <!-- Replace the placeholder URL with your actual image path/URL               -->
+            <!-- ========================================================================= -->
+            <img src="https://placehold.co/200x40/0a0a0a/e5e7eb?text=YOUR+LOGO+HERE" alt="The Chronicle Logo" class="h-8 object-contain">
+            
+        </div>
+        
+        <div class="flex items-center space-x-4">
+            <div class="relative hidden lg:block">
+                <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i>
+                <input type="text" placeholder="Search archive..." class="bg-gray-900 border border-gray-800 text-sm rounded-full pl-9 pr-4 py-1.5 focus:outline-none focus:border-blue-500/50 focus:bg-gray-800 w-64 text-gray-300 transition-all placeholder-gray-600">
+            </div>
+            
+            <div class="flex items-center space-x-3 pl-4 md:border-l md:border-gray-800 relative">
+                <div class="text-right hidden sm:block">
+                    <div class="text-sm font-medium text-gray-200">Sunna Eddudottir</div>
+                    <div class="text-[11px] text-gray-500 font-mono">s.eddudottir@thechronicle.is</div>
+                </div>
+                
+                <!-- Profile Menu / Reset Button -->
+                <div class="relative">
+                    <button id="profile-btn" onclick="resetTake()" class="w-9 h-9 rounded bg-gray-800 flex items-center justify-center border border-gray-700 hover:border-gray-500 transition-colors focus:outline-none" title="Reset Scene Take">
+                        <span class="font-bold text-gray-300 text-sm">SE</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 flex overflow-hidden relative">
+        
+        <!-- Sidebar (Col 1) -->
+        <aside id="sidebar" class="absolute md:relative z-20 w-[240px] md:w-56 lg:w-64 h-full bg-[#0a0a0a] border-r border-gray-800 flex flex-col py-4 shrink-0 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out no-select">
+            <div class="px-4 mb-6">
+                <button class="w-full bg-blue-600/90 hover:bg-blue-600 text-white rounded py-2 px-4 flex items-center justify-center space-x-2 transition-all shadow-[0_0_15px_rgba(37,99,235,0.2)] hover:shadow-[0_0_20px_rgba(37,99,235,0.4)]">
+                    <i class="ph ph-pencil-simple text-lg"></i>
+                    <span class="font-medium tracking-wide text-sm">Compose</span>
+                </button>
+            </div>
+            
+            <nav class="flex-1 space-y-1 px-3 overflow-y-auto no-scrollbar" id="folder-list">
+                <!-- Injected via JS -->
+            </nav>
+            
+            <div class="p-4 mt-auto">
+                <div class="bg-gray-900/50 rounded border border-gray-800/50 p-3 flex items-center space-x-3">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                    <div>
+                        <div class="text-[10px] text-gray-500 uppercase tracking-widest">Server Status</div>
+                        <div class="text-xs text-gray-400 font-mono mt-0.5">secure.thechronicle.is</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Email List (Col 2) -->
+        <section id="list-section" class="w-full md:w-[320px] lg:w-[380px] bg-[#0d0d0d] border-r border-gray-800 flex flex-col shrink-0 relative transition-all duration-300 z-10">
+            <!-- Toolbar -->
+            <div class="h-12 border-b border-gray-800 flex items-center px-4 justify-between bg-[#0a0a0a]/95 sticky top-0 no-select">
+                <h2 id="current-folder-title" class="text-sm font-semibold text-gray-200 tracking-wider uppercase flex items-center space-x-2">
+                    <i id="current-folder-icon" class="ph ph-tray text-gray-500"></i>
+                    <span>Inbox</span>
+                </h2>
+                <div class="text-xs text-gray-500 font-mono" id="folder-count">0 msgs</div>
+            </div>
+            
+            <!-- List Container -->
+            <div class="flex-1 overflow-y-auto relative no-scrollbar pb-16" id="email-list">
+                <!-- Emails injected via JS -->
+            </div>
+        </section>
+
+        <!-- Reading Pane (Col 3) -->
+        <section id="reading-section" class="hidden md:flex flex-1 bg-[#050505] flex-col absolute md:relative z-20 w-full h-full transition-all duration-300">
+            <!-- Content injected via JS -->
+        </section>
+
+        <!-- Mobile Overlay -->
+        <div id="mobile-overlay" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-10 hidden transition-opacity duration-300 opacity-0"></div>
+    </main>
+
+    <script>
+        // --- 1. CONFIGURATION & DATA ---
+        const FOLDERS = [
+            { id: 'inbox', name: 'Inbox', icon: 'ph-tray' },
+            { id: 'junk', name: 'Junk', icon: 'ph-warning-octagon' },
+            { id: 'spam', name: 'Spam', icon: 'ph-shield-warning' },
+            { id: 'trash', name: 'Trash', icon: 'ph-trash' }
+        ];
+
+        // The absolute initial state. Used to populate the app and restore it entirely.
+        const INITIAL_EMAILS = [
+            // ================= SPAM =================
+            {
+                id: 'spam_01', folder: 'spam', senderName: 'Crypto Wallet', senderEmail: 'alert@binance-secure-auth.net', subject: 'Deposit of 0.85 BTC confirmed', preview: 'Your wallet has a pending deposit. Click to verify identity...', body: '<p>Your wallet has a pending deposit of 0.85 BTC. Click here to verify your identity and claim your funds before they expire.</p>', date: 'Yesterday', isRead: false
+            },
+            {
+                id: 'spam_02', folder: 'spam', senderName: 'Landsbankinn Alert', senderEmail: 'security@landsbankinn-auth.is', subject: 'URGENT: Update banking details', preview: 'We detected unusual activity on your account. Log in immediately...', body: '<p>We have detected unusual activity on your account. Please log in to confirm your recent transactions immediately.</p>', date: 'Oct 01', isRead: false
+            },
+            {
+                // Viddar Scripted Email is 3rd in the Spam folder
+                id: 'script_01',
+                folder: 'spam',
+                senderName: 'Vidarr',
+                senderEmail: 'deathofbaldur@gmail.com',
+                subject: 'AS YOU SOW, SO SHALL YOU REAP.',
+                preview: 'Follow my breadcrumbs to Ellidaardalur. An assault took place this morning...',
+                body: '<p>Follow my breadcrumbs to Ellidaardalur. An assault took place this morning.</p><br><p>The “victim” got what he deserved. Just like the others.</p><br><p>Hope you’re hungry.</p><br><p>— Vidarr</p>',
+                date: '08:14 AM',
+                isRead: false
+            },
+            {
+                id: 'spam_03', folder: 'spam', senderName: 'Dr. John Omondi', senderEmail: 'j.omondi.invest@outlook.com', subject: 'Business Proposal - Confidential', preview: 'I am a former government official looking to transfer funds securely...', body: '<p>I am a former government official looking to transfer funds securely. I require your assistance and will compensate you heavily.</p>', date: 'Sep 29', isRead: false
+            },
+            {
+                id: 'spam_04', folder: 'spam', senderName: 'Singles in Reykjavik', senderEmail: 'matches@local-dates-33.com', subject: 'Someone viewed your profile!', preview: 'You have 3 new messages from singles in your area...', body: '<p>You have 3 new messages from singles in Reykjavik. See who is interested in you right now!</p>', date: 'Sep 27', isRead: true
+            },
+            {
+                id: 'spam_05', folder: 'spam', senderName: 'Miracle Keto', senderEmail: 'sales@burnfatfast.net', subject: 'Lose 10kg in ONE week!', preview: 'Doctors hate this new supplement. Find out the secret...', body: '<p>Doctors hate this new supplement. Find out the secret to shedding pounds instantly without exercise.</p>', date: 'Sep 25', isRead: true
+            },
+
+            // ================= INBOX =================
+            {
+                id: 'inbox_01', folder: 'inbox', senderName: 'Jonas Thorvardsson', senderEmail: 'j.thorvardsson@thechronicle.is', subject: 'Deadline for the Geothermal Plant Story', preview: 'Sunna, I need the final draft on my desk by 3 PM today. Legal wants...', body: '<p>Sunna,</p><p>I need the final draft on my desk by 3 PM today. Legal wants to review the quotes from the environmental minister before we go to print. We cannot afford another libel threat.</p><p>Don\'t be late.</p><p>Jonas Thorvardsson<br>Editor-in-Chief</p>', date: '09:45 AM', isRead: true
+            },
+            {
+                id: 'inbox_02', folder: 'inbox', senderName: 'Reykjavik Harbor PR', senderEmail: 'press@rha.is', subject: 'PRESS RELEASE: Harbor Expansion', preview: 'FOR IMMEDIATE RELEASE: The Reykjavik Harbor Authority announces phase 2...', body: '<p>FOR IMMEDIATE RELEASE</p><p>The Reykjavik Harbor Authority announces phase 2 of the industrial expansion project, aiming to increase cargo capacity by 40%.</p><p>Please find attached the media kit.</p>', date: '08:30 AM', isRead: false
+            },
+            {
+                id: 'inbox_03', folder: 'inbox', senderName: 'Unknown Sender', senderEmail: 'anon_whistle88@protonmail.com', subject: 'Mayor\'s offshore accounts', preview: 'You should look into the shell company registered in Panama...', body: '<p>You should look into the shell company registered in Panama under the name of his brother-in-law. The public records are obscured but I have the ledger.</p><p>Meet me where we discussed last time. Come alone.</p>', date: 'Yesterday', isRead: true
+            },
+            {
+                id: 'inbox_04', folder: 'inbox', senderName: 'Gudrun Jonsdottir', senderEmail: 'g.jonsdottir@thechronicle.is', subject: 'Coffee at 2?', preview: 'Need to discuss the upcoming election coverage. My sources say...', body: '<p>Hey Sunna,</p><p>Need to discuss the upcoming election coverage. My sources are saying the polls are skewed heavily. Let\'s grab coffee in the breakroom at 2 PM.</p><p>- G</p>', date: 'Yesterday', isRead: true
+            },
+            {
+                id: 'inbox_05', folder: 'inbox', senderName: 'Lögreglan (Police Dept)', senderEmail: 'media@logreglan.is', subject: 'Weekly Press Briefing Schedule', preview: 'Please note the change in scheduling for this week\'s briefings...', body: '<p>Dear Media Representatives,</p><p>Please note the change in scheduling for this week\'s crime and traffic briefings. The Friday briefing is moved to Thursday at 14:00.</p>', date: 'Oct 01', isRead: true
+            },
+            {
+                id: 'inbox_06', folder: 'inbox', senderName: 'IT Support', senderEmail: 'it.admin@thechronicle.is', subject: 'Mandatory Security Update', preview: 'Please restart your workstation before end of day to apply...', body: '<p>All staff,</p><p>Please restart your workstation before end of day to apply the new endpoint security patches. Failure to do so will lock you out of the intranet.</p>', date: 'Sep 30', isRead: true
+            },
+            {
+                id: 'inbox_07', folder: 'inbox', senderName: 'Althingi Press Office', senderEmail: 'press@althingi.is', subject: 'Parliamentary Schedule - Autumn', preview: 'Attached is the finalized schedule for the opening session...', body: '<p>Attached is the finalized schedule for the opening of the autumn session of Parliament. Please ensure your press credentials are up to date.</p>', date: 'Sep 29', isRead: true
+            },
+            {
+                id: 'inbox_08', folder: 'inbox', senderName: 'HR Department', senderEmail: 'hr@thechronicle.is', subject: 'Office Renovations', preview: 'The newsroom will undergo minor renovations starting next weekend...', body: '<p>The newsroom will undergo minor renovations starting next weekend. Please clear your desks of any sensitive materials on Friday afternoon.</p>', date: 'Sep 27', isRead: true
+            },
+
+            // ================= JUNK =================
+            {
+                id: 'junk_01', folder: 'junk', senderName: 'Icelandair Offers', senderEmail: 'offers@newsletter.icelandair.com', subject: 'Last minute flights to Tenerife!', preview: 'Escape the cold! We have heavily discounted fares for the weekend...', body: '<p>Escape the cold! We have heavily discounted fares for the weekend. Book now before they are gone.</p>', date: '02:11 AM', isRead: false
+            },
+            {
+                id: 'junk_02', folder: 'junk', senderName: 'Adobe Creative Cloud', senderEmail: 'billing@adobe.com', subject: 'Your trial is expiring soon', preview: 'Update your payment method to keep access to Photoshop...', body: '<p>Your free trial ends in 2 days. Update your payment method to avoid interruption.</p>', date: 'Yesterday', isRead: false
+            },
+            {
+                id: 'junk_03', folder: 'junk', senderName: 'Domino\'s Pizza', senderEmail: 'promo@dominos.is', subject: '2-for-1 Mega Week!', preview: 'Order any large pizza and get another one absolutely free...', body: '<p>Order any large pizza and get another one absolutely free. Use code MEGA241 at checkout.</p>', date: 'Oct 01', isRead: true
+            },
+            {
+                id: 'junk_04', folder: 'junk', senderName: 'Global Journalism Network', senderEmail: 'digest@gjn.org', subject: 'Top 10 Tools for 2026', preview: 'AI transcription, secure dropboxes, and more tools you need...', body: '<p>Here is our weekly roundup of the best tools for investigative journalism in the modern era.</p>', date: 'Sep 30', isRead: true
+            },
+            {
+                id: 'junk_05', folder: 'junk', senderName: 'Bónus Supermarket', senderEmail: 'tilbod@bonus.is', subject: 'Weekly Specials: Fresh Produce', preview: 'Check out our new weekly specials on fresh Icelandic tomatoes...', body: '<p>Check out our new weekly specials on fresh Icelandic greenhouse tomatoes and cucumbers.</p>', date: 'Sep 28', isRead: true
+            },
+            {
+                id: 'junk_06', folder: 'junk', senderName: 'Medium Daily Digest', senderEmail: 'noreply@medium.com', subject: 'How to write a compelling headline', preview: 'Plus: 5 tips for better investigative reporting...', body: '<p>Your daily personalized digest. Read the latest articles curated just for you.</p>', date: 'Sep 26', isRead: true
+            },
+            {
+                id: 'junk_07', folder: 'junk', senderName: 'LinkedIn', senderEmail: 'invites@linkedin.com', subject: 'You appeared in 14 searches this week', preview: 'See who is looking at your profile and expand your network...', body: '<p>Your profile is getting noticed! Upgrade to Premium to see exactly who is viewing you.</p>', date: 'Sep 24', isRead: true
+            },
+            {
+                id: 'junk_08', folder: 'junk', senderName: 'Grammarly Insights', senderEmail: 'info@grammarly.com', subject: 'Your weekly writing update', preview: 'You were more productive than 85% of users last week...', body: '<p>Great job! You wrote 14,500 words last week with a high accuracy score.</p>', date: 'Sep 21', isRead: true
+            }
+        ];
+
+        // --- 2. RUNTIME STATE ---
+        let currentEmails = [];
+        let currentFolder = 'inbox';
+        let activeEmailId = null;
+        let isMobileReading = false;
+
+        // --- 3. DOM ELEMENTS ---
+        const els = {
+            sidebar: document.getElementById('sidebar'),
+            folderList: document.getElementById('folder-list'),
+            listSection: document.getElementById('list-section'),
+            emailList: document.getElementById('email-list'),
+            readingSection: document.getElementById('reading-section'),
+            folderTitle: document.getElementById('current-folder-title'),
+            folderIcon: document.getElementById('current-folder-icon'),
+            folderCount: document.getElementById('folder-count'),
+            mobileMenuBtn: document.getElementById('mobile-menu-btn'),
+            mobileOverlay: document.getElementById('mobile-overlay'),
+            profileBtn: document.getElementById('profile-btn')
+        };
+
+        // Initialize App
+        function init() {
+            // Perform deep copy for initial load
+            currentEmails = JSON.parse(JSON.stringify(INITIAL_EMAILS));
+            setupEventListeners();
+            renderApp();
+        }
+
+        // Main Render Coordinator
+        function renderApp() {
+            renderSidebar();
+            renderEmailList();
+            renderReadingPane();
+            updateMobileView();
+        }
+
+        // --- RENDER LOGIC ---
+
+        function renderSidebar() {
+            els.folderList.innerHTML = '';
+            
+            FOLDERS.forEach(folder => {
+                const folderMails = currentEmails.filter(e => e.folder === folder.id);
+                const unreadCount = folderMails.filter(e => !e.isRead).length;
+                const isActive = currentFolder === folder.id;
+                
+                const btn = document.createElement('button');
+                btn.className = `w-full flex items-center justify-between px-3 py-2.5 rounded transition-all group ${
+                    isActive ? 'bg-[#1e293b] text-blue-400 font-medium' : 'text-gray-400 hover:bg-[#1a1a1a] hover:text-gray-200'
+                }`;
+                btn.onclick = () => switchFolder(folder.id);
+                
+                btn.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <i class="ph ${folder.icon} text-lg ${isActive ? 'text-blue-500' : 'text-gray-500 group-hover:text-gray-400'} transition-colors"></i>
+                        <span class="text-sm tracking-wide">${folder.name}</span>
+                    </div>
+                    ${unreadCount > 0 ? `<span class="bg-blue-600/20 border border-blue-500/30 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded shadow-sm">${unreadCount}</span>` : ''}
+                `;
+                els.folderList.appendChild(btn);
+            });
+        }
+
+        function switchFolder(folderId) {
+            currentFolder = folderId;
+            activeEmailId = null;
+            isMobileReading = false;
+            
+            // Update Headers
+            const folderDef = FOLDERS.find(f => f.id === folderId);
+            els.folderTitle.innerHTML = `<i class="ph ${folderDef.icon} text-gray-500"></i><span>${folderDef.name}</span>`;
+            
+            // Close mobile menu if open
+            closeMobileMenu();
+            
+            renderApp();
+        }
+
+        function renderEmailList() {
+            els.emailList.innerHTML = '';
+            const folderEmails = currentEmails.filter(e => e.folder === currentFolder);
+            
+            els.folderCount.textContent = `${folderEmails.length} msgs`;
+            
+            if (folderEmails.length === 0) {
+                els.emailList.innerHTML = `
+                    <div class="p-10 flex flex-col items-center justify-center text-gray-600 h-64">
+                        <i class="ph ph-wind text-4xl mb-3 opacity-30"></i>
+                        <p class="text-sm tracking-wider uppercase font-medium">Folder Empty</p>
+                    </div>
+                `;
+                return;
+            }
+
+            folderEmails.forEach(email => {
+                const isActive = activeEmailId === email.id;
+                
+                const row = document.createElement('div');
+                row.className = `email-row relative p-4 border-b border-gray-800/50 cursor-pointer hover:bg-[#151515] group ${isActive ? 'active' : ''} ${!email.isRead ? 'bg-[#0f1115]' : ''}`;
+                row.onclick = () => viewEmail(email.id);
+                
+                const dotHtml = !email.isRead ? `<div class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)] shrink-0 mt-1 mr-3"></div>` : `<div class="w-2 h-2 shrink-0 mr-3"></div>`;
+                const senderColor = !email.isRead ? 'text-gray-100 font-semibold' : 'text-gray-300 font-medium';
+                const subjectColor = !email.isRead ? 'text-blue-400 font-medium' : 'text-gray-400';
+
+                row.innerHTML = `
+                    <div class="flex items-start">
+                        ${dotHtml}
+                        <div class="flex-1 min-w-0 pr-8">
+                            <div class="flex justify-between items-baseline mb-1">
+                                <div class="text-sm truncate ${senderColor}">${email.senderName}</div>
+                                <div class="text-[11px] text-gray-500 whitespace-nowrap ml-2 font-mono shrink-0">${email.date}</div>
+                            </div>
+                            <div class="text-[13px] truncate ${subjectColor} mb-1">${email.subject}</div>
+                            <div class="text-xs text-gray-500 line-clamp-2 leading-relaxed font-serif">${email.preview}</div>
+                        </div>
+                    </div>
+                    <!-- Delete Button overlay -->
+                    <button onclick="deleteEmail('${email.id}', event)" class="absolute right-3 top-4 p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-400/10 rounded opacity-0 group-hover:opacity-100 transition-all focus:outline-none" title="Delete">
+                        <i class="ph ph-trash text-lg"></i>
+                    </button>
+                `;
+                
+                els.emailList.appendChild(row);
+            });
+
+            // Append Load More button
+            const loadContainer = document.createElement('div');
+            loadContainer.className = 'p-6 flex justify-center pb-20';
+            loadContainer.innerHTML = `
+                <button id="load-more-btn" class="px-5 py-2 text-xs font-medium tracking-widest uppercase text-gray-400 bg-gray-900 border border-gray-800 hover:border-gray-600 hover:text-gray-200 rounded transition-all flex items-center space-x-2">
+                    <i class="ph ph-arrows-down"></i>
+                    <span>Load More</span>
+                </button>
+            `;
+            els.emailList.appendChild(loadContainer);
+            document.getElementById('load-more-btn').addEventListener('click', handleLoadMore);
+        }
+
+        function viewEmail(id) {
+            activeEmailId = id;
+            isMobileReading = true;
+            
+            const emailIndex = currentEmails.findIndex(e => e.id === id);
+            if (emailIndex !== -1 && !currentEmails[emailIndex].isRead) {
+                currentEmails[emailIndex].isRead = true;
+            }
+
+            renderSidebar();
+            renderEmailList();
+            renderReadingPane();
+            updateMobileView();
+        }
+
+        function renderReadingPane() {
+            if (!activeEmailId) {
+                els.readingSection.innerHTML = `
+                    <div class="h-full w-full flex items-center justify-center text-gray-700 flex-col bg-[#050505]">
+                        <div class="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center mb-4 border border-gray-800">
+                            <i class="ph ph-envelope-simple text-3xl"></i>
+                        </div>
+                        <p class="text-sm tracking-widest uppercase font-medium">Select a message</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const email = currentEmails.find(e => e.id === activeEmailId);
+            if (!email) return; // Failsafe if deleted while reading
+            
+            els.readingSection.innerHTML = `
+                <!-- Toolbar -->
+                <div class="h-14 shrink-0 border-b border-gray-800 px-4 flex items-center justify-between bg-[#0a0a0a]">
+                    <div class="flex items-center space-x-2">
+                        <button onclick="closeReadingPane()" class="md:hidden p-1.5 text-gray-400 hover:text-white rounded bg-gray-800 mr-2">
+                            <i class="ph ph-arrow-left text-lg"></i>
+                        </button>
+                        <div class="flex space-x-1">
+                            <button class="p-1.5 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded transition-colors" title="Reply"><i class="ph ph-arrow-u-up-left text-lg"></i></button>
+                            <button class="p-1.5 text-gray-400 hover:text-gray-200 hover:bg-gray-800 rounded transition-colors" title="Forward"><i class="ph ph-arrow-u-up-right text-lg"></i></button>
+                        </div>
+                    </div>
+                    <button onclick="deleteEmail('${email.id}', event)" class="p-1.5 text-gray-400 hover:text-red-400 hover:bg-gray-800 rounded transition-colors flex items-center space-x-1 text-sm font-medium pr-3">
+                        <i class="ph ph-trash text-lg"></i>
+                        <span class="hidden sm:inline">Delete</span>
+                    </button>
+                </div>
+                
+                <!-- Email Header with Custom Hover ID Card -->
+                <div class="shrink-0 p-6 md:p-8 border-b border-gray-800 bg-[#080808]">
+                    <h1 class="text-2xl md:text-3xl font-semibold text-gray-100 mb-6 tracking-tight font-serif">${email.subject}</h1>
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center space-x-4">
+                            <!-- Avatar container with ID Card Hover logic -->
+                            <div class="relative group cursor-pointer inline-block">
+                                <div class="w-12 h-12 rounded bg-[#1e293b] flex items-center justify-center text-blue-400 font-bold border border-[#334155] shadow-inner text-lg transition-transform group-hover:scale-105">
+                                    ${email.senderName.charAt(0).toUpperCase()}
+                                </div>
+                                
+                                <!-- ID Card Popover -->
+                                <div class="absolute left-0 top-14 mt-2 w-72 bg-[#111827] border border-gray-700 rounded-lg shadow-[0_10px_40px_rgba(0,0,0,0.5)] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-4 transform translate-y-2 group-hover:translate-y-0">
+                                    <div class="flex items-center space-x-4 border-b border-gray-800 pb-3 mb-3">
+                                        <div class="w-14 h-14 rounded bg-[#1e293b] flex items-center justify-center text-blue-400 font-bold border border-[#334155] text-xl shrink-0">
+                                            ${email.senderName.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <div class="text-lg font-semibold text-gray-100 truncate">${email.senderName}</div>
+                                            <div class="text-[10px] text-gray-500 uppercase tracking-widest mt-0.5">Verified Sender</div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-black/50 rounded p-2 border border-gray-800/50">
+                                        <div class="text-[11px] text-gray-500 mb-1">Email Address:</div>
+                                        <div class="text-sm text-blue-400 font-mono break-all">${email.senderEmail}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="text-base font-medium text-gray-200">${email.senderName}</div>
+                                <div class="text-xs text-gray-500 font-mono mt-0.5">&lt;${email.senderEmail}&gt;</div>
+                            </div>
+                        </div>
+                        <div class="text-xs text-gray-500 font-mono text-right hidden sm:block">
+                            ${email.date}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Email Body -->
+                <div class="flex-1 overflow-y-auto p-6 md:p-10 bg-[#050505]">
+                    <div class="max-w-3xl prose prose-invert prose-p:text-gray-300 prose-p:leading-relaxed prose-p:font-serif text-[15px] md:text-base">
+                        ${email.body}
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ACTION FUNCTIONS ---
+
+        function deleteEmail(id, event) {
+            if (event) event.stopPropagation();
+            
+            // Move email to trash instead of completely removing
+            const email = currentEmails.find(e => e.id === id);
+            if (email) {
+                email.folder = 'trash';
+            }
+            
+            // If the deleted email is currently being read, close it
+            if (activeEmailId === id) {
+                activeEmailId = null;
+                isMobileReading = false;
+                renderReadingPane();
+                updateMobileView();
+            }
+            
+            // Re-render
+            renderSidebar();
+            renderEmailList();
+        }
+
+        // The Crucial Reset Function
+        function resetTake() {
+            // 1. Deep copy original data to restore deleted items
+            currentEmails = JSON.parse(JSON.stringify(INITIAL_EMAILS));
+            
+            // 2. Reset active states
+            currentFolder = 'inbox';
+            activeEmailId = null;
+            isMobileReading = false;
+            
+            // 3. Update UI Headers
+            const folderDef = FOLDERS.find(f => f.id === 'inbox');
+            els.folderTitle.innerHTML = `<i class="ph ${folderDef.icon} text-gray-500"></i><span>${folderDef.name}</span>`;
+            
+            // 4. Re-render everything
+            renderApp();
+            
+            // 5. Visual feedback on profile button (brief flash)
+            els.profileBtn.classList.add('bg-green-600/30', 'border-green-500');
+            setTimeout(() => { 
+                els.profileBtn.classList.remove('bg-green-600/30', 'border-green-500'); 
+            }, 600);
+        }
+
+        function handleLoadMore() {
+            const btn = document.getElementById('load-more-btn');
+            const icon = btn.querySelector('i');
+            
+            icon.classList.remove('ph-arrows-down');
+            icon.classList.add('ph-spinner', 'animate-spin');
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                const stamp = Date.now();
+                const newMails = [
+                    {
+                        id: `gen_${stamp}_1`, folder: currentFolder, senderName: 'Auto Archiver', senderEmail: 'sys@thechronicle.is', subject: 'Archived Message Notice', preview: 'An older message has been securely archived based on retention policy.', body: '<p>System automated archive event completed.</p>', date: 'Older', isRead: true
+                    },
+                    {
+                        id: `gen_${stamp}_2`, folder: currentFolder, senderName: 'Server Admin', senderEmail: 'noreply@thechronicle.is', subject: 'Storage Quota Report', preview: 'Your current mailbox size is within standard operating parameters.', body: '<p>You have used 42% of your allocated 50GB storage.</p>', date: 'Older', isRead: true
+                    }
+                ];
+                
+                currentEmails.push(...newMails);
+                
+                renderSidebar();
+                renderEmailList();
+            }, 600);
+        }
+
+        // --- RESPONSIVE / MOBILE LOGIC ---
+
+        function updateMobileView() {
+            const isMobile = window.innerWidth < 768; // md breakpoint
+            
+            if (isMobile) {
+                if (isMobileReading) {
+                    els.listSection.classList.add('hidden');
+                    els.readingSection.classList.remove('hidden');
+                    els.readingSection.classList.add('flex');
+                } else {
+                    els.listSection.classList.remove('hidden');
+                    els.readingSection.classList.add('hidden');
+                    els.readingSection.classList.remove('flex');
+                }
+            } else {
+                // Desktop: reset all
+                els.listSection.classList.remove('hidden');
+                els.readingSection.classList.remove('hidden');
+                els.readingSection.classList.add('flex');
+            }
+        }
+
+        function closeReadingPane() {
+            isMobileReading = false;
+            activeEmailId = null; // optional: deselect
+            updateMobileView();
+            renderEmailList(); // to remove active highlight
+            renderReadingPane();
+        }
+
+        function openMobileMenu() {
+            els.sidebar.classList.remove('-translate-x-full');
+            els.mobileOverlay.classList.remove('hidden');
+            // small timeout for transition
+            setTimeout(() => els.mobileOverlay.classList.remove('opacity-0'), 10);
+        }
+
+        function closeMobileMenu() {
+            els.sidebar.classList.add('-translate-x-full');
+            els.mobileOverlay.classList.add('opacity-0');
+            setTimeout(() => els.mobileOverlay.classList.add('hidden'), 300);
+        }
+
+        function setupEventListeners() {
+            // Mobile Menu
+            els.mobileMenuBtn.addEventListener('click', openMobileMenu);
+            els.mobileOverlay.addEventListener('click', closeMobileMenu);
+            
+            window.addEventListener('resize', updateMobileView);
+        }
+
+        // Boot
+        window.onload = init;
+    </script>
+</body>
+</html>
