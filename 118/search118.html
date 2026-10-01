@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mani Search Prop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom Scrollbar for Dark Mode */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111827; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151; 
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4B5563; 
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans h-screen overflow-hidden flex flex-col selection:bg-teal-500 selection:text-white">
+
+    <!-- TOP NAVIGATION (Visible on both screens) -->
+    <nav class="w-full flex items-center justify-between p-4 px-6 absolute top-0 left-0 z-50 pointer-events-none">
+        <div class="flex items-center space-x-4">
+            <!-- Top Left: Empty for balance -->
+        </div>
+        <div class="flex items-center space-x-6 pointer-events-auto">
+            <!-- Settings Icon -->
+            <svg class="w-6 h-6 text-gray-400 cursor-pointer hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            
+            <!-- 9-Dot Menu Icon (Mathematically spaced) -->
+            <svg class="w-6 h-6 text-gray-400 cursor-pointer hover:text-white" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="5" cy="5" r="2"/>
+                <circle cx="12" cy="5" r="2"/>
+                <circle cx="19" cy="5" r="2"/>
+                <circle cx="5" cy="12" r="2"/>
+                <circle cx="12" cy="12" r="2"/>
+                <circle cx="19" cy="12" r="2"/>
+                <circle cx="5" cy="19" r="2"/>
+                <circle cx="12" cy="19" r="2"/>
+                <circle cx="19" cy="19" r="2"/>
+            </svg>
+
+            <!-- Reset Scene Button (Mani's Avatar) -->
+            <button onclick="resetScene()" class="w-10 h-10 rounded-full bg-teal-600 flex items-center justify-center text-white font-bold text-xl hover:bg-teal-500 transition-colors shadow-lg" title="Click to Reset Scene">
+                M
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: HOME PAGE (Search Bar Only)      -->
+    <!-- ========================================== -->
+    <div id="home-screen" class="flex-1 flex flex-col items-center justify-center relative transition-opacity duration-300">
+        <!-- 4-Dot Square Logo -->
+        <div class="grid grid-cols-2 gap-2 mb-8 w-14 h-14">
+            <div class="w-full h-full rounded-full bg-blue-500"></div>
+            <div class="w-full h-full rounded-full bg-red-500"></div>
+            <div class="w-full h-full rounded-full bg-yellow-500"></div>
+            <div class="w-full h-full rounded-full bg-green-500"></div>
+        </div>
+        
+        <!-- Big Search Bar -->
+        <div class="w-full max-w-2xl relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            </div>
+            <input type="text" id="home-search-input" 
+                class="w-full bg-gray-800 border border-gray-700 text-white text-lg rounded-full py-4 pl-12 pr-12 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 shadow-lg transition-all"
+                autocomplete="off" spellcheck="false" autofocus>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: RESULTS PAGE                     -->
+    <!-- ========================================== -->
+    <div id="results-screen" class="hidden flex-1 flex flex-col h-full opacity-0 transition-opacity duration-300 overflow-hidden">
+        
+        <!-- Top Search Bar (Compact) -->
+        <div class="w-full border-b border-gray-800 bg-gray-900 pb-4 pt-16 px-6 shadow-md flex items-center shrink-0">
+            <!-- Mini Square Logo -->
+            <div class="grid grid-cols-2 gap-1 mr-8 w-7 h-7 shrink-0 cursor-pointer" onclick="resetScene()">
+                <div class="w-full h-full rounded-full bg-blue-500"></div>
+                <div class="w-full h-full rounded-full bg-red-500"></div>
+                <div class="w-full h-full rounded-full bg-yellow-500"></div>
+                <div class="w-full h-full rounded-full bg-green-500"></div>
+            </div>
+            
+            <div class="flex-1 max-w-2xl relative">
+                <input type="text" id="results-search-input" 
+                    class="w-full bg-gray-800 border border-gray-700 text-white text-base rounded-full py-3 pl-5 pr-12 focus:outline-none focus:border-gray-500 focus:ring-1 focus:ring-gray-500 transition-all shadow-inner"
+                    autocomplete="off" spellcheck="false">
+                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- Layout Wrapper -->
+        <div class="flex-1 overflow-y-auto overflow-x-hidden relative">
+            <div class="max-w-6xl mx-auto flex py-6 px-4">
+                
+                <!-- Spacer for Centering -->
+                <div class="hidden lg:block w-48 shrink-0"></div>
+
+                <!-- MAIN RESULTS COLUMN (Centered) -->
+                <div class="flex-1 max-w-2xl min-w-0 pr-8">
+                    
+                    <!-- ========================================== -->
+                    <!-- STAGE 1: "Too many hits" generic assaults  -->
+                    <!-- ========================================== -->
+                    <div id="stage-1-results">
+                        <!-- 📝 📝 📝 EDIT NUMBER OF RESULTS SHOWN BELOW 📝 📝 📝 -->
+                        <p class="text-gray-400 text-sm mb-6">About 4,280,000 results (0.34 seconds)</p>
+                        
+                        <!-- RESULT 1 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT SOURCE/URL BELOW 📝 📝 📝 -->
+                            <span class="text-sm text-gray-400 block mb-1">Police Log • Capital Area</span>
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Suspect detained after late-night assault in downtown Reykjavík</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">An unidentified man in black clothing was apprehended by authorities following a physical altercation near Austurvöllur square. Minor injuries reported...</p>
+                        </div>
+                        
+                        <!-- RESULT 2 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT SOURCE/URL BELOW 📝 📝 📝 -->
+                            <span class="text-sm text-gray-400 block mb-1">Local News • Kopavogur</span>
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Witnesses report unprovoked attack by individual wearing dark clothing</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Capital area police are seeking information regarding an assault outside a local convenience store. The assailant fled the scene on foot...</p>
+                        </div>
+                        
+                        <!-- RESULT 3 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT SOURCE/URL BELOW 📝 📝 📝 -->
+                            <span class="text-sm text-gray-400 block mb-1">Security Alert • Hafnarfjörður</span>
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Warning: Series of muggings reported in residential area</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Residents are advised to remain vigilant after three separate attacks were reported over the weekend. Suspect described as a tall man in black gear...</p>
+                        </div>
+
+                        <!-- RESULT 4 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT SOURCE/URL BELOW 📝 📝 📝 -->
+                            <span class="text-sm text-gray-400 block mb-1">News Daily • Crime Section</span>
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Assault charges filed following nightclub dispute</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">A man wearing black tactical clothing was involved in a severe attack on a patron. Capital area emergency services responded quickly...</p>
+                        </div>
+
+                        <!-- RESULT 5 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT SOURCE/URL BELOW 📝 📝 📝 -->
+                            <span class="text-sm text-gray-400 block mb-1">Police Report • Garðabær</span>
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Investigation open into violent altercation in parking garage</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">CCTV footage shows a man in black attacking a commuter. Authorities are asking anyone in the capital area with information to come forward...</p>
+                        </div>
+
+                        <!-- RESULT 6 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT SOURCE/URL BELOW 📝 📝 📝 -->
+                            <span class="text-sm text-gray-400 block mb-1">City Forum • Safety</span>
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Has anyone else noticed an uptick in attacks lately?</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Just heard about another assault in the capital area. Apparently a man in black clothing is targeting people walking alone at night...</p>
+                        </div>
+
+                        <!-- RESULT 7 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Capital area assault suspect still at large</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Police are widening their search perimeter after a man in black attacked a pedestrian...</p>
+                        </div>
+                        
+                        <!-- RESULT 8 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Two hospitalized after unprovoked attack</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Incident occurred in the capital area. Suspect described as male, heavily built, wearing all black...</p>
+                        </div>
+                        
+                        <!-- RESULT 9 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Neighborhood watch issued for capital area</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Following a string of violent attacks by a man in black, local authorities are increasing patrols...</p>
+                        </div>
+                        
+                        <!-- RESULT 10 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Suspected gang-related assault under investigation</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Man in black tactical gear fled the scene after attacking a group in the capital area...</p>
+                        </div>
+                        
+                        <!-- RESULT 11 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Arrest made in capital area assault case</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Authorities detained a man matching the description of the "man in black" attacks...</p>
+                        </div>
+                        
+                        <!-- RESULT 12 -->
+                        <div class="mb-5">
+                            <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                            <h3 class="text-xl text-blue-400 font-medium">Witness plea regarding weekend assault</h3>
+                            <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW 📝 📝 📝 -->
+                            <p class="text-gray-300 mt-1">Did you see a man in black running near the harbor? Capital area police need your help...</p>
+                        </div>
+
+                        <!-- Show More Button -->
+                        <div class="mt-8 mb-12 text-center">
+                            <button class="bg-gray-800 hover:bg-gray-700 text-gray-300 py-3 px-8 rounded-full border border-gray-600 transition-colors font-medium w-full max-w-sm">
+                                Show more results
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ========================================== -->
+                    <!-- STAGE 2: Scripted results with staples warning -->
+                    <!-- ========================================== -->
+                    <div id="stage-2-results" class="hidden">
+                        
+                        <!-- Global Missing Warning -->
+                        <div class="mb-6 text-base flex items-center space-x-2">
+                            <!-- 📝 📝 📝 EDIT MISSING KEYWORD BELOW 📝 📝 📝 -->
+                            <span class="text-red-500 line-through">staples</span>
+                            <span class="text-gray-600">|</span>
+                            <!-- 📝 📝 📝 EDIT WARNING TEXT BELOW 📝 📝 📝 -->
+                            <span class="text-gray-400">Missing: staples</span>
+                            <!-- 📝 📝 📝 EDIT CLICKABLE WARNING TEXT BELOW 📝 📝 📝 -->
+                            <span class="text-blue-400 cursor-pointer hover:underline">Show results with: staples</span>
+                        </div>
+                        
+                        <!-- 📝 📝 📝 EDIT RESULTS COUNT BELOW 📝 📝 📝 -->
+                        <p class="text-gray-400 text-sm mb-6">3 results found</p>
+
+                        <!-- SCRIPTED RESULT 1 -->
+                        <div class="mb-8 p-5 bg-gray-800 border border-gray-700 rounded-lg shadow-sm hover:border-gray-500 transition-colors">
+                            <div class="flex items-start">
+                                <div class="w-16 h-16 bg-gray-700 rounded-md shrink-0 mr-4 overflow-hidden border border-gray-600">
+                                    <!-- 🎬 🎬 🎬 REPLACE IMAGE LINK HERE: Ensure image is in assets/ folder 🎬 🎬 🎬 -->
+                                    <img src="assets/kjalarnes-photo.jpg" alt="Facebook Photo" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                                    <h3 class="text-xl text-blue-400 font-medium">Incident Report • 28 April</h3>
+                                    
+                                    <!-- 📝 📝 📝 EDIT SUBTITLE/LOCATION BELOW 📝 📝 📝 -->
+                                    <span class="text-sm text-gray-400 block mb-2">Location: Kjalarnes</span>
+                                    
+                                    <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW. (Leave the <span class="..."> wrapped around "Bat." so it stays bright white!) 📝 📝 📝 -->
+                                    <p class="text-gray-200">Known felon. Van destroyed. <span class="font-bold text-white text-lg">Bat.</span></p>
+
+                                    <!-- Individual Missing Staples Warning -->
+                                    <div class="mt-3 text-sm flex items-center space-x-2">
+                                        <span class="text-red-500 line-through">staples</span>
+                                        <span class="text-gray-600">|</span>
+                                        <span class="text-gray-400">Missing: staples</span>
+                                        <span class="text-blue-400 cursor-pointer hover:underline">Show results with: staples</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCRIPTED RESULT 2 -->
+                        <div class="mb-8 p-5 bg-gray-800 border border-gray-700 rounded-lg shadow-sm hover:border-gray-500 transition-colors">
+                            <div class="flex items-start">
+                                <div class="w-16 h-16 bg-gray-700 rounded-md shrink-0 mr-4 overflow-hidden border border-gray-600">
+                                    <!-- 🎬 🎬 🎬 REPLACE IMAGE LINK HERE: Ensure image is in assets/ folder 🎬 🎬 🎬 -->
+                                    <img src="assets/mikael-photo.jpg" alt="Mikael National Team" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                                    <h3 class="text-xl text-blue-400 font-medium">Assault Case • 27 July</h3>
+                                    
+                                    <!-- 📝 📝 📝 EDIT SUBTITLE/VICTIM BELOW 📝 📝 📝 -->
+                                    <span class="text-sm text-gray-400 block mb-2">Victim: Mikael Arason</span>
+                                    
+                                    <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW. (Leave the <span class="..."> wrapped around "BAT." so it stays bright white!) 📝 📝 📝 -->
+                                    <p class="text-gray-200">Severe beating. Car Destroyed. <span class="font-bold text-white text-lg">BAT.</span></p>
+
+                                    <!-- Individual Missing Staples Warning -->
+                                    <div class="mt-3 text-sm flex items-center space-x-2">
+                                        <span class="text-red-500 line-through">staples</span>
+                                        <span class="text-gray-600">|</span>
+                                        <span class="text-gray-400">Missing: staples</span>
+                                        <span class="text-blue-400 cursor-pointer hover:underline">Show results with: staples</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SCRIPTED RESULT 3 -->
+                        <div class="mb-8 p-5 bg-gray-800 border border-gray-700 rounded-lg shadow-sm hover:border-gray-500 transition-colors">
+                            <div class="flex items-start">
+                                <div class="w-16 h-16 bg-gray-700 rounded-md shrink-0 mr-4 overflow-hidden border border-gray-600">
+                                    <!-- 🎬 🎬 🎬 REPLACE IMAGE LINK HERE: Ensure image is in assets/ folder 🎬 🎬 🎬 -->
+                                    <img src="assets/ulfar-photo.jpg" alt="Facebook Photo" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <!-- 📝 📝 📝 EDIT HEADLINE BELOW 📝 📝 📝 -->
+                                    <h3 class="text-xl text-blue-400 font-medium">Medical Report / Police File • 26 August</h3>
+                                    
+                                    <!-- 📝 📝 📝 EDIT SUBTITLE/VICTIM BELOW 📝 📝 📝 -->
+                                    <span class="text-sm text-gray-400 block mb-2">Victim: Ulfar Andresson</span>
+                                    
+                                    <!-- 📝 📝 📝 EDIT ARTICLE TEXT BELOW. (Leave the <span class="..."> wrapped around "BAT." so it stays bright white!) 📝 📝 📝 -->
+                                    <p class="text-gray-200">ICU. Bike destroyed. <span class="font-bold text-white text-lg">BAT.</span></p>
+
+                                    <!-- Individual Missing Staples Warning -->
+                                    <div class="mt-3 text-sm flex items-center space-x-2">
+                                        <span class="text-red-500 line-through">staples</span>
+                                        <span class="text-gray-600">|</span>
+                                        <span class="text-gray-400">Missing: staples</span>
+                                        <span class="text-blue-400 cursor-pointer hover:underline">Show results with: staples</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- STAGE 2 FOOTER -->
+                        <div class="mt-12 pt-8 border-t border-gray-700 text-center pb-24">
+                            <!-- 📝 📝 📝 EDIT FOOTER DISCLAIMER BELOW 📝 📝 📝 -->
+                            <p class="text-gray-400 italic mb-4">End of results matching your request - Further results might not be what you are looking for.</p>
+                            <!-- 📝 📝 📝 EDIT FOOTER BUTTON TEXT BELOW 📝 📝 📝 -->
+                            <button class="bg-teal-700 hover:bg-teal-600 text-white py-2 px-6 rounded-md font-medium transition-colors">
+                                Show Anyways
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDEBAR (Ads/Related) -->
+                <div class="hidden lg:block w-64 shrink-0 pl-6 border-l border-gray-800">
+                    <span class="text-xs text-gray-500 uppercase tracking-wider block mb-4">Sponsored</span>
+                    
+                    <div class="mb-6 group cursor-pointer">
+                        <!-- 📝 📝 📝 EDIT AD HEADLINE BELOW 📝 📝 📝 -->
+                        <h4 class="text-blue-400 group-hover:underline font-medium text-sm">Capital Area Legal Defense</h4>
+                        <!-- 📝 📝 📝 EDIT AD URL BELOW 📝 📝 📝 -->
+                        <span class="text-xs text-green-500 block mb-1">www.reykjavik-defense.is</span>
+                        <!-- 📝 📝 📝 EDIT AD TEXT BELOW 📝 📝 📝 -->
+                        <p class="text-gray-400 text-xs">Facing assault charges? Expert criminal defense lawyers available 24/7.</p>
+                    </div>
+
+                    <div class="mb-6 group cursor-pointer">
+                        <!-- 📝 📝 📝 EDIT AD HEADLINE BELOW 📝 📝 📝 -->
+                        <h4 class="text-blue-400 group-hover:underline font-medium text-sm">Personal Security Systems</h4>
+                        <!-- 📝 📝 📝 EDIT AD URL BELOW 📝 📝 📝 -->
+                        <span class="text-xs text-green-500 block mb-1">www.secure-home.is</span>
+                        <!-- 📝 📝 📝 EDIT AD TEXT BELOW 📝 📝 📝 -->
+                        <p class="text-gray-400 text-xs">Protect your home and vehicle in the capital area. Free consultation.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT: TWO-STAGE TYPING LOCK          -->
+    <!-- ========================================== -->
+    <script>
+        // The two scripted queries
+        const query1 = "man in black - attack - capital area";
+        const query2Append = " baseball bat staples"; // What Mani adds on the second pass
+        const fullQuery = query1 + query2Append;
+        
+        let typeIndex = 0;
+        let currentStage = 0; // 0 = Home, 1 = Stage 1 Results, 2 = Stage 2 Results
+        
+        const homeInput = document.getElementById('home-search-input');
+        const resultsInput = document.getElementById('results-search-input');
+        
+        const homeScreen = document.getElementById('home-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const stage1Content = document.getElementById('stage-1-results');
+        const stage2Content = document.getElementById('stage-2-results');
+
+        // Function to handle the fake typing effect on ANY keystroke
+        function handleTyping(e, targetInput) {
+            // Ignore system keys
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+            
+            // Backspace deletes a character
+            if (e.key === 'Backspace') {
+                e.preventDefault();
+                typeIndex = Math.max(0, typeIndex - 1);
+                targetInput.value = fullQuery.substring(0, typeIndex);
+                return;
+            }
+
+            // Normal typing (only accept single character keys)
+            if (e.key.length === 1) {
+                e.preventDefault();
+                
+                // Advance typing index
+                typeIndex = Math.min(fullQuery.length, typeIndex + 1);
+                targetInput.value = fullQuery.substring(0, typeIndex);
+
+                // AUTO-TRIGGER LOGIC STAGE 1
+                if (currentStage === 0 && typeIndex === query1.length) {
+                    targetInput.blur(); // Remove focus
+                    setTimeout(() => transitionToStage1(), 200); // Tiny pause for realism
+                }
+                
+                // AUTO-TRIGGER LOGIC STAGE 2
+                if (currentStage === 1 && typeIndex === fullQuery.length) {
+                    targetInput.blur(); // Remove focus
+                    setTimeout(() => transitionToStage2(), 200); // Tiny pause for realism
+                }
+            }
+        }
+
+        // Screen transition logic
+        function transitionToStage1() {
+            currentStage = 1;
+            
+            // Sync text to top bar
+            resultsInput.value = query1;
+            
+            // Fade out home, fade in results
+            homeScreen.classList.add('opacity-0');
+            setTimeout(() => {
+                homeScreen.classList.add('hidden');
+                homeScreen.classList.remove('flex');
+                
+                resultsScreen.classList.remove('hidden');
+                // Trigger reflow
+                void resultsScreen.offsetWidth;
+                resultsScreen.classList.remove('opacity-0');
+                
+                // Reset scroll
+                document.querySelector('.overflow-y-auto').scrollTop = 0;
+            }, 300);
+        }
+
+        function transitionToStage2() {
+            currentStage = 2;
+            
+            // Hide stage 1 content, show stage 2 content
+            stage1Content.classList.add('hidden');
+            stage2Content.classList.remove('hidden');
+            
+            // Reset scroll to top of new results
+            document.querySelector('.overflow-y-auto').scrollTop = 0;
+        }
+
+        // Attach event listeners
+        homeInput.addEventListener('keydown', (e) => handleTyping(e, homeInput));
+        resultsInput.addEventListener('keydown', (e) => handleTyping(e, resultsInput));
+
+        // Click on the big search bar keeps focus
+        homeScreen.addEventListener('click', () => {
+            if (currentStage === 0) homeInput.focus();
+        });
+
+        // ==========================================
+        // RESET FUNCTION (Click the Teal 'M')
+        // ==========================================
+        function resetScene() {
+            typeIndex = 0;
+            currentStage = 0;
+            
+            homeInput.value = "";
+            resultsInput.value = "";
+            
+            // Hide Stage 2, Show Stage 1
+            stage2Content.classList.add('hidden');
+            stage1Content.classList.remove('hidden');
+
+            // Hide Results Screen, Show Home Screen
+            resultsScreen.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                resultsScreen.classList.add('hidden');
+                
+                homeScreen.classList.remove('hidden');
+                homeScreen.classList.add('flex');
+                
+                // Trigger reflow
+                void homeScreen.offsetWidth;
+                homeScreen.classList.remove('opacity-0');
+                
+                homeInput.focus();
+            }, 300);
+        }
+
+        // Start with focus on home input
+        window.onload = () => {
+            homeInput.focus();
+        };
+    </script>
+</body>
+</html>
