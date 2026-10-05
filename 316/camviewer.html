@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Street Cams Viewer</title>
+    <title>Cam Viewer</title>
     
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -327,6 +327,119 @@
             75% { opacity: 0.5; transform: translate(-1px,-1px); }
         }
 
+        /* Modal / Expanded Video UI */
+        .video-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            z-index: 2000; /* Above Leaflet controls */
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-modal-container {
+            width: 80vw;
+            max-width: 1000px;
+            height: 70vh;
+            background: var(--ui-bg);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: 4px solid var(--alert-color);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 1), 0 0 15px var(--ui-glow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--alert-color);
+            background: rgba(0,0,0,0.5);
+        }
+
+        .close-modal-btn {
+            background: none;
+            border: 1px solid var(--alert-color);
+            color: var(--alert-color);
+            font-family: 'Share Tech Mono', monospace;
+            cursor: pointer;
+            padding: 2px 8px;
+            transition: all 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            background: var(--alert-color);
+            color: #000;
+        }
+
+        .modal-body {
+            display: flex;
+            flex: 1;
+            height: calc(100% - 45px);
+        }
+
+        .modal-video-wrapper {
+            flex: 3;
+            background: #000;
+            position: relative;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .modal-context-menu {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(10,10,10,0.9);
+            overflow-y: auto;
+        }
+
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--ui-color);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 12px 10px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .menu-btn:hover {
+            background: var(--ui-color);
+            color: #000;
+            box-shadow: 0 0 10px var(--ui-glow);
+        }
+
+        .enlarge-btn {
+            position: absolute;
+            top: 5px; right: 5px;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid var(--ui-color);
+            color: var(--ui-color);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            cursor: pointer;
+            z-index: 10;
+            display: none; /* Shown via JS when video connects */
+        }
+        
+        .enlarge-btn:hover {
+            background: var(--ui-color);
+            color: #000;
+        }
+
         /* Mobile adjustments */
         @media (max-width: 600px) {
             .terminal-window {
@@ -339,6 +452,15 @@
             .crosshair {
                 width: 60vw;
                 height: 60vw;
+            }
+            .modal-body {
+                flex-direction: column;
+            }
+            .modal-video-wrapper {
+                flex: 1;
+                min-height: 200px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
             }
         }
     </style>
@@ -356,6 +478,29 @@
     <div class="terminal-window" id="terminal">
         <div id="terminal-content"></div>
         <div><span class="blinking-cursor"></span></div>
+    </div>
+
+    <!-- Expanded Video Modal HUD -->
+    <div id="video-modal" class="video-modal-overlay">
+        <div class="video-modal-container">
+            <div class="modal-header">
+                <span id="modal-title">UPLINK ESTABLISHED</span>
+                <button class="close-modal-btn" onclick="closeVideoModal()">[ CLOSE ]</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-video-wrapper" class="modal-video-wrapper">
+                    <!-- Video injected here via JS -->
+                </div>
+                <div class="modal-context-menu">
+                    <div style="color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 5px;">TACTICAL OPTIONS</div>
+                    <button class="menu-btn" onclick="handleMenuAction('ARCHIVES')">> ACCESS ARCHIVES</button>
+                    <button class="menu-btn" onclick="handleMenuAction('DOWNLOAD')">> DOWNLOAD FEED</button>
+                    <button class="menu-btn" onclick="handleMenuAction('FACIAL_REC')">> RUN FACIAL REC</button>
+                    <button class="menu-btn" onclick="handleMenuAction('ENHANCE')">> ENHANCE AUDIO</button>
+                    <button class="menu-btn" onclick="handleMenuAction('TRACE')">> TRACE SIGNAL</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Map Container -->
@@ -383,11 +528,12 @@
         // =========================================================================
         // ⬇️⬇️⬇️ ADD YOUR CUSTOM VIDEO LINKS HERE ⬇️⬇️⬇️
         // =========================================================================
-        // Instructions: Add the camera ID as the key, and your video .mp4 URL as the value.
+        // Instructions: Add the camera ID as the key, and your video URL as the value.
+        // You can use standard .mp4 links OR YouTube embed links!
         // If a camera ID is NOT in this list, it will play the default "SIGNAL LOST" animation.
         const videoFeeds = {
-            "CAM_001": "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", // Example Camera 1
-            "CAM_015": "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",       // Example Camera 15
+            "CAM_001": "https://www.youtube.com/embed/tYgGEC-ESTw?autoplay=1&mute=1&controls=0&modestbranding=1", // YouTube Example
+            "CAM_015": "https://www.w3schools.com/html/mov_bbb.mp4", // Direct MP4 Example
             // "CAM_042": "https://your-website.com/your-custom-video.mp4",                        // <--- Copy this format to add more
         };
         // =========================================================================
@@ -461,8 +607,11 @@
                 </div>
                 <button class="watch-live-btn" id="btn-${camId}" onclick="initiateLiveFeed('${camId}')">WATCH LIVE</button>
                 <div class="video-feed" id="vid-${camId}">
-                    <div class="tv-static"></div>
-                    <div class="video-status" id="vid-text-${camId}">CONNECTING...</div>
+                    <div id="vid-container-${camId}" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+                        <div class="tv-static"></div>
+                        <div class="video-status" id="vid-text-${camId}">CONNECTING...</div>
+                    </div>
+                    <button class="enlarge-btn" id="enlarge-${camId}" onclick="expandVideo('${camId}')">[+] ENLARGE</button>
                 </div>
             `;
 
@@ -512,7 +661,9 @@
         window.initiateLiveFeed = function(camId) {
             const btn = document.getElementById('btn-' + camId);
             const vid = document.getElementById('vid-' + camId);
+            const vidContainer = document.getElementById('vid-container-' + camId);
             const text = document.getElementById('vid-text-' + camId);
+            const enlargeBtn = document.getElementById('enlarge-' + camId);
 
             if(btn) btn.style.display = 'none';
             if(vid) vid.style.display = 'block';
@@ -523,7 +674,14 @@
             if (videoFeeds[camId]) {
                 setTimeout(() => {
                     addTerminalLine("> ENCRYPTION BYPASSED. STREAM LIVE.");
-                    vid.innerHTML = `<video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:5;"><source src="${videoFeeds[camId]}" type="video/mp4"></video>`;
+                    if(enlargeBtn) enlargeBtn.style.display = 'block'; // Reveal Enlarge Button
+                    const feedUrl = videoFeeds[camId];
+                    // Smart detection: Use iframe for YouTube, <video> for direct MP4 files
+                    if (feedUrl.includes("youtube.com") || feedUrl.includes("youtu.be")) {
+                        vidContainer.innerHTML = `<iframe width="100%" height="100%" src="${feedUrl}" title="Live Feed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position: absolute; top: 0; left: 0; z-index: 5; border: none;"></iframe>`;
+                    } else {
+                        vidContainer.innerHTML = `<video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:5;"><source src="${feedUrl}" type="video/mp4"></video>`;
+                    }
                 }, 1200);
             } else {
                 // Default cinematic failure animation for unconfigured cameras
@@ -576,6 +734,65 @@
 
         // Start boot sequence shortly after load
         setTimeout(runBootSequence, 800);
+
+        // --- NEW MODAL FUNCTIONS ---
+        window.expandVideo = function(camId) {
+            const modal = document.getElementById('video-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalVideoWrapper = document.getElementById('modal-video-wrapper');
+            const feedUrl = videoFeeds[camId];
+
+            if (!feedUrl) return; // Prevent expanding if no feed exists
+
+            modalTitle.textContent = `${camId} - HIGH RES UPLINK`;
+            
+            // Inject the appropriate video format into the modal overlay
+            if (feedUrl.includes("youtube.com") || feedUrl.includes("youtu.be")) {
+                modalVideoWrapper.innerHTML = `<iframe width="100%" height="100%" src="${feedUrl}" title="Live Feed" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position: absolute; top: 0; left: 0; border: none;"></iframe>`;
+            } else {
+                modalVideoWrapper.innerHTML = `<video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0;"><source src="${feedUrl}" type="video/mp4"></video>`;
+            }
+            
+            modal.style.display = 'flex';
+            addTerminalLine(`> DEPLOYING TACTICAL HUD FOR ${camId}`);
+        };
+
+        window.closeVideoModal = function() {
+            const modal = document.getElementById('video-modal');
+            const modalVideoWrapper = document.getElementById('modal-video-wrapper');
+            
+            modal.style.display = 'none';
+            modalVideoWrapper.innerHTML = ''; // Destroy video element to stop playback in background
+            addTerminalLine("> HUD UPLINK SEVERED.");
+        };
+
+        // Contextual menu actions that write directly to the terminal
+        window.handleMenuAction = function(action) {
+            switch(action) {
+                case 'ARCHIVES':
+                    addTerminalLine("> SEARCHING SERVER FRAGMENTS...");
+                    setTimeout(() => addTerminalLine("> ERROR: ARCHIVE CORRUPTED / ENCRYPTED"), 800);
+                    break;
+                case 'DOWNLOAD':
+                    addTerminalLine("> INIT LOCAL DOWNLOAD...");
+                    setTimeout(() => addTerminalLine("> 28% ... 64% ... 100%"), 600);
+                    setTimeout(() => addTerminalLine("> FEED SECURED TO LOCAL DRIVE"), 1200);
+                    break;
+                case 'FACIAL_REC':
+                    addTerminalLine("> SCANNING BIOMETRICS...");
+                    setTimeout(() => addTerminalLine("> NO MATCH FOUND IN INTERPOL DB"), 1500);
+                    break;
+                case 'ENHANCE':
+                    addTerminalLine("> ISOLATING AUDIO FREQUENCIES...");
+                    setTimeout(() => addTerminalLine("> NOISE REDUCTION FILTER APPLIED"), 900);
+                    break;
+                case 'TRACE':
+                    addTerminalLine("> TRACING NODE PACKETS...");
+                    setTimeout(() => addTerminalLine("> TRACE FAILED: IP BOUNCED"), 1100);
+                    break;
+            }
+        };
+
     }; // Close window.onload
     </script>
 </body>
