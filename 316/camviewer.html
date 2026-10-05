@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Reykjavik Global Surveillance Node</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Monospace Font for Cinematic Feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ui-color: #f0f0f0;
+            --ui-bg: rgba(10, 10, 10, 0.85);
+            --bg-color: #050505;
+            --alert-color: #f0f0f0; /* Changed from red to white */
+            --ui-glow: rgba(255, 255, 255, 0.5);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-color);
+            overflow: hidden;
+            font-family: 'Share Tech Mono', monospace; /* Using requested font */
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Map Container strictly sized to full screen */
+        #map {
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            background-color: var(--bg-color);
+        }
+
+        /* Hide Leaflet UI elements for cinematic purity */
+        .leaflet-control-container {
+            display: none !important;
+        }
+
+        /* Scanline Overlay */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.15) 50%,
+                rgba(0,0,0,0.15)
+            );
+            background-size: 100% 4px;
+            z-index: 100;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        /* Center Crosshair / Grid */
+        .crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40vw;
+            height: 40vw;
+            max-width: 400px;
+            max-height: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            z-index: 90;
+            pointer-events: none;
+            box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.05);
+        }
+
+        .crosshair::before, .crosshair::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Horizontal crosshair line */
+        .crosshair::before {
+            top: 50%;
+            left: -10%;
+            right: -10%;
+            height: 1px;
+        }
+
+        /* Vertical crosshair line */
+        .crosshair::after {
+            left: 50%;
+            top: -10%;
+            bottom: -10%;
+            width: 1px;
+        }
+
+        .crosshair-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 1px solid var(--ui-color);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Tactical Terminal UI */
+        .terminal-window {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 320px;
+            background: var(--ui-bg);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-left: 4px solid var(--ui-color);
+            color: var(--ui-color);
+            padding: 15px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            z-index: 95;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            text-shadow: 0 0 2px var(--ui-glow);
+        }
+
+        .terminal-line {
+            opacity: 0;
+            animation: fadeIn 0.1s forwards;
+        }
+
+        .blinking-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background-color: var(--ui-color);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+        
+        /* Data Card UI - Refactored as Leaflet Popup */
+        .leaflet-popup-content-wrapper {
+            background: var(--ui-bg);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: 4px solid var(--alert-color);
+            color: var(--ui-color);
+            border-radius: 0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(4px);
+            font-family: 'Share Tech Mono', monospace;
+            padding: 0;
+        }
+
+        .leaflet-popup-content {
+            margin: 0;
+            padding: 15px;
+            width: 220px !important; /* Smaller width */
+        }
+
+        .leaflet-popup-tip {
+            background: var(--ui-bg);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-top: none;
+            border-left: none;
+        }
+
+        .leaflet-container a.leaflet-popup-close-button {
+            color: var(--ui-color);
+            padding: 5px;
+        }
+
+        .data-card-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 4px;
+            color: var(--alert-color);
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.8rem;
+        }
+        
+        .data-label {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .data-value {
+            font-weight: bold;
+        }
+        
+        .watch-live-btn {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--alert-color);
+            color: var(--alert-color);
+            padding: 8px 0;
+            margin-top: 10px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .watch-live-btn:hover {
+            background: var(--alert-color);
+            color: #000;
+            box-shadow: 0 0 10px var(--ui-glow);
+        }
+
+        .watch-live-btn::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--alert-color);
+            animation: blink 2s infinite;
+        }
+
+        .watch-live-btn:hover::before {
+            background-color: #000;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .camera-node {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            background: #000000 !important; /* Force solid black square */
+            border: 1px solid #ffffff !important; /* Force solid white border */
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+            transition: all 0.15s ease-out; /* Smooth snappy transition */
+            cursor: pointer;
+        }
+
+        .camera-node svg {
+            width: 22px;
+            height: 22px;
+            fill: #ffffff !important; /* Force bright white icon */
+            filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.5));
+        }
+
+        /* Tactical Button Hover State */
+        .camera-node:hover {
+            transform: translateY(-2px) scale(1.05);
+            background: #1a1a1a !important; /* Slightly lighter on hover */
+            border-color: #ffffff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.8), 0 0 12px rgba(255, 255, 255, 0.3);
+            z-index: 1000 !important;
+        }
+        
+        /* Tactical Button Active (Click) State */
+        .camera-node:active {
+            transform: translateY(1px) scale(0.95);
+            background: #000000 !important;
+            box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .video-feed {
+            display: none;
+            width: 100%;
+            height: 120px;
+            margin-top: 10px;
+            position: relative;
+            background: #111;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+        
+        .tv-static {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='noise'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23noise)' opacity='0.6'/></svg>");
+            animation: staticFlicker 0.05s infinite;
+        }
+        
+        .video-status {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--ui-color);
+            text-shadow: 0 0 5px #000, 0 0 10px #000;
+            z-index: 2;
+            width: 100%;
+            text-align: center;
+        }
+        
+        @keyframes staticFlicker {
+            0%, 100% { opacity: 0.8; transform: translate(0,0); }
+            25% { opacity: 0.6; transform: translate(2px,-2px); }
+            50% { opacity: 0.9; transform: translate(-2px,2px); }
+            75% { opacity: 0.5; transform: translate(-1px,-1px); }
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 600px) {
+            .terminal-window {
+                bottom: 20px;
+                left: 15px;
+                right: 15px;
+                width: auto;
+                font-size: 0.8rem;
+            }
+            .crosshair {
+                width: 60vw;
+                height: 60vw;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Overlays -->
+    <div class="scanlines"></div>
+    
+    <div class="crosshair">
+        <div class="crosshair-center"></div>
+    </div>
+
+    <!-- Terminal UI -->
+    <div class="terminal-window" id="terminal">
+        <div id="terminal-content"></div>
+        <div><span class="blinking-cursor"></span></div>
+    </div>
+
+    <!-- Map Container -->
+    <div id="map"></div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script>
+    window.onload = function() {
+        // Initialize Map focused on Reykjavik
+        const map = L.map('map', {
+            center: [64.1466, -21.9426],
+            zoom: 14,
+            zoomControl: false, // Disabled for cinematic purity
+            attributionControl: false // Disabled for cinematic purity
+        });
+
+        // Use Esri Dark Gray Base (No API key needed, strictly adheres to prompt)
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 16,
+            attribution: '' // Suppressed for prop immersion
+        }).addTo(map);
+
+        // =========================================================================
+        // ⬇️⬇️⬇️ ADD YOUR CUSTOM VIDEO LINKS HERE ⬇️⬇️⬇️
+        // =========================================================================
+        // Instructions: Add the camera ID as the key, and your video .mp4 URL as the value.
+        // If a camera ID is NOT in this list, it will play the default "SIGNAL LOST" animation.
+        const videoFeeds = {
+            "CAM_001": "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4", // Example Camera 1
+            "CAM_015": "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",       // Example Camera 15
+            // "CAM_042": "https://your-website.com/your-custom-video.mp4",                        // <--- Copy this format to add more
+        };
+        // =========================================================================
+        // ⬆️⬆️⬆️ END OF CUSTOM VIDEO LINKS ⬆️⬆️⬆️
+        // =========================================================================
+
+        const cameraSVG = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM10 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>
+            </svg>
+        `;
+
+        // Create Leaflet DivIcon
+        const camIcon = L.divIcon({
+            html: `<div class="camera-node">${cameraSVG}</div>`,
+            className: '',
+            iconSize: [36, 36],
+            iconAnchor: [18, 18]
+        });
+
+        // Meticulously vetted land/street coordinates in downtown Reykjavik
+        const cameraLocations = [
+            // Downtown core & Hlemmur area
+            [64.1467, -21.9426], [64.1451, -21.9392], [64.1436, -21.9351], [64.1423, -21.9284],
+            [64.1478, -21.9315], [64.1490, -21.9363], [64.1455, -21.9442], [64.1448, -21.9333],
+            [64.1415, -21.9472], [64.1472, -21.9385],
+            // Harbor / Grandi (Strictly on docks and streets)
+            [64.1512, -21.9388], [64.1534, -21.9455], [64.1548, -21.9515], [64.1525, -21.9582],
+            [64.1561, -21.9511], [64.1538, -21.9642], [64.1500, -21.9540], [64.1519, -21.9322],
+            [64.1488, -21.9411], [64.1460, -21.9520],
+            // Laugavegur / Austurbaer streets
+            [64.1430, -21.9160], [64.1425, -21.9130], [64.1418, -21.9090], [64.1412, -21.9050],
+            [64.1405, -21.9010], [64.1465, -21.9210], [64.1445, -21.9220], [64.1438, -21.9240],
+            [64.1415, -21.9180], [64.1402, -21.9140],
+            // University / Vesturbaer inland
+            [64.1400, -21.9490], [64.1385, -21.9530], [64.1370, -21.9580], [64.1360, -21.9620],
+            [64.1395, -21.9600], [64.1412, -21.9650], [64.1430, -21.9580], [64.1350, -21.9480],
+            [64.1380, -21.9420], [64.1365, -21.9460],
+            // Hringbraut / Tjörnin (Pond) perimeter
+            [64.1420, -21.9410], [64.1435, -21.9400], [64.1410, -21.9370], [64.1395, -21.9350],
+            [64.1380, -21.9330], [64.1390, -21.9280], [64.1375, -21.9250], [64.1408, -21.9310],
+            [64.1442, -21.9300], [64.1458, -21.9280]
+        ];
+
+        // Helper to determine sector based on longitude
+        function getSector(lng) {
+            if (lng < -21.95) return 'RVK-WEST';
+            if (lng > -21.91) return 'RVK-EAST';
+            return 'RVK-CEN';
+        }
+
+        cameraLocations.forEach((loc, index) => {
+            const camId = `CAM_${String(index + 1).padStart(3, '0')}`;
+            const sector = getSector(loc[1]);
+            const lat = loc[0].toFixed(4);
+            const lng = loc[1].toFixed(4);
+
+            const popupContent = `
+                <div class="data-card-header">UNIT ${camId}</div>
+                <div class="data-row">
+                    <span class="data-label">STATUS:</span>
+                    <span class="data-value" style="color: var(--ui-color);">ACTIVE</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">LOCATION:</span>
+                    <span class="data-value" id="street-${camId}">FETCHING...</span>
+                </div>
+                <div class="data-row">
+                    <span class="data-label">COORD:</span>
+                    <span class="data-value">${lat}, ${lng}</span>
+                </div>
+                <button class="watch-live-btn" id="btn-${camId}" onclick="initiateLiveFeed('${camId}')">WATCH LIVE</button>
+                <div class="video-feed" id="vid-${camId}">
+                    <div class="tv-static"></div>
+                    <div class="video-status" id="vid-text-${camId}">CONNECTING...</div>
+                </div>
+            `;
+
+            const marker = L.marker(loc, {icon: camIcon}).addTo(map);
+            marker.bindPopup(popupContent, {
+                offset: [0, -10],
+                closeButton: true
+            });
+            
+            // Add interaction: clicking a camera updates the terminal and shows data card
+            marker.on('click', () => {
+                // Terminal output
+                addTerminalLine(`> INTERCEPTING ${camId}...`);
+                setTimeout(() => addTerminalLine(`> ${camId} LINK ESTABLISHED.`), 400);
+                
+                // Fetch Street Name (Timeout ensures DOM is ready after popup opens)
+                setTimeout(() => {
+                    const streetEl = document.getElementById('street-' + camId);
+                    if (streetEl && streetEl.textContent === 'FETCHING...') {
+                        const url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + loc[0] + '&lon=' + loc[1];
+                        fetch(url)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data && data.address) {
+                                    const street = data.address.road || data.address.pedestrian || data.address.suburb || "UNKNOWN ZONE";
+                                    streetEl.textContent = street.toUpperCase();
+                                    addTerminalLine("> LOC MAPPED: " + street.toUpperCase());
+                                } else {
+                                    streetEl.textContent = "UNMAPPED";
+                                }
+                            })
+                            .catch(() => {
+                                streetEl.textContent = "OFF-GRID";
+                            });
+                    }
+                }, 100);
+
+                // Optional: Pan map to marker
+                map.flyTo(loc, 15, {
+                    animate: true,
+                    duration: 1.5
+                });
+            });
+        });
+
+        // Function called by the watch live button in the popup
+        window.initiateLiveFeed = function(camId) {
+            const btn = document.getElementById('btn-' + camId);
+            const vid = document.getElementById('vid-' + camId);
+            const text = document.getElementById('vid-text-' + camId);
+
+            if(btn) btn.style.display = 'none';
+            if(vid) vid.style.display = 'block';
+            
+            addTerminalLine("> INITIATING VIDEO UPLINK TO " + camId + "...");
+            
+            // Check if user has defined a URL for this specific camera
+            if (videoFeeds[camId]) {
+                setTimeout(() => {
+                    addTerminalLine("> ENCRYPTION BYPASSED. STREAM LIVE.");
+                    vid.innerHTML = `<video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:5;"><source src="${videoFeeds[camId]}" type="video/mp4"></video>`;
+                }, 1200);
+            } else {
+                // Default cinematic failure animation for unconfigured cameras
+                setTimeout(() => {
+                    if(text) text.textContent = "DECRYPTING KEY...";
+                    addTerminalLine("> BYPASSING FIREWALL...");
+                }, 1200);
+
+                setTimeout(() => {
+                    if(text) {
+                        text.textContent = "SIGNAL LOST";
+                        text.style.color = "var(--alert-color)";
+                    }
+                    addTerminalLine("> ERROR: HOST FORCED DISCONNECT");
+                }, 3500);
+            }
+        };
+
+        const terminalBootSequence = [
+            "> INIT ROOT ACC...",
+            "> SECURE UPLINK ESTABLISHED",
+            "> ENCRYPTION: AES-256 (ACTIVE)",
+            "> REYKJAVIK GRID: ONLINE",
+            "> AWAITING DIRECTIVE..."
+        ];
+        
+        const terminalContent = document.getElementById('terminal-content');
+        
+        function addTerminalLine(text) {
+            const line = document.createElement('div');
+            line.className = 'terminal-line';
+            line.textContent = text;
+            terminalContent.appendChild(line);
+            
+            // Auto-scroll / remove old lines to keep terminal clean
+            if (terminalContent.children.length > 7) {
+                terminalContent.removeChild(terminalContent.firstChild);
+            }
+        }
+
+        let bootIndex = 0;
+        function runBootSequence() {
+            if (bootIndex < terminalBootSequence.length) {
+                addTerminalLine(terminalBootSequence[bootIndex]);
+                bootIndex++;
+                // Randomize typing delay for realism
+                setTimeout(runBootSequence, 400 + Math.random() * 600);
+            }
+        }
+
+        // Start boot sequence shortly after load
+        setTimeout(runBootSequence, 800);
+    }; // Close window.onload
+    </script>
+</body>
+</html>
