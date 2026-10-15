@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWN - Meridian World News | Breaking News, World Analysis & Multimedia</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Sans-serif & Serif editorial typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mwn: {
+                            red: '#bb1919',
+                            darkred: '#901010',
+                            brightred: '#d92525',
+                            dark: '#121212',
+                            graybg: '#f6f6f6',
+                            border: '#e2e2e2',
+                            text: '#222222',
+                            muted: '#5a5a5a'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['IBM Plex Sans', 'Helvetica Neue', 'Arial', 'sans-serif'],
+                        serif: ['IBM Plex Serif', 'Georgia', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f6f6f6;
+            color: #222222;
+            font-family: 'IBM Plex Sans', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ticker Animation */
+        @keyframes ticker {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .animate-ticker {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: ticker 45s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
+        }
+
+        /* Pulsing dot for live status */
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 0.4; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .pulse-live {
+            animation: pulse-ring 1.8s infinite ease-in-out;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- MAIN MWN RED HEADER (AUTHENTIC BBC LAYOUT) -->
+    <header class="bg-mwn-red text-white sticky top-0 z-40 shadow-md">
+        <!-- Top Branding Row -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 border-b border-mwn-darkred/40">
+                
+                <!-- Logo Section -->
+                <div class="flex items-center space-x-4">
+                    <a href="#" onclick="filterCategory('All')" class="flex items-center space-x-3 group">
+                        <!-- Square Logo Blocks -->
+                        <div class="flex space-x-1">
+                            <span class="bg-white text-mwn-red font-black text-2xl px-2.5 py-1 rounded-sm shadow-sm tracking-tighter select-none">M</span>
+                            <span class="bg-white text-mwn-red font-black text-2xl px-2.5 py-1 rounded-sm shadow-sm tracking-tighter select-none">W</span>
+                            <span class="bg-white text-mwn-red font-black text-2xl px-2.5 py-1 rounded-sm shadow-sm tracking-tighter select-none">N</span>
+                        </div>
+                        <div class="hidden sm:block border-l border-white/30 pl-3">
+                            <span class="block text-xs font-bold tracking-widest leading-none text-red-100">MERIDIAN</span>
+                            <span class="block text-sm font-extrabold tracking-tight leading-tight">WORLD NEWS</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Right Actions: Edition & Search -->
+                <div class="flex items-center space-x-4 text-sm">
+
+                    <!-- Edition Dropdown -->
+                    <div class="hidden md:flex items-center space-x-1 text-xs bg-mwn-darkred/60 hover:bg-mwn-darkred px-3 py-1.5 rounded transition cursor-pointer border border-white/10">
+                        <i class="fa-solid fa-globe text-red-200"></i>
+                        <span class="font-medium text-white">Edition:</span>
+                        <select id="editionSelect" class="bg-transparent text-white font-semibold outline-none cursor-pointer">
+                            <option value="global" class="text-black">International (Global)</option>
+                            <option value="uk" class="text-black">Europe & UK</option>
+                            <option value="us" class="text-black">Americas</option>
+                            <option value="asia" class="text-black">Asia-Pacific</option>
+                            <option value="me" class="text-black">Middle East</option>
+                        </select>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div class="relative">
+                        <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Search news..." 
+                            class="bg-mwn-darkred/80 text-white placeholder-red-200/70 text-xs rounded-full py-1.5 pl-8 pr-4 w-32 sm:w-48 focus:outline-none focus:ring-2 focus:ring-white focus:bg-mwn-darkred transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-xs text-red-200"></i>
+                    </div>
+
+                    <button class="bg-white/10 hover:bg-white/20 p-2 rounded text-white transition md:hidden" title="Menu">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Primary Navigation Bar -->
+            <nav class="flex items-center space-x-1 overflow-x-auto py-1 scrollbar-none text-sm font-semibold tracking-wide">
+                <button onclick="filterCategory('All')" class="nav-tab active-tab text-white bg-mwn-darkred/90 px-3.5 py-2 rounded-t transition whitespace-nowrap font-bold">Home</button>
+                <button onclick="filterCategory('World')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">World</button>
+                <button onclick="filterCategory('Business')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">Business</button>
+                <button onclick="filterCategory('Tech')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">Tech</button>
+                <button onclick="filterCategory('Science')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">Science</button>
+                <button onclick="filterCategory('Climate')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">Climate</button>
+                <button onclick="filterCategory('Culture')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">Culture</button>
+                <button onclick="filterCategory('Sport')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">Sport</button>
+                <button onclick="filterCategory('Opinion')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap">Opinion</button>
+                <button onclick="filterCategory('Video')" class="nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap flex items-center gap-1.5"><i class="fa-solid fa-circle-play text-red-300"></i>Watch</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- BREAKING NEWS TICKER -->
+    <div class="bg-black text-white border-b border-stone-800 overflow-hidden flex items-stretch h-10 shadow-inner">
+        <div class="bg-mwn-red px-4 flex items-center shrink-0 z-10 font-bold text-xs uppercase tracking-wider text-white shadow-md">
+            <span class="w-2.5 h-2.5 bg-white rounded-full mr-2 pulse-live inline-block"></span>
+            Breaking
+        </div>
+        <div class="flex-1 overflow-hidden relative flex items-center">
+            <div class="animate-ticker space-x-12 text-xs font-medium text-stone-200">
+                <span class="inline-flex items-center cursor-pointer hover:text-red-400 transition" onclick="openArticle('hero')"><strong class="text-mwn-red mr-1.5">[GENEVA]:</strong> Global Ocean Treaty ratified by 142 nations following overnight session.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-red-400 transition" onclick="openArticle('tech-1')"><strong class="text-mwn-red mr-1.5">[TECH]:</strong> Room-temperature quantum processor achieves 18-minute coherence record.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-red-400 transition" onclick="openArticle('biz-1')"><strong class="text-mwn-red mr-1.5">[MARKETS]:</strong> Central Banks establish unified digital clearance framework.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-red-400 transition" onclick="openArticle('space-1')"><strong class="text-mwn-red mr-1.5">[SPACE]:</strong> Magellan-7 probe confirms complex organic molecules in Europa plumes.</span>
+            </div>
+        </div>
+        <div class="bg-stone-900 px-3 hidden md:flex items-center text-[11px] text-stone-400 border-l border-stone-800 shrink-0">
+            <i class="fa-solid fa-rss text-mwn-red mr-2"></i> BULLETIN LIVE
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8" id="mainContent">
+
+        <!-- ACTIVE FILTER DISPLAY BANNER (Hidden by default) -->
+        <div id="filterBanner" class="hidden bg-stone-200 border-l-4 border-mwn-red p-3 rounded flex justify-between items-center text-sm">
+            <div>
+                Showing results for section: <strong id="filterCategoryName" class="text-mwn-red uppercase">World</strong>
+            </div>
+            <button onclick="filterCategory('All')" class="text-xs bg-white hover:bg-stone-100 text-stone-700 px-3 py-1 rounded border border-stone-300 transition">
+                Clear Filter
+            </button>
+        </div>
+
+        <!-- HERO & TOP NEWS GRID -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- LEFT & CENTER COLUMNS (Primary Stories: 8 cols) -->
+            <div class="lg:col-span-8 space-y-8">
+                
+                <!-- HERO FEATURED STORY CARD -->
+                <article class="bg-white rounded-lg overflow-hidden border border-mwn-border shadow-sm hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('hero')" data-category="World">
+                    <div class="relative overflow-hidden aspect-[16/9] bg-stone-900">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent z-10"></div>
+                        
+                        <!-- ==================== REPLACE IMAGE HERE: MAIN HERO STORY ==================== -->
+                        <!-- Recommended size: 1200x675 (16:9 ratio). Replace 'src' with your image file path or URL -->
+                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80" 
+                             alt="Geneva Palais des Nations Summit" 
+                             id="img-hero"
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700">
+                        <!-- ============================================================================= -->
+
+                        <!-- Badges Overlay -->
+                        <div class="absolute top-4 left-4 z-20 flex items-center space-x-2">
+                            <span class="bg-mwn-red text-white text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-xs shadow">WORLD DIPLOMACY</span>
+                            <span class="bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded flex items-center gap-1">
+                                <i class="fa-regular fa-clock text-stone-300"></i> 4 min read
+                            </span>
+                        </div>
+
+                        <!-- Headline Overlay -->
+                        <div class="absolute bottom-0 left-0 right-0 p-6 z-20 text-white">
+                            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold font-sans tracking-tight leading-tight group-hover:text-red-200 transition">
+                                Historic Ocean Accord Reached in Geneva as 142 Nations Commit to High Seas Protection Zone
+                            </h2>
+                            <p class="mt-2 text-stone-300 text-sm sm:text-base line-clamp-2 story-excerpt font-serif">
+                                Following marathon 36-hour negotiations, delegates ratify landmark binding framework establishing marine sanctuaries across 30% of international waters by 2032.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Meta Footer -->
+                    <div class="px-6 py-3 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-xs text-mwn-muted">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-semibold text-stone-800">By Elena Vance in Geneva</span>
+                            <span>•</span>
+                            <span>2 hours ago</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-stone-500">
+                            <span class="hover:text-mwn-red"><i class="fa-regular fa-comment mr-1"></i>342</span>
+                            <span class="hover:text-mwn-red"><i class="fa-solid fa-share-nodes"></i></span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- SECONDARY NEWS GRID (4 Main Feature Cards) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="secondaryGrid">
+
+                    <!-- CARD 1: Business/Markets -->
+                    <article class="bg-white rounded-lg border border-mwn-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('biz-1')" data-category="Business">
+                        <div>
+                            <div class="relative aspect-[16/10] bg-stone-800 overflow-hidden">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: BUSINESS ARTICLE ==================== -->
+                                <!-- Recommended size: 600x375 (16:10 ratio) -->
+                                <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Financial Stock Screen Data" 
+                                     id="img-biz-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- ============================================================================== -->
+
+                                <span class="absolute top-3 left-3 bg-stone-900/90 text-emerald-400 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded border border-emerald-500/30">BUSINESS</span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg leading-snug group-hover:text-mwn-red transition text-stone-900">
+                                    Central Banks Unveil Unified Protocol for Cross-Border Digital Currency Settlements
+                                </h3>
+                                <p class="mt-2 text-xs text-mwn-muted line-clamp-2 story-excerpt font-serif">
+                                    The "Aegis Framework" promises friction-free trade clearance, bypassing legacy wire bottlenecks across major economic hubs.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-mwn-muted">
+                            <span>Markets & Economy</span>
+                            <span>3 hours ago</span>
+                        </div>
+                    </article>
+
+                    <!-- CARD 2: Technology -->
+                    <article class="bg-white rounded-lg border border-mwn-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('tech-1')" data-category="Tech">
+                        <div>
+                            <div class="relative aspect-[16/10] bg-stone-800 overflow-hidden">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: TECH ARTICLE ==================== -->
+                                <!-- Recommended size: 600x375 (16:10 ratio) -->
+                                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Quantum Microchip Super-conductors" 
+                                     id="img-tech-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- =========================================================================== -->
+
+                                <span class="absolute top-3 left-3 bg-stone-900/90 text-purple-400 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded border border-purple-500/30">TECHNOLOGY</span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg leading-snug group-hover:text-mwn-red transition text-stone-900">
+                                    Sustained Coherence Milestone Reached in Room-Temperature Quantum Processing Test
+                                </h3>
+                                <p class="mt-2 text-xs text-mwn-muted line-clamp-2 story-excerpt font-serif">
+                                    Kyoto-based researchers maintain qubit stability for over 18 minutes without liquid helium cooling, opening real-world computing pathways.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-mwn-muted">
+                            <span>Deep Tech</span>
+                            <span>5 hours ago</span>
+                        </div>
+                    </article>
+
+                    <!-- CARD 3: Climate/Science -->
+                    <article class="bg-white rounded-lg border border-mwn-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('climate-1')" data-category="Climate">
+                        <div>
+                            <div class="relative aspect-[16/10] bg-stone-800 overflow-hidden">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: CLIMATE ARTICLE ==================== -->
+                                <!-- Recommended size: 600x375 (16:10 ratio) -->
+                                <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Offshore Wind Turbines Grid" 
+                                     id="img-climate-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- ============================================================================== -->
+
+                                <span class="absolute top-3 left-3 bg-stone-900/90 text-emerald-300 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded border border-emerald-500/30">CLIMATE</span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg leading-snug group-hover:text-mwn-red transition text-stone-900">
+                                    North Sea Offshore Grid Transmits Record 45 GW of Renewable Energy in Storm Surge Test
+                                </h3>
+                                <p class="mt-2 text-xs text-mwn-muted line-clamp-2 story-excerpt font-serif">
+                                    Interconnected HVDC subsea lines deliver clean power to six European capitals during high-capacity atmospheric pass.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-mwn-muted">
+                            <span>Energy Transformation</span>
+                            <span>6 hours ago</span>
+                        </div>
+                    </article>
+
+                    <!-- CARD 4: Space/Science -->
+                    <article class="bg-white rounded-lg border border-mwn-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('space-1')" data-category="Science">
+                        <div>
+                            <div class="relative aspect-[16/10] bg-stone-800 overflow-hidden">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: SPACE ARTICLE ==================== -->
+                                <!-- Recommended size: 600x375 (16:10 ratio) -->
+                                <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Deep Space Planetary Observation" 
+                                     id="img-space-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- ============================================================================ -->
+
+                                <span class="absolute top-3 left-3 bg-stone-900/90 text-sky-400 text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded border border-sky-500/30">SCIENCE</span>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-bold text-lg leading-snug group-hover:text-mwn-red transition text-stone-900">
+                                    Magellan-7 Spacecraft Detects Complex Organic Compounds in Jovian Plume Flyby
+                                </h3>
+                                <p class="mt-2 text-xs text-mwn-muted line-clamp-2 story-excerpt font-serif">
+                                    Mass spectrometer readings reveal rich hydrothermal signatures beneath Europa's frozen outer shell.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-mwn-muted">
+                            <span>Deep Space</span>
+                            <span>8 hours ago</span>
+                        </div>
+                    </article>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDEBAR (4 cols: Live Feed, Most Read, Video Highlights) -->
+            <aside class="lg:col-span-4 space-y-8">
+
+                <!-- LIVE DEVELOPING STORY BOX -->
+                <div class="bg-stone-900 text-white rounded-lg p-5 border-t-4 border-mwn-red shadow-md">
+                    <div class="flex items-center justify-between border-b border-stone-800 pb-3 mb-4">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-2.5 h-2.5 bg-mwn-red rounded-full pulse-live"></span>
+                            <h3 class="font-bold text-sm tracking-wide text-white uppercase">LIVE COVERAGE</h3>
+                        </div>
+                        <span class="text-[10px] bg-stone-800 text-stone-400 px-2 py-0.5 rounded font-mono">UPDATED</span>
+                    </div>
+
+                    <h4 class="font-bold text-base text-red-100 leading-snug hover:text-white cursor-pointer transition" onclick="openArticle('hero')">
+                        Global Environmental Regulatory Summit: Final Declaration Directives
+                    </h4>
+
+                    <!-- Live Timeline Updates -->
+                    <div class="mt-4 space-y-3 relative before:absolute before:inset-0 before:left-2 before:w-0.5 before:bg-stone-800">
+                        <div class="relative pl-6 text-xs">
+                            <span class="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-mwn-red"></span>
+                            <p class="text-stone-200 mt-0.5 font-medium">Delegates formally sign Section 12 on deep-sea mineral mining moratorium.</p>
+                        </div>
+                        <div class="relative pl-6 text-xs">
+                            <span class="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-stone-600"></span>
+                            <p class="text-stone-300 mt-0.5">Pacific Island Coalition issues joint statement praising binding enforcement targets.</p>
+                        </div>
+                        <div class="relative pl-6 text-xs">
+                            <span class="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-stone-600"></span>
+                            <p class="text-stone-400 mt-0.5">Draft text finalized following overnight compromise on arbitration protocols.</p>
+                        </div>
+                    </div>
+
+                    <button onclick="openArticle('hero')" class="mt-5 w-full bg-mwn-red hover:bg-mwn-brightred text-white text-xs font-bold py-2 rounded transition flex items-center justify-center gap-2">
+                        <span>Follow Live Stream & Text Updates</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+
+                <!-- MOST READ RANKED LIST -->
+                <div class="bg-white rounded-lg p-5 border border-mwn-border shadow-sm">
+                    <div class="flex items-center justify-between border-b border-stone-200 pb-3 mb-4">
+                        <h3 class="font-bold text-base text-stone-900 tracking-tight flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-mwn-red"></i>
+                            Most Read Stories
+                        </h3>
+                        <span class="text-xs text-stone-400">Last 24 Hours</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Rank 1 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('hero')">
+                            <span class="text-3xl font-black text-stone-300 group-hover:text-mwn-red transition font-sans leading-none w-6">1</span>
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-800 group-hover:text-mwn-red transition leading-snug">
+                                    Geneva Ocean Accord Signed: What It Means for Global Trade Routes
+                                </h4>
+                                <span class="text-[11px] text-stone-500 mt-1 block">World • 142k views</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 2 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('tech-1')">
+                            <span class="text-3xl font-black text-stone-300 group-hover:text-mwn-red transition font-sans leading-none w-6">2</span>
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-800 group-hover:text-mwn-red transition leading-snug">
+                                    Quantum Coherence Breakthrough Explained: The End of Extreme Cryo Cooling?
+                                </h4>
+                                <span class="text-[11px] text-stone-500 mt-1 block">Tech • 98k views</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 3 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('opinion-1')">
+                            <span class="text-3xl font-black text-stone-300 group-hover:text-mwn-red transition font-sans leading-none w-6">3</span>
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-800 group-hover:text-mwn-red transition leading-snug">
+                                    Analysis: The Real Geopolitical Impact of Autonomous Megacity Logistics
+                                </h4>
+                                <span class="text-[11px] text-stone-500 mt-1 block">Opinion • 76k views</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 4 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('space-1')">
+                            <span class="text-3xl font-black text-stone-300 group-hover:text-mwn-red transition font-sans leading-none w-6">4</span>
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-800 group-hover:text-mwn-red transition leading-snug">
+                                    Europa Plume Data Confirms Hydrothermal Biosignatures
+                                </h4>
+                                <span class="text-[11px] text-stone-500 mt-1 block">Science • 61k views</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 5 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('biz-1')">
+                            <span class="text-3xl font-black text-stone-300 group-hover:text-mwn-red transition font-sans leading-none w-6">5</span>
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-800 group-hover:text-mwn-red transition leading-snug">
+                                    Central Bank Digital Standard: How Markets Reacted
+                                </h4>
+                                <span class="text-[11px] text-stone-500 mt-1 block">Business • 54k views</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MWN VIDEO & WATCH SECTION -->
+                <div class="bg-stone-900 text-white rounded-lg p-5 border border-stone-800">
+                    <div class="flex items-center justify-between border-b border-stone-800 pb-3 mb-4">
+                        <h3 class="font-bold text-sm uppercase tracking-wider text-white flex items-center gap-2">
+                            <i class="fa-solid fa-play text-mwn-red"></i>
+                            MWN Video Reports
+                        </h3>
+                        <span class="text-xs text-mwn-red font-semibold cursor-pointer hover:underline" onclick="filterCategory('Video')">View All</span>
+                    </div>
+
+                    <!-- Video Thumbnail -->
+                    <div class="relative aspect-video bg-black rounded overflow-hidden group cursor-pointer border border-stone-700" onclick="openArticle('hero')">
+                        
+                        <!-- ==================== REPLACE IMAGE HERE: VIDEO SPOTLIGHT THUMBNAIL ==================== -->
+                        <!-- Recommended size: 600x337 (16:9 ratio) -->
+                        <img src="https://images.unsplash.com/photo-1526470608268-f674ce90ebd4?auto=format&fit=crop&w=600&q=80" 
+                             alt="Broadcasting Press Room" 
+                             id="img-video-thumb"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-90">
+                        <!-- ======================================================================================= -->
+
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
+                            <div class="w-12 h-12 bg-mwn-red text-white rounded-full flex items-center justify-center shadow-lg transform group-hover:scale-110 transition">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </div>
+                        </div>
+                        <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-mono px-1.5 py-0.5 rounded">05:42</span>
+                    </div>
+                    <h4 class="font-bold text-sm text-stone-100 mt-3 hover:text-red-300 cursor-pointer transition" onclick="openArticle('hero')">
+                        Inside the High Seas Negotiations: How Geneva Reached Agreement
+                    </h4>
+                    <p class="text-xs text-stone-400 mt-1 font-serif">MWN Special Correspondent Marcus Vance reports live from the plenary floor.</p>
+                </div>
+
+            </aside>
+        </section>
+
+        <!-- HORIZONTAL SECTION: BUSINESS & MARKETS HUB -->
+        <section class="bg-white rounded-lg p-6 border border-mwn-border shadow-sm space-y-4">
+            <div class="flex items-center justify-between border-b border-stone-200 pb-3">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-mwn-red w-3 h-6 rounded-xs inline-block"></span>
+                    <h2 class="text-xl font-bold text-stone-900 tracking-tight">Business & Global Markets</h2>
+                </div>
+                <button onclick="filterCategory('Business')" class="text-xs font-semibold text-mwn-red hover:underline">Explore Business Hub &rarr;</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-4 bg-stone-50 rounded border border-stone-200/60 hover:border-mwn-red/40 transition cursor-pointer" onclick="openArticle('biz-1')">
+                    <span class="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Monetary Policy</span>
+                    <h3 class="font-bold text-base text-stone-900 mt-1 hover:text-mwn-red">Aegis Standard Adoption</h3>
+                    <p class="text-xs text-stone-600 mt-2 font-serif line-clamp-2">Commercial lenders begin trial operations using verified ledger tokens for cross-border credit liquidity.</p>
+                </div>
+
+                <div class="p-4 bg-stone-50 rounded border border-stone-200/60 hover:border-mwn-red/40 transition cursor-pointer" onclick="openArticle('biz-1')">
+                    <span class="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Supply Chains</span>
+                    <h3 class="font-bold text-base text-stone-900 mt-1 hover:text-mwn-red">Pacific Corridor Freight Index</h3>
+                    <p class="text-xs text-stone-600 mt-2 font-serif line-clamp-2">Container throughput reaches post-adjustment high following automated dock upgrades in Singapore and Yokohama.</p>
+                </div>
+
+                <div class="p-4 bg-stone-50 rounded border border-stone-200/60 hover:border-mwn-red/40 transition cursor-pointer" onclick="openArticle('biz-1')">
+                    <span class="text-[10px] font-bold text-stone-500 uppercase tracking-wider">Energy Sector</span>
+                    <h3 class="font-bold text-base text-stone-900 mt-1 hover:text-mwn-red">Grid Infrastructure Bonds</h3>
+                    <p class="text-xs text-stone-600 mt-2 font-serif line-clamp-2">Sovereign green debt issuance oversubscribed by 240% as institutional investors pivot to long-term storage assets.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- HORIZONTAL SECTION: OPINION & ANALYSIS -->
+        <section class="bg-stone-900 text-white rounded-lg p-6 shadow-md space-y-4">
+            <div class="flex items-center justify-between border-b border-stone-800 pb-3">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-red-500 w-3 h-6 rounded-xs inline-block"></span>
+                    <h2 class="text-xl font-bold tracking-tight">Opinion & Global Perspectives</h2>
+                </div>
+                <button onclick="filterCategory('Opinion')" class="text-xs font-semibold text-red-400 hover:underline">Read All Opinion Pieces &rarr;</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Columnist 1 -->
+                <div class="bg-stone-800/60 p-5 rounded border border-stone-700/60 hover:border-stone-500 transition cursor-pointer flex flex-col justify-between" onclick="openArticle('opinion-1')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-3">
+                            
+                            <!-- ==================== REPLACE IMAGE HERE: COLUMNIST 1 AVATAR ==================== -->
+                            <!-- Recommended size: 100x100 square headshot -->
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=100&q=80" 
+                                 alt="Dr. Helena Kroll" 
+                                 class="w-10 h-10 rounded-full object-cover border border-stone-500">
+                            <!-- ================================================================================= -->
+
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-100">Dr. Helena Kroll</h4>
+                                <span class="text-[11px] text-stone-400">Senior Fellow, Geneva Institute</span>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-red-200 font-serif leading-snug">
+                            "The High Seas Accord proves multilateralism is far from extinct in an era of multipolar tension."
+                        </h3>
+                    </div>
+                    <span class="text-[11px] text-stone-400 mt-4 block">5 min read</span>
+                </div>
+
+                <!-- Columnist 2 -->
+                <div class="bg-stone-800/60 p-5 rounded border border-stone-700/60 hover:border-stone-500 transition cursor-pointer flex flex-col justify-between" onclick="openArticle('opinion-1')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-3">
+                            
+                            <!-- ==================== REPLACE IMAGE HERE: COLUMNIST 2 AVATAR ==================== -->
+                            <!-- Recommended size: 100x100 square headshot -->
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=100&q=80" 
+                                 alt="Michael Aris" 
+                                 class="w-10 h-10 rounded-full object-cover border border-stone-500">
+                            <!-- ================================================================================= -->
+
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-100">Michael Aris</h4>
+                                <span class="text-[11px] text-stone-400">Technology Editor</span>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-red-200 font-serif leading-snug">
+                            "Why the room-temperature quantum benchmark changes everything for cybersecurity architectures."
+                        </h3>
+                    </div>
+                    <span class="text-[11px] text-stone-400 mt-4 block">7 min read</span>
+                </div>
+
+                <!-- Columnist 3 -->
+                <div class="bg-stone-800/60 p-5 rounded border border-stone-700/60 hover:border-stone-500 transition cursor-pointer flex flex-col justify-between" onclick="openArticle('opinion-1')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-3">
+                            
+                            <!-- ==================== REPLACE IMAGE HERE: COLUMNIST 3 AVATAR ==================== -->
+                            <!-- Recommended size: 100x100 square headshot -->
+                            <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=100&q=80" 
+                                 alt="Siddharth V. Rao" 
+                                 class="w-10 h-10 rounded-full object-cover border border-stone-500">
+                            <!-- ================================================================================= -->
+
+                            <div>
+                                <h4 class="font-bold text-sm text-stone-100">Siddharth V. Rao</h4>
+                                <span class="text-[11px] text-stone-400">Global Infrastructure Analyst</span>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-base text-red-200 font-serif leading-snug">
+                            "Offshore grid super-connectors represent the single greatest leap in 21st century statecraft."
+                        </h3>
+                    </div>
+                    <span class="text-[11px] text-stone-400 mt-4 block">4 min read</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- INTERACTIVE FULL ARTICLE MODAL READER -->
+    <div id="articleModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 hidden overflow-y-auto flex justify-center p-2 sm:p-4 md:p-6">
+        <div class="bg-white w-full max-w-4xl rounded-lg shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
+            
+            <!-- Modal Header Bar -->
+            <div class="bg-mwn-red text-white px-6 py-3 flex justify-between items-center shrink-0 border-b border-mwn-darkred">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-white text-mwn-red font-black text-xs px-2 py-0.5 rounded">MWN ARTICLE</span>
+                    <span id="modalCategory" class="text-xs font-bold uppercase tracking-wider text-red-100">WORLD DIPLOMACY</span>
+                </div>
+                <button onclick="closeModal()" class="text-white hover:text-stone-200 p-1 rounded-full transition focus:outline-none" title="Close Article">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body (Injected by JS) -->
+            <div class="p-6 sm:p-10 overflow-y-auto space-y-6 flex-1 font-sans text-stone-800" id="modalBody">
+                <!-- Content generated dynamically in openArticle() -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-stone-100 px-6 py-3 border-t border-stone-200 flex justify-between items-center text-xs text-stone-500 shrink-0">
+                <span>Meridian World News Broadcast Feed • Property of MWN Network</span>
+                <button onclick="closeModal()" class="bg-stone-800 hover:bg-stone-900 text-white font-bold px-4 py-1.5 rounded transition">
+                    Close Article
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-stone-900 text-stone-300 mt-12 border-t-4 border-mwn-red">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8 text-xs">
+                <div>
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3 border-b border-stone-800 pb-2">News Categories</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" onclick="filterCategory('World')" class="hover:text-white transition">World News</a></li>
+                        <li><a href="#" onclick="filterCategory('Business')" class="hover:text-white transition">Business & Finance</a></li>
+                        <li><a href="#" onclick="filterCategory('Tech')" class="hover:text-white transition">Technology & AI</a></li>
+                        <li><a href="#" onclick="filterCategory('Science')" class="hover:text-white transition">Science & Space</a></li>
+                        <li><a href="#" onclick="filterCategory('Climate')" class="hover:text-white transition">Climate & Earth</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3 border-b border-stone-800 pb-2">Regional Hubs</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition">Europe Desk</a></li>
+                        <li><a href="#" class="hover:text-white transition">Americas Bureau</a></li>
+                        <li><a href="#" class="hover:text-white transition">Asia-Pacific HQ</a></li>
+                        <li><a href="#" class="hover:text-white transition">Middle East & Africa</a></li>
+                        <li><a href="#" class="hover:text-white transition">Geneva UN Bureau</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3 border-b border-stone-800 pb-2">Multimedia & Features</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" onclick="filterCategory('Video')" class="hover:text-white transition">MWN Live Video Stream</a></li>
+                        <li><a href="#" class="hover:text-white transition">Audio Bulletins / Podcasts</a></li>
+                        <li><a href="#" onclick="filterCategory('Opinion')" class="hover:text-white transition">Opinion & Editorials</a></li>
+                        <li><a href="#" class="hover:text-white transition">In-Depth Documentaries</a></li>
+                        <li><a href="#" class="hover:text-white transition">Interactive Graphics</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3 border-b border-stone-800 pb-2">Broadcast Services</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-white transition">MWN World Service Radio</a></li>
+                        <li><a href="#" class="hover:text-white transition">Satellite Frequency Guide</a></li>
+                        <li><a href="#" class="hover:text-white transition">Syndication & Licensing</a></li>
+                        <li><a href="#" class="hover:text-white transition">Press Access & Media Room</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="font-bold text-white uppercase tracking-wider mb-3 border-b border-stone-800 pb-2">Network Info</h4>
+                    <p class="text-stone-400 text-[11px] leading-relaxed mb-3">
+                        Meridian World News is a fictional international news organization created for cinematic display and background media props.
+                    </p>
+                    <div class="flex space-x-3 text-stone-400">
+                        <i class="fa-brands fa-twitter text-sm hover:text-white cursor-pointer"></i>
+                        <i class="fa-brands fa-youtube text-sm hover:text-white cursor-pointer"></i>
+                        <i class="fa-brands fa-facebook text-sm hover:text-white cursor-pointer"></i>
+                        <i class="fa-solid fa-rss text-sm hover:text-white cursor-pointer"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Legal Bar -->
+            <div class="border-t border-stone-800 pt-6 flex flex-col md:flex-row justify-between items-center text-[11px] text-stone-500 gap-4">
+                <div class="flex items-center space-x-4">
+                    <span class="font-bold text-stone-300">MWN © MERIDIAN WORLD NEWS NETWORK</span>
+                    <span>•</span>
+                    <a href="#" class="hover:underline">Terms of Use</a>
+                    <a href="#" class="hover:underline">Privacy Charter</a>
+                    <a href="#" class="hover:underline">Editorial Guidelines</a>
+                </div>
+                <div class="text-stone-400 font-mono text-[10px]">
+                    PROP ID: MWN-ONSET-9942 • SCREEN READY
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // Full Fictional Article Database
+        const articlesDB = {
+            'hero': {
+                category: 'WORLD DIPLOMACY',
+                title: 'Historic Ocean Accord Reached in Geneva as 142 Nations Commit to High Seas Protection Zone',
+                author: 'By Elena Vance, Senior Diplomatic Correspondent in Geneva',
+                time: 'Recent Update',
+                readTime: '4 min read',
+                image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Delegates stand for the ratification of the treaty at the Palais des Nations in Geneva.',
+                lead: 'GENEVA — In what international diplomats are calling a watershed moment for ocean governance, 142 nation states have formally signed the Global High Seas Environmental Treaty following a marathon 36-hour negotiation session.',
+                body: `
+                    <p class="mb-4">The agreement establishes a legally binding framework to protect at least 30% of international waters by 2032, instituting strict controls over commercial deep-sea mining, illegal fishing, and seabed industrial extraction across international corridors.</p>
+                    
+                    <blockquote class="my-6 border-l-4 border-mwn-red pl-4 py-2 italic font-serif text-lg text-stone-700 bg-stone-50 rounded-r">
+                        "We have moved beyond fragmented regional pacts toward a single unified standard for planetary ocean stewardship."
+                        <span class="block text-xs font-sans text-stone-500 mt-1 font-normal">— Dr. Aris Thorne, Lead UN Maritime Observer</span>
+                    </blockquote>
+
+                    <h3 class="text-lg font-bold text-stone-900 mt-6 mb-2">Key Framework Pillars</h3>
+                    <ul class="list-disc pl-5 space-y-2 mb-4">
+                        <li><strong>International Sanctuary Reserves:</strong> Designation of four megaregional no-take zones in the Central Pacific, Atlantic Abyssal Plain, and Southern Ocean.</li>
+                        <li><strong>Enforcement Grid:</strong> Joint satellite and autonomous vessel surveillance grid to monitor maritime compliance in real time.</li>
+                        <li><strong>Benefit Sharing:</strong> Mandatory royalty sharing for pharmaceutical discoveries derived from ocean seabed genetic resources.</li>
+                    </ul>
+
+                    <p class="mb-4">While delegation leaders praised the consensus vote, maritime shipping representatives raised questions regarding transition timelines for commercial trans-ocean routes. Further technical sessions are slated for October in Singapore to finalize navigation protocols.</p>
+                `
+            },
+            'biz-1': {
+                category: 'BUSINESS & MARKETS',
+                title: 'Central Banks Unveil Unified Protocol for Cross-Border Digital Currency Settlements',
+                author: 'By Marcus Thorne, Financial Markets Editor',
+                time: 'Recent Update',
+                readTime: '3 min read',
+                image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Trading screens react to the central bank joint communique in London.',
+                lead: 'LONDON — Financial authorities from 18 major economies have published technical specifications for the "Aegis Protocol," a standardized clearing architecture designed to streamline international wholesale settlements.',
+                body: `
+                    <p class="mb-4">The landmark initiative promises to reduce cross-border settlement latency from days to near-instantaneous clearance, dramatically lowering friction for international trade financing.</p>
+                    <p class="mb-4">Initial market reaction was swift, with global banking indices rising 1.4% following the joint communique. The framework operates on a distributed sovereign ledger, ensuring central bank autonomy while enabling seamless currency conversion without intermediary clearinghouses.</p>
+                `
+            },
+            'tech-1': {
+                category: 'TECHNOLOGY & FUTURE',
+                title: 'Sustained Coherence Milestone Reached in Room-Temperature Quantum Processing Test',
+                author: 'By Dr. Kenji Sato, Tech & Innovation Writer',
+                time: 'Recent Update',
+                readTime: '5 min read',
+                image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'A synthetic diamond qubit lattice inside Kyoto research facilities.',
+                lead: 'KYOTO — Quantum computing researchers at the Advanced Photonics Institute have demonstrated sustained qubit coherence for over 18 minutes at ambient temperatures, eliminating the need for bulky sub-zero cryogenic systems.',
+                body: `
+                    <p class="mb-4">Using custom synthetic diamond lattices to isolate nitrogen-vacancy centers, the team achieved stable entanglement across a 256-qubit array. The breakthrough is widely expected to accelerate commercial applications in molecular modeling and cryptography.</p>
+                `
+            },
+            'climate-1': {
+                category: 'CLIMATE & ENERGY',
+                title: 'North Sea Offshore Grid Transmits Record 45 GW of Renewable Energy in Storm Surge Test',
+                author: 'By Sarah Lindqvist, European Energy Correspondent',
+                time: 'Recent Update',
+                readTime: '4 min read',
+                image: 'https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'High-voltage subsea converter stations in the North Sea.',
+                lead: 'ROTTERDAM — An interconnected network of offshore wind arrays and subsea direct-current super-lines successfully managed peak surge generation during Atlantic Storm Vane, delivering power to six coastal nations.',
+                body: `
+                    <p class="mb-4">The test confirms the resilience of regional HVDC grids, demonstrating automated load-balancing algorithms capable of rerouting gigawatts of power in milliseconds to avoid grid overload.</p>
+                `
+            },
+            'space-1': {
+                category: 'SPACE & SCIENCE',
+                title: 'Magellan-7 Spacecraft Detects Complex Organic Compounds in Jovian Plume Flyby',
+                author: 'By David Vance, Science Editor',
+                time: 'Recent Update',
+                readTime: '4 min read',
+                image: 'https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Artistic composite rendered from Magellan-7 Europa plume telemetry.',
+                lead: 'PASADENA — High-resolution mass spectrometry data returned from the Magellan-7 Europa probe has confirmed complex organic molecules within water vapor plumes erupting from the moon’s southern polar region.',
+                body: `
+                    <p class="mb-4">Scientists confirmed the presence of complex hydrocarbons and nitrogen-bearing compounds, strongly reinforcing hypotheses regarding hydrothermal activity beneath Europa’s ice ocean.</p>
+                `
+            },
+            'opinion-1': {
+                category: 'OPINION & EDITORIAL',
+                title: 'The High Seas Accord proves multilateralism is far from extinct in an era of multipolar tension',
+                author: 'By Dr. Helena Kroll',
+                time: 'Recent Update',
+                readTime: '5 min read',
+                image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Dr. Helena Kroll at the Geneva Institute.',
+                lead: 'GENEVA — Many skeptics predicted that global treaty-making would fracture along regional lines. The 142-nation consensus in Geneva proves otherwise.',
+                body: `
+                    <p class="mb-4">When common ecological thresholds are at stake, shared necessity forces pragmatic compromise. The success of the High Seas Accord offers a blueprint for future space traffic and orbital debris management treaties.</p>
+                `
+            }
+        };
+
+        // Open Modal Reader with Article Details
+        function openArticle(articleId) {
+            const article = articlesDB[articleId] || articlesDB['hero'];
+            const modal = document.getElementById('articleModal');
+            const modalCategory = document.getElementById('modalCategory');
+            const modalBody = document.getElementById('modalBody');
+
+            modalCategory.innerText = article.category;
+            modalBody.innerHTML = `
+                <div class="border-b border-stone-200 pb-4 mb-4">
+                    <h1 class="text-2xl sm:text-3xl font-bold font-sans text-stone-900 leading-tight">${article.title}</h1>
+                    <div class="mt-3 flex flex-wrap items-center justify-between text-xs text-stone-500 gap-2">
+                        <span class="font-semibold text-stone-800">${article.author}</span>
+                        <div class="flex items-center space-x-3">
+                            <span>${article.readTime}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Article Image Header -->
+                <div class="relative rounded-lg overflow-hidden bg-stone-900 aspect-[16/9]">
+                    
+                    <!-- ==================== REPLACE IMAGE HERE: MODAL INSIDE ARTICLE ==================== -->
+                    <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover">
+                    <!-- ================================================================================== -->
+
+                </div>
+                <p class="text-xs text-stone-500 italic border-b border-stone-200 pb-3">${article.imageCaption}</p>
+
+                <div class="text-base sm:text-lg font-semibold text-stone-800 font-serif leading-relaxed">
+                    ${article.lead}
+                </div>
+                <div class="text-stone-700 text-sm sm:text-base leading-relaxed space-y-4">
+                    ${article.body}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Modal Reader
+        function closeModal() {
+            const modal = document.getElementById('articleModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key closes modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Category Filter Logic
+        function filterCategory(category) {
+            const banner = document.getElementById('filterBanner');
+            const bannerName = document.getElementById('filterCategoryName');
+            const tabs = document.querySelectorAll('.nav-tab');
+            const storyCards = document.querySelectorAll('.story-card');
+
+            tabs.forEach(tab => {
+                if (tab.innerText.toLowerCase() === category.toLowerCase() || (category === 'All' && tab.innerText === 'Home')) {
+                    tab.className = 'nav-tab active-tab text-white bg-mwn-darkred/90 px-3.5 py-2 rounded-t transition whitespace-nowrap font-bold';
+                } else {
+                    tab.className = 'nav-tab text-red-100 hover:text-white hover:bg-mwn-darkred/50 px-3.5 py-2 rounded-t transition whitespace-nowrap';
+                }
+            });
+
+            if (category === 'All') {
+                banner.classList.add('hidden');
+                storyCards.forEach(card => card.style.display = '');
+            } else {
+                banner.classList.remove('hidden');
+                bannerName.innerText = category;
+
+                storyCards.forEach(card => {
+                    const cardCat = card.getAttribute('data-category');
+                    if (cardCat && cardCat.toLowerCase() === category.toLowerCase()) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // Search Input Filtering
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const storyCards = document.querySelectorAll('.story-card');
+
+            storyCards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
