@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Broadview | News, Analysis and Opinion from Around the World</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Editorial Serif & Clean Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bv: {
+                            navy: '#052962',
+                            navydark: '#021838',
+                            blue: '#005689',
+                            yellow: '#ffe500',
+                            yellowdark: '#e6cc00',
+                            red: '#c70000',
+                            opinionbg: '#fef9e7',
+                            cardbg: '#ffffff',
+                            pagebg: '#f6f6f6',
+                            border: '#dcdcdc',
+                            text: '#121212',
+                            muted: '#666666'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f6f6f6;
+            color: #121212;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Continuous Ticker */
+        @keyframes tickerScroll {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .animate-ticker {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: tickerScroll 50s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
+        }
+
+        /* Pulsing dot for live status */
+        @keyframes livePulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.15); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .pulse-live {
+            animation: livePulse 1.6s infinite ease-in-out;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5e5e5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #005689;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #052962;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- TOP GUARDIAN-STYLE BRANDING HEADER -->
+    <header class="bg-bv-navy text-white sticky top-0 z-40 shadow-lg">
+        <!-- Top Utility Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-white/10">
+            <div class="flex items-center justify-between h-12 text-xs">
+                
+                <!-- Left Edition Selector -->
+                <div class="flex items-center space-x-3">
+                    <span class="font-semibold text-bv-yellow uppercase tracking-wider text-[11px]">Edition:</span>
+                    <select id="editionSelect" class="bg-bv-navydark text-white font-medium px-2 py-1 rounded border border-white/20 outline-none cursor-pointer">
+                        <option value="international">International</option>
+                        <option value="uk">UK & Europe</option>
+                        <option value="us">US Edition</option>
+                        <option value="asia">Asia-Pacific</option>
+                    </select>
+                </div>
+
+                <!-- Right Actions & Search -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Search news & analysis..." 
+                            class="bg-white/10 text-white placeholder-white/60 text-xs rounded-full py-1 pl-7 pr-3 w-36 sm:w-56 focus:outline-none focus:ring-2 focus:ring-bv-yellow focus:bg-bv-navydark transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-[10px] text-white/70"></i>
+                    </div>
+                    <button class="bg-bv-yellow text-bv-navy font-extrabold px-3 py-1 rounded text-xs hover:bg-bv-yellowdark transition">
+                        Support Us
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Masthead Banner -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between border-b border-white/10">
+            <div>
+                <a href="#" onclick="filterCategory('All')" class="group inline-block">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black font-serif tracking-tight text-white group-hover:text-bv-yellow transition">
+                        The Broadview
+                    </h1>
+                </a>
+                <p class="text-xs text-white/70 mt-1 font-sans tracking-wide uppercase">Independent Journalism • International Edition</p>
+            </div>
+
+            <!-- Header Badge Graphic / Support Callout -->
+            <div class="hidden md:flex items-center space-x-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-lg">
+                <div class="text-right">
+                    <span class="block text-xs font-bold text-bv-yellow uppercase">Global Investigative Journalism</span>
+                    <span class="block text-[11px] text-white/80">Reader-funded • No paywall</span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-bv-yellow text-bv-navy flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-globe"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Primary Navigation Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center space-x-1 overflow-x-auto py-1 scrollbar-none text-sm font-semibold tracking-tight">
+                <button onclick="filterCategory('All')" class="nav-tab text-bv-navy bg-bv-yellow px-4 py-2 rounded-t font-bold transition whitespace-nowrap">News</button>
+                <button onclick="filterCategory('World')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">World</button>
+                <button onclick="filterCategory('Politics')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Politics</button>
+                <button onclick="filterCategory('Climate')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Climate</button>
+                <button onclick="filterCategory('Science')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Science</button>
+                <button onclick="filterCategory('Tech')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Tech</button>
+                <button onclick="filterCategory('Business')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Business</button>
+                <button onclick="filterCategory('Culture')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Culture</button>
+                <button onclick="filterCategory('Opinion')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap text-bv-yellow">Opinion</button>
+                <button onclick="filterCategory('Sport')" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Sport</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- LIVE NEWS TICKER BANNER -->
+    <div class="bg-bv-navydark text-white border-b border-bv-blue/40 overflow-hidden flex items-stretch h-10 shadow-md">
+        <div class="bg-bv-red px-4 flex items-center shrink-0 z-10 font-black text-xs uppercase tracking-wider text-white">
+            <span class="w-2.5 h-2.5 bg-white rounded-full mr-2 pulse-live inline-block"></span>
+            Live Updates
+        </div>
+        <div class="flex-1 overflow-hidden relative flex items-center">
+            <div class="animate-ticker space-x-12 text-xs font-medium text-stone-200">
+                <span class="inline-flex items-center cursor-pointer hover:text-bv-yellow transition" onclick="openArticle('hero')"><strong class="text-bv-yellow mr-1.5">[ARCTIC SUMMIT]:</strong> 14 North Atlantic nations agree on binding polar protection accord.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-bv-yellow transition" onclick="openArticle('climate-1')"><strong class="text-bv-yellow mr-1.5">[ATMOSPHERE]:</strong> Sub-orbital research fleet detects record stabilization in stratospheric jet.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-bv-yellow transition" onclick="openArticle('tech-1')"><strong class="text-bv-yellow mr-1.5">[ARTIFICIAL INTEL]:</strong> Sovereign AI coalition issues ethics directives for autonomous systems.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-bv-yellow transition" onclick="openArticle('biz-1')"><strong class="text-bv-yellow mr-1.5">[TRANSIT]:</strong> Trans-Eurasian maglev network passes first multi-border freight trial.</span>
+            </div>
+        </div>
+        <div class="bg-bv-navy px-3 hidden lg:flex items-center text-[11px] text-stone-300 border-l border-white/10 shrink-0 font-mono">
+            <i class="fa-solid fa-satellite text-bv-yellow mr-2"></i> GLOBAL DISPATCH
+        </div>
+    </div>
+
+    <!-- MAIN PAGE CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10" id="mainContent">
+
+        <!-- ACTIVE FILTER DISPLAY BANNER (Hidden by default) -->
+        <div id="filterBanner" class="hidden bg-stone-200 border-l-4 border-bv-navy p-3 rounded flex justify-between items-center text-sm">
+            <div>
+                Filtering section: <strong id="filterCategoryName" class="text-bv-navy uppercase font-bold">World</strong>
+            </div>
+            <button onclick="filterCategory('All')" class="text-xs bg-white hover:bg-stone-100 text-stone-800 px-3 py-1 rounded border border-stone-300 font-bold transition">
+                Reset Filter
+            </button>
+        </div>
+
+        <!-- SECTION 1: MAIN SPLASH & TOP STORIES GRID -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- LEFT & CENTER: PRIMARY SPLASH STORY (8 cols) -->
+            <div class="lg:col-span-8 space-y-8">
+                
+                <!-- GUARDIAN-STYLE HERO CARD -->
+                <article class="bg-white rounded-lg overflow-hidden border border-bv-border shadow-sm hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('hero')" data-category="World">
+                    <div class="relative overflow-hidden aspect-[16/9] bg-stone-900">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-10"></div>
+                        
+                        <!-- ==================== REPLACE IMAGE HERE: MAIN HERO STORY (Recommended: 1200x675) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80" 
+                             alt="Arctic Research Station" 
+                             id="img-hero"
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700">
+                        <!-- ================================================================================================== -->
+
+                        <!-- Badges Overlay -->
+                        <div class="absolute top-4 left-4 z-20 flex items-center space-x-2">
+                            <span class="bg-bv-yellow text-bv-navy text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-sm shadow">EXCLUIVE</span>
+                            <span class="bg-bv-navy text-white text-xs font-bold px-2.5 py-1 rounded-sm flex items-center gap-1">
+                                <i class="fa-solid fa-globe text-bv-yellow"></i> Polar Summit
+                            </span>
+                        </div>
+
+                        <!-- Headline Overlay -->
+                        <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8 z-20 text-white">
+                            <h2 class="text-2xl sm:text-4xl font-bold font-serif leading-tight group-hover:text-bv-yellow transition">
+                                Historic Polar Sovereignty Treaty Signed as 14 Atlantic Nations Lock In Mining Moratorium
+                            </h2>
+                            <p class="mt-3 text-stone-200 text-sm sm:text-base line-clamp-2 font-serif font-light leading-relaxed">
+                                Landmark Reykjavik Agreement halts deep-water seabed exploitation across 2.4 million square kilometers, creating the world's largest contiguous environmental preserve.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Meta Footer -->
+                    <div class="px-6 py-3.5 bg-stone-50 border-t border-bv-border flex items-center justify-between text-xs text-bv-muted">
+                        <div class="flex items-center space-x-3">
+                            <span class="font-bold text-stone-900">By Charlotte Sterling in Reykjavik</span>
+                            <span>•</span>
+                            <span>International Environment Desk</span>
+                        </div>
+                        <div class="flex items-center space-x-3 text-stone-600">
+                            <span class="hover:text-bv-blue"><i class="fa-regular fa-comment mr-1"></i>512</span>
+                            <span class="hover:text-bv-blue"><i class="fa-solid fa-share-nodes"></i></span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- SECONDARY NEWS GRID (4 Key Secondary Stories) -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6" id="secondaryGrid">
+
+                    <!-- CARD 1: Climate -->
+                    <article class="bg-white rounded-lg border-t-4 border-bv-blue border-x border-b border-bv-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('climate-1')" data-category="Climate">
+                        <div class="p-5">
+                            <div class="relative aspect-[16/10] bg-stone-800 rounded overflow-hidden mb-4">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: CLIMATE STORY (Recommended: 600x375) ==================== -->
+                                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Coastal Atmospheric Observation Station" 
+                                     id="img-climate-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- ================================================================================================ -->
+
+                                <span class="absolute top-2 left-2 bg-bv-yellow text-bv-navy text-[10px] font-black uppercase px-2 py-0.5 rounded">BREAKTHROUGH</span>
+                            </div>
+                            <span class="text-xs font-bold text-bv-blue uppercase tracking-wide">Atmospheric Research</span>
+                            <h3 class="font-serif font-bold text-lg leading-snug mt-1 group-hover:text-bv-blue transition text-stone-900">
+                                Sub-Orbital Sensor Grid Confirms Recovery Milestone in Jet Stream Alignment
+                            </h3>
+                            <p class="mt-2 text-xs text-bv-muted line-clamp-2 font-sans leading-relaxed">
+                                High-altitude atmospheric monitoring satellites confirm three consecutive quarters of thermal stabilization across northern trade corridors.
+                            </p>
+                        </div>
+                        <div class="px-5 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-bv-muted">
+                            <span>Climate & Earth</span>
+                            <span class="font-semibold text-stone-700">4 min read</span>
+                        </div>
+                    </article>
+
+                    <!-- CARD 2: Technology -->
+                    <article class="bg-white rounded-lg border-t-4 border-purple-700 border-x border-b border-bv-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('tech-1')" data-category="Tech">
+                        <div class="p-5">
+                            <div class="relative aspect-[16/10] bg-stone-800 rounded overflow-hidden mb-4">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: TECH STORY (Recommended: 600x375) ==================== -->
+                                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Silicon Microprocessor Chip" 
+                                     id="img-tech-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- ============================================================================================= -->
+
+                                <span class="absolute top-2 left-2 bg-bv-navy text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">ANALYSIS</span>
+                            </div>
+                            <span class="text-xs font-bold text-purple-700 uppercase tracking-wide">Tech Ethics</span>
+                            <h3 class="font-serif font-bold text-lg leading-snug mt-1 group-hover:text-bv-blue transition text-stone-900">
+                                Global Sovereign AI Accord Drafts Directives for Neural Network Transparency
+                            </h3>
+                            <p class="mt-2 text-xs text-bv-muted line-clamp-2 font-sans leading-relaxed">
+                                International alliance obligates autonomous network providers to submit algorithmic provenance logs for financial and civic infrastructure.
+                            </p>
+                        </div>
+                        <div class="px-5 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-bv-muted">
+                            <span>Technology & Society</span>
+                            <span class="font-semibold text-stone-700">6 min read</span>
+                        </div>
+                    </article>
+
+                    <!-- CARD 3: Business/Transit -->
+                    <article class="bg-white rounded-lg border-t-4 border-emerald-600 border-x border-b border-bv-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('biz-1')" data-category="Business">
+                        <div class="p-5">
+                            <div class="relative aspect-[16/10] bg-stone-800 rounded overflow-hidden mb-4">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: BUSINESS STORY (Recommended: 600x375) ==================== -->
+                                <img src="https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=600&q=80" 
+                                     alt="High Speed Railway Infrastructure" 
+                                     id="img-biz-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- =================================================================================================== -->
+
+                                <span class="absolute top-2 left-2 bg-emerald-700 text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded">GLOBAL TRADE</span>
+                            </div>
+                            <span class="text-xs font-bold text-emerald-600 uppercase tracking-wide">Infrastructure</span>
+                            <h3 class="font-serif font-bold text-lg leading-snug mt-1 group-hover:text-bv-blue transition text-stone-900">
+                                Trans-Eurasian Maglev Freight Corridor Completes Maiden High-Velocity Run
+                            </h3>
+                            <p class="mt-2 text-xs text-bv-muted line-clamp-2 font-sans leading-relaxed">
+                                Continuous 7,800km automated freight line slashes maritime transit times from three weeks to 34 hours.
+                            </p>
+                        </div>
+                        <div class="px-5 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-bv-muted">
+                            <span>Logistics & Trade</span>
+                            <span class="font-semibold text-stone-700">5 min read</span>
+                        </div>
+                    </article>
+
+                    <!-- CARD 4: Science -->
+                    <article class="bg-white rounded-lg border-t-4 border-amber-600 border-x border-b border-bv-border overflow-hidden hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('science-1')" data-category="Science">
+                        <div class="p-5">
+                            <div class="relative aspect-[16/10] bg-stone-800 rounded overflow-hidden mb-4">
+                                
+                                <!-- ==================== REPLACE IMAGE HERE: SCIENCE STORY (Recommended: 600x375) ==================== -->
+                                <img src="https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Deep Ocean Exploration Vehicle" 
+                                     id="img-science-1"
+                                     class="w-full h-full object-cover transform group-hover:scale-105 transition duration-500">
+                                <!-- ================================================================================================== -->
+
+                                <span class="absolute top-2 left-2 bg-bv-yellow text-bv-navy text-[10px] font-black uppercase px-2 py-0.5 rounded">DISCOVERY</span>
+                            </div>
+                            <span class="text-xs font-bold text-amber-600 uppercase tracking-wide">Deep Sea Ecology</span>
+                            <h3 class="font-serif font-bold text-lg leading-snug mt-1 group-hover:text-bv-blue transition text-stone-900">
+                                Robotic Submersible Uncovers Hydrothermal Ecosystem in Kermadec Trench
+                            </h3>
+                            <p class="mt-2 text-xs text-bv-muted line-clamp-2 font-sans leading-relaxed">
+                                Autonomous deep-ocean probe cataloged 48 unclassified chemosynthetic organisms thriving 8,000 meters below sea level.
+                            </p>
+                        </div>
+                        <div class="px-5 py-2.5 bg-stone-50 border-t border-stone-100 flex items-center justify-between text-[11px] text-bv-muted">
+                            <span>Ocean Exploration</span>
+                            <span class="font-semibold text-stone-700">3 min read</span>
+                        </div>
+                    </article>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDEBAR (4 cols: Most Read, Video Spotlight, Opinion Highlights) -->
+            <aside class="lg:col-span-4 space-y-8">
+
+                <!-- GUARDIAN-STYLE RANKED "MOST READ" -->
+                <div class="bg-white rounded-lg p-5 border border-bv-border shadow-sm">
+                    <div class="flex items-center justify-between border-b-2 border-bv-navy pb-3 mb-4">
+                        <h3 class="font-serif font-bold text-lg text-bv-navy tracking-tight flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-bv-yellow inline-block rounded-full"></span>
+                            Most Read Globally
+                        </h3>
+                        <span class="text-[11px] text-bv-muted font-mono uppercase">24 Hours</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Rank 1 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('hero')">
+                            <span class="text-3xl font-black text-bv-yellow group-hover:text-bv-navy transition font-serif leading-none w-6">1</span>
+                            <div class="border-b border-stone-100 pb-3 w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Reykjavik Accord moratorium: What the polar treaty changes for global deep-sea mining
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">World • 188k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 2 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('opinion-1')">
+                            <span class="text-3xl font-black text-bv-yellow group-hover:text-bv-navy transition font-serif leading-none w-6">2</span>
+                            <div class="border-b border-stone-100 pb-3 w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Dr. Helena Vance: Why sovereign AI regulations will define the next fifty years of democracy
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">Opinion • 134k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 3 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('climate-1')">
+                            <span class="text-3xl font-black text-bv-yellow group-hover:text-bv-navy transition font-serif leading-none w-6">3</span>
+                            <div class="border-b border-stone-100 pb-3 w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Atmospheric satellite data shows earliest signs of northern jet stream thermal lock
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">Climate • 95k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 4 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('biz-1')">
+                            <span class="text-3xl font-black text-bv-yellow group-hover:text-bv-navy transition font-serif leading-none w-6">4</span>
+                            <div class="border-b border-stone-100 pb-3 w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Inside the Trans-Eurasian maglev terminal: High-speed freight in pictures
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">Business • 82k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 5 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer" onclick="openArticle('science-1')">
+                            <span class="text-3xl font-black text-bv-yellow group-hover:text-bv-navy transition font-serif leading-none w-6">5</span>
+                            <div class="w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Kermadec Trench expedition discovers new chemosynthetic species
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">Science • 71k readers</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BROADVIEW MULTIMEDIA SPOTLIGHT CARD -->
+                <div class="bg-bv-navy text-white rounded-lg p-5 border border-bv-navydark shadow-md">
+                    <div class="flex items-center justify-between border-b border-white/20 pb-3 mb-4">
+                        <h3 class="font-serif font-bold text-sm uppercase tracking-wider text-bv-yellow flex items-center gap-2">
+                            <i class="fa-solid fa-circle-play"></i>
+                            Broadview Documentaries
+                        </h3>
+                        <span class="text-xs text-white/70 hover:underline cursor-pointer" onclick="filterCategory('Culture')">View All</span>
+                    </div>
+
+                    <div class="relative aspect-video rounded overflow-hidden group cursor-pointer border border-white/10" onclick="openArticle('hero')">
+                        
+                        <!-- ==================== REPLACE IMAGE HERE: VIDEO SPOTLIGHT THUMBNAIL (Recommended: 600x337) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=600&q=80" 
+                             alt="Earth Satellite View" 
+                             id="img-video-thumb"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500 opacity-80">
+                        <!-- ========================================================================================================== -->
+
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition flex items-center justify-center">
+                            <div class="w-12 h-12 bg-bv-yellow text-bv-navy rounded-full flex items-center justify-center shadow-xl transform group-hover:scale-110 transition">
+                                <i class="fa-solid fa-play text-lg ml-1"></i>
+                            </div>
+                        </div>
+                        <span class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded">18:24</span>
+                    </div>
+
+                    <h4 class="font-serif font-bold text-base text-white mt-3 hover:text-bv-yellow cursor-pointer transition leading-snug" onclick="openArticle('hero')">
+                        The Silent Frontier: How Satellite Grids Are Monitoring the High Oceans
+                    </h4>
+                    <p class="text-xs text-stone-300 mt-1 font-sans">Broadview Visual Investigations team examines autonomous maritime enforcement.</p>
+                </div>
+
+            </aside>
+        </section>
+
+        <!-- SECTION 2: SIGNATURE OPINION & COMMENT SECTION (Soft Cream/Yellow Tint Cards) -->
+        <section class="bg-bv-opinionbg rounded-xl p-6 md:p-8 border border-amber-200 shadow-sm space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-bv-navy pb-4 gap-2">
+                <div>
+                    <span class="text-xs font-black uppercase tracking-widest text-bv-red">Opinion & Analysis</span>
+                    <h2 class="text-2xl md:text-3xl font-serif font-extrabold text-bv-navy">The Broadview Columnists</h2>
+                </div>
+                <button onclick="filterCategory('Opinion')" class="text-xs font-bold text-bv-blue hover:text-bv-navy flex items-center gap-1">
+                    <span>Explore All Comment & Editorial</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Columnist Card 1 -->
+                <article class="bg-white p-6 rounded-lg border border-amber-200/80 hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('opinion-1')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            
+                            <!-- ==================== REPLACE IMAGE HERE: COLUMNIST 1 HEADSHOT (100x100) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80" 
+                                 alt="Dr. Helena Vance" 
+                                 class="w-14 h-14 rounded-full object-cover border-2 border-bv-yellow shadow-sm">
+                            <!-- ============================================================================================== -->
+
+                            <div>
+                                <h4 class="font-serif font-bold text-base text-stone-900 group-hover:text-bv-blue transition">Dr. Helena Vance</h4>
+                                <span class="text-xs text-bv-muted">Ethics & AI Policy Fellow</span>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <span class="text-4xl font-serif text-bv-yellow absolute -top-3 -left-2 leading-none select-none">“</span>
+                            <h3 class="font-serif font-bold text-lg text-stone-900 leading-snug pl-3 relative z-10 group-hover:text-bv-blue transition">
+                                The Sovereign AI Accord is a triumph for civic technology, but key enforcement loopholes remain.
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-bv-muted">
+                        <span>Opinion • Tech Ethics</span>
+                        <span class="font-semibold text-stone-700">5 min read</span>
+                    </div>
+                </article>
+
+                <!-- Columnist Card 2 -->
+                <article class="bg-white p-6 rounded-lg border border-amber-200/80 hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('opinion-1')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            
+                            <!-- ==================== REPLACE IMAGE HERE: COLUMNIST 2 HEADSHOT (100x100) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" 
+                                 alt="Marcus Lindemann" 
+                                 class="w-14 h-14 rounded-full object-cover border-2 border-bv-yellow shadow-sm">
+                            <!-- ============================================================================================== -->
+
+                            <div>
+                                <h4 class="font-serif font-bold text-base text-stone-900 group-hover:text-bv-blue transition">Marcus Lindemann</h4>
+                                <span class="text-xs text-bv-muted">Senior International Editor</span>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <span class="text-4xl font-serif text-bv-yellow absolute -top-3 -left-2 leading-none select-none">“</span>
+                            <h3 class="font-serif font-bold text-lg text-stone-900 leading-snug pl-3 relative z-10 group-hover:text-bv-blue transition">
+                                Reykjavik shows how environmental diplomacy can succeed even in a fractured multipolar landscape.
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-bv-muted">
+                        <span>Opinion • World Affairs</span>
+                        <span class="font-semibold text-stone-700">7 min read</span>
+                    </div>
+                </article>
+
+                <!-- Columnist Card 3 -->
+                <article class="bg-white p-6 rounded-lg border border-amber-200/80 hover:shadow-md transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('opinion-1')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            
+                            <!-- ==================== REPLACE IMAGE HERE: COLUMNIST 3 HEADSHOT (100x100) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" 
+                                 alt="Aisha Rahman" 
+                                 class="w-14 h-14 rounded-full object-cover border-2 border-bv-yellow shadow-sm">
+                            <!-- ============================================================================================== -->
+
+                            <div>
+                                <h4 class="font-serif font-bold text-base text-stone-900 group-hover:text-bv-blue transition">Aisha Rahman</h4>
+                                <span class="text-xs text-bv-muted">Global Infrastructure Analyst</span>
+                            </div>
+                        </div>
+
+                        <div class="relative">
+                            <span class="text-4xl font-serif text-bv-yellow absolute -top-3 -left-2 leading-none select-none">“</span>
+                            <h3 class="font-serif font-bold text-lg text-stone-900 leading-snug pl-3 relative z-10 group-hover:text-bv-blue transition">
+                                Trans-continental maglev networks prove that clean rail freight can outpace maritime shipping.
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-bv-muted">
+                        <span>Opinion • Infrastructure</span>
+                        <span class="font-semibold text-stone-700">4 min read</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FULL INTERACTIVE ARTICLE MODAL READER -->
+    <div id="articleModal" class="fixed inset-0 bg-bv-navydark/80 backdrop-blur-sm z-50 hidden overflow-y-auto flex justify-center p-2 sm:p-4 md:p-6">
+        <div class="bg-white w-full max-w-4xl rounded-lg shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
+            
+            <!-- Modal Header Bar -->
+            <div class="bg-bv-navy text-white px-6 py-3.5 flex justify-between items-center shrink-0 border-b border-bv-blue">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-bv-yellow text-bv-navy font-black text-xs px-2.5 py-1 rounded-sm uppercase tracking-wider">The Broadview</span>
+                    <span id="modalCategory" class="text-xs font-bold uppercase tracking-wider text-stone-300">World News</span>
+                </div>
+                <button onclick="closeModal()" class="text-white hover:text-bv-yellow p-1 rounded-full transition focus:outline-none" title="Close Article">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (Injected dynamically) -->
+            <div class="p-6 sm:p-10 overflow-y-auto space-y-6 flex-1 font-sans text-stone-800" id="modalBody">
+                <!-- Content injected via JavaScript openArticle() -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-stone-100 px-6 py-3 border-t border-stone-200 flex justify-between items-center text-xs text-stone-500 shrink-0">
+                <span>The Broadview • Independent International Journalism</span>
+                <button onclick="closeModal()" class="bg-bv-navy hover:bg-bv-blue text-white font-bold px-4 py-1.5 rounded transition">
+                    Close Article
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-bv-navydark text-white mt-16 border-t-4 border-bv-yellow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            
+            <!-- Top Footer Brand Row -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/10 pb-8 mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-black text-white">The Broadview</h2>
+                    <p class="text-xs text-stone-400 mt-1">Global Coverage • Uncompromising Analysis • Independent Voice</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-white/10 hover:bg-white/20 text-xs font-bold px-4 py-2 rounded text-stone-200 border border-white/20 transition flex items-center gap-2">
+                        <span>Back to top</span>
+                        <i class="fa-solid fa-arrow-up text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Category Columns -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10 text-xs">
+                <div>
+                    <h4 class="font-bold text-bv-yellow uppercase tracking-wider mb-3 border-b border-white/10 pb-2">News Sections</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" onclick="filterCategory('World')" class="hover:text-white transition">World News</a></li>
+                        <li><a href="#" onclick="filterCategory('Politics')" class="hover:text-white transition">Global Politics</a></li>
+                        <li><a href="#" onclick="filterCategory('Climate')" class="hover:text-white transition">Climate & Earth</a></li>
+                        <li><a href="#" onclick="filterCategory('Tech')" class="hover:text-white transition">Technology</a></li>
+                        <li><a href="#" onclick="filterCategory('Science')" class="hover:text-white transition">Science & Space</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-bv-yellow uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Opinion & Commentary</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" onclick="filterCategory('Opinion')" class="hover:text-white transition">The Broadview Editorial</a></li>
+                        <li><a href="#" onclick="filterCategory('Opinion')" class="hover:text-white transition">Columnists</a></li>
+                        <li><a href="#" onclick="filterCategory('Opinion')" class="hover:text-white transition">Global Perspectives</a></li>
+                        <li><a href="#" onclick="filterCategory('Opinion')" class="hover:text-white transition">Letters & Reader Opinions</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-bv-yellow uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Multimedia & Culture</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" class="hover:text-white transition">Broadview Visual Investigations</a></li>
+                        <li><a href="#" class="hover:text-white transition">Podcasts & Audio Dispatch</a></li>
+                        <li><a href="#" onclick="filterCategory('Culture')" class="hover:text-white transition">Books & Culture</a></li>
+                        <li><a href="#" onclick="filterCategory('Sport')" class="hover:text-white transition">International Sport</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-bv-yellow uppercase tracking-wider mb-3 border-b border-white/10 pb-2">About The Broadview</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" class="hover:text-white transition">Our Reader Ownership Model</a></li>
+                        <li><a href="#" class="hover:text-white transition">Editorial Independence Charter</a></li>
+                        <li><a href="#" class="hover:text-white transition">Global Bureau Locations</a></li>
+                        <li><a href="#" class="hover:text-white transition">Careers & Fellowships</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="font-bold text-bv-yellow uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Prop Information</h4>
+                    <p class="text-stone-400 text-[11px] leading-relaxed mb-3">
+                        "The Broadview" is a fictional screen prop website created for set display, filming, and cinematic backgrounds.
+                    </p>
+                    <div class="text-stone-400 font-mono text-[10px]">
+                        PROP ID: BROADVIEW-SET-2026 • READY
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Legal Bar -->
+            <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center text-[11px] text-stone-400 gap-4">
+                <div>
+                    © 2026 The Broadview Publishing Group. All rights reserved.
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <span>•</span>
+                    <a href="#" class="hover:underline">Terms of Service</a>
+                    <span>•</span>
+                    <a href="#" class="hover:underline">Editorial Guidelines</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // Full Fictional Article Database for Modal Reader
+        const articlesDB = {
+            'hero': {
+                category: 'WORLD DIPLOMACY',
+                title: 'Historic Polar Sovereignty Treaty Signed as 14 Atlantic Nations Lock In Mining Moratorium',
+                author: 'By Charlotte Sterling, Senior Environmental Correspondent in Reykjavik',
+                readTime: '6 min read',
+                image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'The Reykjavik Diplomatic Center following the signature of the Polar Accord.',
+                lead: 'REYKJAVIK — In a landmark triumph for international climate statecraft, representatives from fourteen North Atlantic states signed the binding Reykjavik Polar Sovereignty Accord early Thursday morning.',
+                body: `
+                    <p class="mb-4">The treaty establishes a total moratorium on commercial seabed extraction, oil drilling, and heavy industrial transit across 2.4 million square kilometers of sensitive Arctic waters until at least 2060.</p>
+                    
+                    <blockquote class="my-6 border-l-4 border-bv-yellow pl-4 py-2 italic font-serif text-lg text-stone-800 bg-amber-50 rounded-r">
+                        "We have chosen shared stewardship over unregulated exploitation. The Arctic ecosystem is no longer a theater for territorial posturing."
+                        <span class="block text-xs font-sans text-stone-600 mt-1 font-semibold">— Dr. Aris Thorne, Director of the International Polar Institute</span>
+                    </blockquote>
+
+                    <h3 class="text-lg font-bold font-serif text-stone-900 mt-6 mb-2">Treaty Core Accord Directives</h3>
+                    <ul class="list-disc pl-5 space-y-2 mb-4 text-stone-700">
+                        <li><strong>Permanent Seabed Sanctuary:</strong> Immediate prohibition of polymetallic nodule mining and deep-sea dredging operations.</li>
+                        <li><strong>Autonomous Monitoring Grid:</strong> Deployment of a shared satellite and sub-surface acoustic sensor array to log all vessel entries.</li>
+                        <li><strong>Indigenous Rights Protection:</strong> Direct revenue allocation from regional eco-tourism funds to Arctic indigenous communities.</li>
+                    </ul>
+
+                    <p class="mb-4">Environmental coalitions worldwide praised the consensus, while shipping logistics groups requested dedicated transit corridors during summer thaw cycles. Follow-up technical panels will convene in Oslo next spring.</p>
+                `
+            },
+            'climate-1': {
+                category: 'ATMOSPHERIC SCIENCE',
+                title: 'Sub-Orbital Sensor Grid Confirms Recovery Milestone in Jet Stream Alignment',
+                author: 'By Marcus Thorne, Earth Systems Editor',
+                readTime: '4 min read',
+                image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'High-altitude sub-orbital research vessel collecting stratospheric temperature data.',
+                lead: 'GENEVA — Data compiled from high-altitude atmospheric drones and satellite telemetry shows three consecutive quarters of thermal stabilization in northern trade winds.',
+                body: `
+                    <p class="mb-4">The research marks the first tangible evidence that reduced aerosol emissions in major industrial corridors are contributing to more predictable seasonal jet stream patterns.</p>
+                    <p class="mb-4">Meteorologists emphasize that while long-term warming trends remain a challenge, the reduced variance in northern weather patterns should alleviate extreme agricultural drought events across southern Europe and North America.</p>
+                `
+            },
+            'tech-1': {
+                category: 'TECHNOLOGY ETHICS',
+                title: 'Global Sovereign AI Accord Drafts Directives for Neural Network Transparency',
+                author: 'By Dr. Kenji Sato, Global Technology Writer',
+                readTime: '6 min read',
+                image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'A optical microprocessor wafer undergoing diagnostic testing in Kyoto.',
+                lead: 'KYOTO — Delegates representing 22 technology-exporting nations have agreed on mandatory audit protocols for high-capacity neural network architectures deployed in public infrastructure.',
+                body: `
+                    <p class="mb-4">Under the newly minted "Kyoto Standards," artificial intelligence systems utilized in medical diagnostics, banking clearance, and power grid distribution must maintain fully reproducible decision logs.</p>
+                    <p class="mb-4">The initiative seeks to eliminate "black-box" risk in critical societal infrastructure while maintaining commercial intellectual property protections for algorithm developers.</p>
+                `
+            },
+            'biz-1': {
+                category: 'LOGISTICS & TRADE',
+                title: 'Trans-Eurasian Maglev Freight Corridor Completes Maiden High-Velocity Run',
+                author: 'By Sarah Lindqvist, Infrastructure Analyst',
+                readTime: '5 min read',
+                image: 'https://images.unsplash.com/photo-1474487548417-781cb71495f3?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'An automated maglev freight capsule entering the central transit depot.',
+                lead: 'ROTTERDAM — The world’s longest automated magnetic levitation freight line completed its maiden voyage on Wednesday, delivering 4,000 metric tons of cargo across 7,800 kilometers in under 35 hours.',
+                body: `
+                    <p class="mb-4">The electrified transit line operates in low-pressure conduits, reducing carbon emissions by 92% compared to maritime container transport while dramatically accelerating supply chain velocity between East Asia and Europe.</p>
+                `
+            },
+            'science-1': {
+                category: 'OCEAN EXPLORATION',
+                title: 'Robotic Submersible Uncovers Hydrothermal Ecosystem in Kermadec Trench',
+                author: 'By David Vance, Science Editor',
+                readTime: '3 min read',
+                image: 'https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'The deep-sea robotic probe Nereus-IV prior to deployment.',
+                lead: 'WELLINGTON — Marine biologists operating deep ocean landers in the Kermadec Trench have recorded dozens of unclassified organisms flourishing around high-temperature mineral vents 8,000 meters underwater.',
+                body: `
+                    <p class="mb-4">The biological discovery provides crucial data regarding how life adapts to extreme oceanic pressure and thermal chemical energy without sunlight, shedding light on potential biosignatures in extraterrestrial ocean worlds.</p>
+                `
+            },
+            'opinion-1': {
+                category: 'EDITORIAL COMMENTARY',
+                title: 'The Sovereign AI Accord is a triumph for civic technology, but key enforcement loops remain',
+                author: 'By Dr. Helena Kroll, Senior Fellow at the Geneva Institute',
+                readTime: '5 min read',
+                image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Dr. Helena Kroll addressing the AI Governance Panel in Geneva.',
+                lead: 'GENEVA — When public institutions rely on autonomous algorithms to manage water distribution, healthcare access, and financial clearing, transparency is not an optional feature—it is a fundamental right.',
+                body: `
+                    <p class="mb-4">The Kyoto Standards represent a vital first step in ensuring technology serves human interests with accountability. However, without independent international audit bodies, compliance risks becoming voluntary for large tech conglomerates.</p>
+                `
+            }
+        };
+
+        // Open Modal Reader
+        function openArticle(articleId) {
+            const article = articlesDB[articleId] || articlesDB['hero'];
+            const modal = document.getElementById('articleModal');
+            const modalCategory = document.getElementById('modalCategory');
+            const modalBody = document.getElementById('modalBody');
+
+            modalCategory.innerText = article.category;
+            modalBody.innerHTML = `
+                <div class="border-b border-stone-200 pb-4 mb-4">
+                    <h1 class="text-2xl sm:text-4xl font-bold font-serif text-stone-900 leading-tight">${article.title}</h1>
+                    <div class="mt-4 flex flex-wrap items-center justify-between text-xs text-stone-600 gap-2 font-sans">
+                        <span class="font-bold text-stone-900">${article.author}</span>
+                        <div class="flex items-center space-x-3">
+                            <span class="bg-bv-opinionbg text-bv-navy px-2 py-0.5 rounded font-semibold border border-amber-200">${article.readTime}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Article Header Image -->
+                <div class="relative rounded-lg overflow-hidden bg-stone-900 aspect-[16/9]">
+                    
+                    <!-- ==================== REPLACE IMAGE HERE: MODAL INSIDE ARTICLE ==================== -->
+                    <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover">
+                    <!-- ================================================================================== -->
+
+                </div>
+                <p class="text-xs text-stone-500 italic font-sans border-b border-stone-200 pb-3">${article.imageCaption}</p>
+
+                <div class="text-base sm:text-lg font-serif font-bold text-stone-800 leading-relaxed">
+                    ${article.lead}
+                </div>
+                <div class="text-stone-700 text-sm sm:text-base leading-relaxed space-y-4 font-sans">
+                    ${article.body}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Modal Reader
+        function closeModal() {
+            const modal = document.getElementById('articleModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // ESC key closes modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Section Category Filter Logic
+        function filterCategory(category) {
+            const banner = document.getElementById('filterBanner');
+            const bannerName = document.getElementById('filterCategoryName');
+            const tabs = document.querySelectorAll('.nav-tab');
+            const storyCards = document.querySelectorAll('.story-card');
+
+            tabs.forEach(tab => {
+                if (tab.innerText.toLowerCase() === category.toLowerCase() || (category === 'All' && tab.innerText === 'News')) {
+                    tab.className = 'nav-tab text-bv-navy bg-bv-yellow px-4 py-2 rounded-t font-bold transition whitespace-nowrap';
+                } else {
+                    tab.className = 'nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap';
+                }
+            });
+
+            if (category === 'All') {
+                banner.classList.add('hidden');
+                storyCards.forEach(card => card.style.display = '');
+            } else {
+                banner.classList.remove('hidden');
+                bannerName.innerText = category;
+
+                storyCards.forEach(card => {
+                    const cardCat = card.getAttribute('data-category');
+                    if (cardCat && cardCat.toLowerCase() === category.toLowerCase()) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // Dynamic Search Filter
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const storyCards = document.querySelectorAll('.story-card');
+
+            storyCards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
