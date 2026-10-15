@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Signal | News, Analysis and Opinion from Around the World</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Oswald (Headlines) & Inter (Body Text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gs: {
+                            orange: '#FA9000',
+                            orangedark: '#D97B00',
+                            slate: '#0E1B26',
+                            slatedark: '#09121A',
+                            slatelight: '#1C2C3A',
+                            pagebg: '#F5F7FA',
+                            cardbg: '#FFFFFF',
+                            border: '#E2E8F0',
+                            text: '#111827',
+                            muted: '#64748B'
+                        }
+                    },
+                    fontFamily: {
+                        headline: ['Oswald', 'Inter', 'sans-serif'],
+                        sans: ['Inter', 'Helvetica Neue', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #F5F7FA;
+            color: #111827;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Enforce strict image display behavior so cards never collapse */
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Pulsing live badge indicator */
+        @keyframes livePulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(1.15); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .pulse-live {
+            animation: livePulse 1.8s infinite ease-in-out;
+        }
+
+        /* Continuous Ticker Animation */
+        @keyframes tickerScroll {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .animate-ticker {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: tickerScroll 45s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E2E8F0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FA9000;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D97B00;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- HEADER & NAVIGATION -->
+    <header class="bg-gs-slatedark text-white sticky top-0 z-40 border-b-2 border-gs-orange shadow-lg">
+        
+        <!-- Utility Top Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-white/10">
+            <div class="flex items-center justify-between h-10 text-xs">
+                <div class="flex items-center space-x-4 font-semibold text-stone-300">
+                    <a href="#" class="hover:text-gs-orange transition flex items-center gap-1.5">
+                        <span class="w-2 h-2 bg-gs-orange rounded-full inline-block pulse-live"></span>
+                        <span>Watch Live</span>
+                    </a>
+                    <span class="text-white/20">|</span>
+                    <a href="#" class="hover:text-gs-orange transition">Podcasts</a>
+                    <span class="text-white/20 hidden sm:inline">|</span>
+                    <a href="#" class="hover:text-gs-orange transition hidden sm:inline">Shows</a>
+                    <span class="text-white/20 hidden md:inline">|</span>
+                    <a href="#" class="hover:text-gs-orange transition hidden md:inline">Documentaries</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Search Global Signal..." 
+                            class="bg-gs-slatelight text-white placeholder-stone-400 text-xs rounded py-1 pl-7 pr-3 w-36 sm:w-52 focus:outline-none focus:ring-1 focus:ring-gs-orange transition-all border border-white/10">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-[10px] text-stone-400"></i>
+                    </div>
+                    <span class="text-stone-400 text-[11px] hidden lg:inline font-mono">EDITION: INTERNATIONAL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Masthead Brand Area -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <a href="#" onclick="filterCategory('All')" class="flex items-center space-x-3 group">
+                    <!-- Flame / Calligraphic SVG Emblem -->
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gs-orange rounded flex items-center justify-center p-1.5 shadow-md group-hover:bg-white transition duration-300 shrink-0">
+                        <svg viewBox="0 0 100 100" class="w-full h-full fill-gs-slate group-hover:fill-gs-orange transition duration-300">
+                            <path d="M50,5 C55,20 68,30 75,45 C82,60 80,75 70,85 C60,95 40,95 30,85 C20,75 18,60 25,45 C32,30 45,20 50,5 Z" />
+                            <path d="M50,25 C53,35 60,42 64,52 C68,62 66,72 60,78 C54,84 46,84 40,78 C34,72 32,62 36,52 C40,42 47,35 50,25 Z" fill="#FA9000"/>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <h1 class="text-2xl sm:text-4xl font-extrabold font-headline tracking-wider text-white uppercase group-hover:text-gs-orange transition">
+                            GLOBAL<span class="text-gs-orange group-hover:text-white transition">SIGNAL</span>
+                        </h1>
+                        <p class="text-[10px] sm:text-xs text-stone-400 font-sans tracking-widest uppercase">Independent International Journalism</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-3 border-l border-white/10 pl-6 text-stone-300 text-xs">
+                <i class="fa-solid fa-satellite-dish text-gs-orange text-2xl"></i>
+                <div>
+                    <span class="block font-bold text-white uppercase tracking-wider">Unbiased Field Reporting</span>
+                    <span class="block text-[11px] text-stone-400">Cairo • Doha • Nairobi • London • Singapore</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Primary Navigation Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-gs-slate border-t border-white/5">
+            <nav class="flex items-center space-x-1 overflow-x-auto py-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider">
+                <button onclick="filterCategory('All')" class="nav-tab text-white bg-gs-orange px-3.5 py-1.5 rounded transition whitespace-nowrap">News</button>
+                <button onclick="filterCategory('Middle East')" class="nav-tab text-stone-300 hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap">Middle East</button>
+                <button onclick="filterCategory('Africa')" class="nav-tab text-stone-300 hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap">Africa</button>
+                <button onclick="filterCategory('Asia Pacific')" class="nav-tab text-stone-300 hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap">Asia Pacific</button>
+                <button onclick="filterCategory('Americas')" class="nav-tab text-stone-300 hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap">Americas</button>
+                <button onclick="filterCategory('Economy')" class="nav-tab text-stone-300 hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap">Economy</button>
+                <button onclick="filterCategory('Climate')" class="nav-tab text-stone-300 hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap">Climate & Tech</button>
+                <button onclick="filterCategory('Opinion')" class="nav-tab text-gs-orange hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap">Opinion</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- DEVELOPING STORY BREAKING BANNER -->
+    <div class="bg-gs-slatelight text-white border-b border-gs-orange/30 overflow-hidden flex items-stretch h-10 shadow-md">
+        <div class="bg-gs-orange px-4 flex items-center shrink-0 z-10 font-bold text-xs uppercase tracking-wider text-gs-slate">
+            <span class="w-2.5 h-2.5 bg-gs-slate rounded-full mr-2 pulse-live inline-block"></span>
+            BREAKING NEWS
+        </div>
+        <div class="flex-1 overflow-hidden relative flex items-center">
+            <div class="animate-ticker space-x-12 text-xs font-semibold text-stone-200">
+                <span class="inline-flex items-center cursor-pointer hover:text-gs-orange transition" onclick="openArticle('hero')"><strong class="text-gs-orange mr-1.5">[CAIRO SUMMIT]:</strong> Global Energy Alliance signs landmark 6,000km hydrogen network deal.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-gs-orange transition" onclick="openArticle('sec-1')"><strong class="text-gs-orange mr-1.5">[EAST AFRICA]:</strong> Solar irrigation expansion increases drought resilience across Rift Valley.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-gs-orange transition" onclick="openArticle('sec-2')"><strong class="text-gs-orange mr-1.5">[PACIFIC]:</strong> Island nations table binding proposal on deep-sea dredging limits.</span>
+                <span class="inline-flex items-center cursor-pointer hover:text-gs-orange transition" onclick="openArticle('tech-1')"><strong class="text-gs-orange mr-1.5">[SPACE RADAR]:</strong> Methane tracking satellites begin broadcasting live emission maps.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN PAGE CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12" id="mainContent">
+
+        <!-- ACTIVE FILTER DISPLAY BANNER -->
+        <div id="filterBanner" class="hidden bg-stone-200 border-l-4 border-gs-orange p-3 rounded flex justify-between items-center text-sm">
+            <div>
+                Filtering section: <strong id="filterCategoryName" class="text-gs-slate uppercase font-bold">Middle East</strong>
+            </div>
+            <button onclick="filterCategory('All')" class="text-xs bg-white hover:bg-stone-100 text-stone-800 px-3 py-1 rounded border border-stone-300 font-bold transition">
+                Reset Filter
+            </button>
+        </div>
+
+        <!-- SECTION 1: HOMEPAGE HERO GRID -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- LEFT LEAD STORY (MAIN HERO LEAD STORY - 8 cols) -->
+            <div class="lg:col-span-8">
+                <article class="bg-white rounded-lg border border-gs-border overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer group story-card flex flex-col h-full" onclick="openArticle('hero')" data-category="Middle East">
+                    
+                    <div class="relative w-full aspect-[16/9] min-h-[280px] bg-gs-slatelight overflow-hidden">
+                        
+                        <!-- ==================== REPLACE IMAGE HERE: Main Lead Story - Global Energy Alliance (1200x675) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80" 
+                             alt="Global Energy Alliance Cairo Summit" 
+                             id="img-hero"
+                             loading="lazy"
+                             class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1200&q=80';">
+                        <!-- ================================================================================================================== -->
+
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent z-10"></div>
+
+                        <!-- Top Badges -->
+                        <div class="absolute top-4 left-4 z-20 flex items-center space-x-2">
+                            <span class="bg-gs-orange text-gs-slate text-xs font-black uppercase tracking-widest px-3 py-1 rounded shadow">SPECIAL REPORT</span>
+                            <span class="bg-gs-slate text-white text-xs font-semibold px-2.5 py-1 rounded border border-white/20">Cairo Summit</span>
+                        </div>
+
+                        <!-- Headline Overlay -->
+                        <div class="absolute bottom-0 left-0 right-0 p-6 sm:p-8 z-20 text-white">
+                            <div class="flex items-center space-x-2 text-gs-orange text-xs font-bold uppercase tracking-wider mb-2">
+                                <span class="w-2 h-2 bg-gs-orange rounded-full"></span>
+                                <span>Middle East & Energy</span>
+                                <span>•</span>
+                                <span class="text-stone-300 font-normal">2 hours ago</span>
+                            </div>
+                            <h2 class="text-2xl sm:text-4xl font-extrabold font-headline uppercase leading-tight tracking-wide group-hover:text-gs-orange transition">
+                                Global Energy Alliance Unveils Cross-Continent Hydrogen Grid Initiative in Cairo Summit
+                            </h2>
+                            <p class="mt-3 text-stone-200 text-sm sm:text-base line-clamp-2 font-sans font-normal leading-relaxed">
+                                Delegates from 28 nations sign landmark deal to build a 6,000km clean hydrogen conduit linking North Africa with Mediterranean distribution networks by 2030.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Meta Footer -->
+                    <div class="px-6 py-3.5 bg-stone-50 border-t border-gs-border flex items-center justify-between text-xs text-gs-muted mt-auto">
+                        <span class="font-bold text-stone-900">By Tariq Al-Mansoor in Cairo</span>
+                        <div class="flex items-center space-x-4">
+                            <span class="hover:text-gs-orange"><i class="fa-regular fa-comment mr-1"></i>342 Comments</span>
+                            <span class="hover:text-gs-orange"><i class="fa-solid fa-share-nodes"></i> Share</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <!-- RIGHT STACK: TOP SECONDARY STORIES (4 cols) -->
+            <div class="lg:col-span-4 space-y-4">
+
+                <div class="flex items-center justify-between border-b-2 border-gs-slate pb-2">
+                    <h3 class="font-headline font-bold text-lg uppercase tracking-wider text-gs-slate flex items-center gap-2">
+                        <span class="w-3 h-5 bg-gs-orange inline-block"></span>
+                        Top Stories
+                    </h3>
+                    <span class="text-xs text-gs-muted font-bold">12 OCT 2026</span>
+                </div>
+
+                <!-- Secondary Story 1 -->
+                <article class="bg-white p-3 rounded-lg border border-gs-border hover:shadow-md transition cursor-pointer flex gap-3 group story-card" onclick="openArticle('sec-1')" data-category="Africa">
+                    <div class="w-28 h-20 shrink-0 bg-gs-slatelight rounded overflow-hidden relative">
+                        <!-- ==================== REPLACE IMAGE HERE: Top Right Story 1 - East Africa Agriculture (600x400) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=600&q=80" 
+                             alt="Agricultural technology in Africa" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=600&q=80';">
+                        <!-- ========================================================================================================= -->
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-[10px] font-bold text-gs-orange uppercase tracking-wider block">Africa Tech</span>
+                        <h4 class="font-headline font-bold text-sm text-stone-900 group-hover:text-gs-orange transition leading-snug truncate">
+                            Solar Irrigation Network Boosts Drought Resilience
+                        </h4>
+                        <span class="text-[11px] text-gs-muted mt-1 block">5 hours ago</span>
+                    </div>
+                </article>
+
+                <!-- Secondary Story 2 -->
+                <article class="bg-white p-3 rounded-lg border border-gs-border hover:shadow-md transition cursor-pointer flex gap-3 group story-card" onclick="openArticle('sec-2')" data-category="Asia Pacific">
+                    <div class="w-28 h-20 shrink-0 bg-gs-slatelight rounded overflow-hidden relative">
+                        <!-- ==================== REPLACE IMAGE HERE: Top Right Story 2 - Pacific Island Mining (600x400) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=600&q=80" 
+                             alt="Pacific Ocean seabed protection" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <!-- ========================================================================================================= -->
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider block">Asia Pacific</span>
+                        <h4 class="font-headline font-bold text-sm text-stone-900 group-hover:text-gs-orange transition leading-snug truncate">
+                            Pacific Island Coalition Tables Mining Moratorium
+                        </h4>
+                        <span class="text-[11px] text-gs-muted mt-1 block">7 hours ago</span>
+                    </div>
+                </article>
+
+                <!-- Secondary Story 3 -->
+                <article class="bg-white p-3 rounded-lg border border-gs-border hover:shadow-md transition cursor-pointer flex gap-3 group story-card" onclick="openArticle('tech-1')" data-category="Climate">
+                    <div class="w-28 h-20 shrink-0 bg-gs-slatelight rounded overflow-hidden relative">
+                        <!-- ==================== REPLACE IMAGE HERE: Top Right Story 3 - Methane Satellites (600x400) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80" 
+                             alt="Satellite tracking methane" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <!-- ========================================================================================================= -->
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block">Climate & Tech</span>
+                        <h4 class="font-headline font-bold text-sm text-stone-900 group-hover:text-gs-orange transition leading-snug truncate">
+                            Satellite Constellation Tracks Global Methane Leaks
+                        </h4>
+                        <span class="text-[11px] text-gs-muted mt-1 block">9 hours ago</span>
+                    </div>
+                </article>
+
+                <!-- Secondary Story 4 -->
+                <article class="bg-white p-3 rounded-lg border border-gs-border hover:shadow-md transition cursor-pointer flex gap-3 group story-card" onclick="openArticle('americas-1')" data-category="Americas">
+                    <div class="w-28 h-20 shrink-0 bg-gs-slatelight rounded overflow-hidden relative">
+                        <!-- ==================== REPLACE IMAGE HERE: Top Right Story 4 - Amazon Protection Accord (600x400) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=600&q=80" 
+                             alt="Amazon Rainforest Protection Accord" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <!-- ========================================================================================================= -->
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="text-[10px] font-bold text-amber-600 uppercase tracking-wider block">Americas</span>
+                        <h4 class="font-headline font-bold text-sm text-stone-900 group-hover:text-gs-orange transition leading-snug truncate">
+                            Amazon Biodiversity Treaty Secures $4B Green Fund
+                        </h4>
+                        <span class="text-[11px] text-gs-muted mt-1 block">11 hours ago</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: OPINION & PERSPECTIVES -->
+        <section class="bg-gs-slate text-white rounded-xl p-6 md:p-8 shadow-md space-y-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-white/10 pb-4 gap-2">
+                <div class="flex items-center space-x-3">
+                    <span class="w-3 h-7 bg-gs-orange inline-block"></span>
+                    <h2 class="text-2xl md:text-3xl font-headline font-extrabold uppercase tracking-wider text-white">OPINION & PERSPECTIVES</h2>
+                </div>
+                <button onclick="filterCategory('Opinion')" class="text-xs font-bold text-gs-orange hover:text-white flex items-center gap-1 transition">
+                    <span>EXPLORE ALL OPINION DISPATCHES</span>
+                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <!-- Opinion Card 1 -->
+                <article class="bg-gs-slatelight p-6 rounded-lg border border-white/10 hover:border-gs-orange transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('opinion-1')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <!-- ==================== REPLACE IMAGE HERE: Columnist 1 - Dr. Rashid Al-Hassan Headshot (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Dr. Rashid Al-Hassan" 
+                                 loading="lazy"
+                                 class="w-14 h-14 rounded-full object-cover border-2 border-gs-orange shadow shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div>
+                                <h4 class="font-headline font-bold text-base text-white group-hover:text-gs-orange transition">Dr. Rashid Al-Hassan</h4>
+                                <span class="text-xs text-stone-400">Senior Trade Economist, Doha</span>
+                            </div>
+                        </div>
+
+                        <h3 class="font-sans font-semibold text-base text-stone-100 leading-snug group-hover:text-gs-orange transition">
+                            “Why the South-South Trade Corridor is Redefining Global Economic Hegemony”
+                        </h3>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-stone-400">
+                        <span>Perspective • Trade</span>
+                        <span class="text-gs-orange font-bold">5 min read</span>
+                    </div>
+                </article>
+
+                <!-- Opinion Card 2 -->
+                <article class="bg-gs-slatelight p-6 rounded-lg border border-white/10 hover:border-gs-orange transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('opinion-2')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <!-- ==================== REPLACE IMAGE HERE: Columnist 2 - Amara Okafor Headshot (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Amara Okafor" 
+                                 loading="lazy"
+                                 class="w-14 h-14 rounded-full object-cover border-2 border-gs-orange shadow shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div>
+                                <h4 class="font-headline font-bold text-base text-white group-hover:text-gs-orange transition">Amara Okafor</h4>
+                                <span class="text-xs text-stone-400">Climate Resilience Fellow</span>
+                            </div>
+                        </div>
+
+                        <h3 class="font-sans font-semibold text-base text-stone-100 leading-snug group-hover:text-gs-orange transition">
+                            “Sub-Saharan local technology proves that decentralized energy systems work best.”
+                        </h3>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-stone-400">
+                        <span>Perspective • Energy</span>
+                        <span class="text-gs-orange font-bold">4 min read</span>
+                    </div>
+                </article>
+
+                <!-- Opinion Card 3 -->
+                <article class="bg-gs-slatelight p-6 rounded-lg border border-white/10 hover:border-gs-orange transition cursor-pointer flex flex-col justify-between group story-card" onclick="openArticle('opinion-3')" data-category="Opinion">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <!-- ==================== REPLACE IMAGE HERE: Columnist 3 - Li Wei Headshot (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Li Wei" 
+                                 loading="lazy"
+                                 class="w-14 h-14 rounded-full object-cover border-2 border-gs-orange shadow shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div>
+                                <h4 class="font-headline font-bold text-base text-white group-hover:text-gs-orange transition">Li Wei</h4>
+                                <span class="text-xs text-stone-400">Asia-Pacific Geopolitics Analyst</span>
+                            </div>
+                        </div>
+
+                        <h3 class="font-sans font-semibold text-base text-stone-100 leading-snug group-hover:text-gs-orange transition">
+                            “The Pacific Seabed Accord demonstrates the power of small island state diplomacy.”
+                        </h3>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-stone-400">
+                        <span>Perspective • Oceans</span>
+                        <span class="text-gs-orange font-bold">6 min read</span>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: BROADCAST & VIDEO DISPATCHES -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between border-b-2 border-gs-slate pb-2">
+                <h3 class="font-headline font-bold text-lg uppercase tracking-wider text-gs-slate flex items-center gap-2">
+                    <span class="w-3 h-5 bg-gs-orange inline-block"></span>
+                    Video Dispatches & Field Documentaries
+                </h3>
+                <span class="text-xs text-gs-orange font-bold uppercase tracking-wider">Broadcasting Worldwide</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Video Card 1 -->
+                <div class="bg-white rounded-lg border border-gs-border overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('hero')" data-category="Middle East">
+                    <div class="relative aspect-video bg-gs-slatelight overflow-hidden min-h-[180px]">
+                        <!-- ==================== REPLACE IMAGE HERE: Video Showcase 1 - Trans-Mediterranean Pipeline (600x337) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=600&q=80" 
+                             alt="Hydrogen Pipeline Construction Documentary" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <!-- ========================================================================================================= -->
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition"></div>
+                        <div class="absolute bottom-3 left-3 bg-gs-orange text-gs-slate w-9 h-9 rounded-full flex items-center justify-center shadow">
+                            <i class="fa-solid fa-play text-xs pl-0.5"></i>
+                        </div>
+                        <span class="absolute bottom-3 right-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded">14:20</span>
+                    </div>
+                    <div class="p-4">
+                        <span class="text-[10px] font-bold text-gs-orange uppercase">Documentary • Cairo</span>
+                        <h4 class="font-headline font-bold text-base text-stone-900 group-hover:text-gs-orange transition leading-snug mt-1">
+                            Building the Trans-Mediterranean Clean Energy Pipeline
+                        </h4>
+                    </div>
+                </div>
+
+                <!-- Video Card 2 -->
+                <div class="bg-white rounded-lg border border-gs-border overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('sec-1')" data-category="Africa">
+                    <div class="relative aspect-video bg-gs-slatelight overflow-hidden min-h-[180px]">
+                        <!-- ==================== REPLACE IMAGE HERE: Video Showcase 2 - Rift Valley Micro-Pumps (600x337) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=600&q=80" 
+                             alt="Rift Valley Agriculture Field Video" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <!-- ========================================================================================================= -->
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition"></div>
+                        <div class="absolute bottom-3 left-3 bg-gs-orange text-gs-slate w-9 h-9 rounded-full flex items-center justify-center shadow">
+                            <i class="fa-solid fa-play text-xs pl-0.5"></i>
+                        </div>
+                        <span class="absolute bottom-3 right-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded">08:45</span>
+                    </div>
+                    <div class="p-4">
+                        <span class="text-[10px] font-bold text-emerald-600 uppercase">Field Report • Nairobi</span>
+                        <h4 class="font-headline font-bold text-base text-stone-900 group-hover:text-gs-orange transition leading-snug mt-1">
+                            How Solar Micro-Pumps Are Securing East Africa’s Water Future
+                        </h4>
+                    </div>
+                </div>
+
+                <!-- Video Card 3 -->
+                <div class="bg-white rounded-lg border border-gs-border overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('sec-2')" data-category="Asia Pacific">
+                    <div class="relative aspect-video bg-gs-slatelight overflow-hidden min-h-[180px]">
+                        <!-- ==================== REPLACE IMAGE HERE: Video Showcase 3 - Guardians of the Pacific Trench (600x337) ==================== -->
+                        <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80" 
+                             alt="Deep Sea Marine Exploration Video" 
+                             loading="lazy"
+                             class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <!-- ========================================================================================================= -->
+                        <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition"></div>
+                        <div class="absolute bottom-3 left-3 bg-gs-orange text-gs-slate w-9 h-9 rounded-full flex items-center justify-center shadow">
+                            <i class="fa-solid fa-play text-xs pl-0.5"></i>
+                        </div>
+                        <span class="absolute bottom-3 right-3 bg-black/80 text-white text-[10px] font-mono px-2 py-0.5 rounded">22:10</span>
+                    </div>
+                    <div class="p-4">
+                        <span class="text-[10px] font-bold text-blue-600 uppercase">Investigation • Suva</span>
+                        <h4 class="font-headline font-bold text-base text-stone-900 group-hover:text-gs-orange transition leading-snug mt-1">
+                            Guardians of the Trench: Pacific Island Benthic Conservation
+                        </h4>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: REGIONAL FEEDS & BOTTOM LEFT FEATURED WINDOW ARTICLE -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- LEFT 8 COLS: REGIONAL BLOCKS & BOTTOM-LEFT ARTICLE -->
+            <div class="lg:col-span-8 space-y-8">
+
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between border-b-2 border-gs-slate pb-2">
+                        <h3 class="font-headline font-bold text-lg uppercase tracking-wider text-gs-slate flex items-center gap-2">
+                            <span class="w-3 h-5 bg-gs-orange inline-block"></span>
+                            Regional Field Reports & Featured Dispatches
+                        </h3>
+                        <button onclick="filterCategory('Middle East')" class="text-xs font-bold text-gs-orange hover:underline">View All Regions</button>
+                    </div>
+
+                    <!-- BOTTOM-LEFT FEATURED DISPATCH STORY (North Africa Clean Energy Grid / Red Sea Alliance) -->
+                    <article class="bg-white rounded-lg border border-gs-border p-6 hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('bottom-left-feat')" data-category="Middle East">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                            
+                            <div class="md:col-span-6 aspect-[16/10] min-h-[220px] bg-gs-slatelight rounded-lg overflow-hidden relative">
+                                <!-- ==================== REPLACE IMAGE HERE: Bottom Left Featured Article - North Africa Clean Energy / Maritime (800x500) ==================== -->
+                                <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=800&q=80" 
+                                     alt="Suez Canal Logistics & Clean Energy Corridor" 
+                                     loading="lazy"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1541888946425-d0fbb186a5b3?auto=format&fit=crop&w=800&q=80';">
+                                <!-- ========================================================================================================================== -->
+                                <span class="absolute top-3 left-3 bg-gs-orange text-gs-slate text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded shadow">SPECIAL FIELD DISPATCH</span>
+                            </div>
+
+                            <div class="md:col-span-6 space-y-3">
+                                <div class="flex items-center space-x-2 text-xs text-gs-orange font-bold uppercase tracking-wider">
+                                    <span>Middle East & Trade</span>
+                                    <span>•</span>
+                                    <span class="text-gs-muted font-normal">4 hours ago</span>
+                                </div>
+                                <h3 class="font-headline font-bold text-xl sm:text-2xl text-stone-900 group-hover:text-gs-orange transition leading-tight">
+                                    Red Sea Maritime Alliance Deploys Autonomous Hydrographic Patrol Fleet
+                                </h3>
+                                <p class="text-xs sm:text-sm text-gs-muted leading-relaxed line-clamp-3">
+                                    A consortium of nine regional port authorities has launched a fully integrated real-time marine traffic sensor grid to prevent shipping bottlenecks and monitor North Africa clean energy trade corridors.
+                                </p>
+                                <div class="pt-2 flex items-center justify-between text-xs text-stone-500 font-medium">
+                                    <span>By Tariq Al-Mansoor in Cairo</span>
+                                    <span class="text-gs-orange font-bold flex items-center gap-1">Read Dispatch <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </article>
+
+                    <!-- TWO COLUMN REGIONAL GRID BELOW -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        
+                        <article class="bg-white rounded-lg border border-gs-border p-4 hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('hero')" data-category="Middle East">
+                            <div class="aspect-video min-h-[150px] bg-gs-slatelight rounded overflow-hidden mb-3 relative">
+                                <!-- ==================== REPLACE IMAGE HERE: Regional Block 1 - Cairo Clean Energy Bureau (600x337) ==================== -->
+                                <img src="https://images.unsplash.com/photo-1466611653911-95081537e5b7?auto=format&fit=crop&w=600&q=80" 
+                                     alt="Cairo Energy Grid Station" 
+                                     loading="lazy"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=600&q=80';">
+                                <!-- ========================================================================================================= -->
+                            </div>
+                            <span class="text-[10px] font-bold text-gs-orange uppercase">Cairo Bureau</span>
+                            <h4 class="font-headline font-bold text-base text-stone-900 group-hover:text-gs-orange transition leading-snug mt-1">
+                                North Africa Clean Energy Network Prepares for Phase One Grid Integration
+                            </h4>
+                            <p class="text-xs text-gs-muted mt-2 line-clamp-2">High-capacity transmission sub-stations along the Suez Canal reach 85% completion mark ahead of 2027 launch.</p>
+                        </article>
+
+                        <article class="bg-white rounded-lg border border-gs-border p-4 hover:shadow-md transition cursor-pointer group story-card" onclick="openArticle('sec-1')" data-category="Africa">
+                            <div class="aspect-video min-h-[150px] bg-gs-slatelight rounded overflow-hidden mb-3 relative">
+                                <!-- ==================== REPLACE IMAGE HERE: East African Agricultural Summit (800x500) ==================== -->
+                                <img src="https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=800&q=80" 
+                                     alt="East African Agricultural Summit" 
+                                     loading="lazy"
+                                     class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80';">
+                                <!-- ==================================================================================================== -->
+                            </div>
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase">Nairobi Bureau</span>
+                            <h4 class="font-headline font-bold text-base text-stone-900 group-hover:text-gs-orange transition leading-snug mt-1">
+                                East African Agricultural Summit Agrees on Shared Water Protocols
+                            </h4>
+                            <p class="text-xs text-gs-muted mt-2 line-clamp-2">Delegates endorse solar-powered micro-irrigation frameworks across smallholder farming cooperatives.</p>
+                        </article>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- RIGHT 4 COLS: MOST READ SIDEBAR WITH THUMBNAILS -->
+            <div class="lg:col-span-4">
+                <div class="bg-white rounded-lg p-5 border border-gs-border shadow-sm">
+                    <div class="flex items-center justify-between border-b-2 border-gs-slate pb-3 mb-4">
+                        <h3 class="font-headline font-bold text-lg uppercase tracking-wider text-gs-slate flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-gs-orange inline-block rounded-full"></span>
+                            MOST READ
+                        </h3>
+                        <span class="text-[10px] font-mono uppercase text-gs-muted">Updated Hourly</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        
+                        <!-- Item 1 -->
+                        <div class="flex items-center space-x-3 group cursor-pointer" onclick="openArticle('hero')">
+                            <span class="text-2xl font-black font-headline text-gs-orange group-hover:text-gs-slate transition w-5 shrink-0">1</span>
+                            <!-- ==================== REPLACE IMAGE HERE: Most Read Thumb 1 - Cairo Energy Alliance (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Cairo Summit Thumbnail" 
+                                 loading="lazy"
+                                 class="w-14 h-14 object-cover rounded shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-headline font-bold text-xs text-stone-900 group-hover:text-gs-orange transition leading-snug line-clamp-2">
+                                    Cairo Summit: 28 nations sign deal for 6,000km hydrogen energy grid
+                                </h4>
+                                <span class="text-[10px] text-gs-muted mt-0.5 block">Middle East • 210k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 2 -->
+                        <div class="flex items-center space-x-3 group cursor-pointer" onclick="openArticle('opinion-1')">
+                            <span class="text-2xl font-black font-headline text-gs-orange group-hover:text-gs-slate transition w-5 shrink-0">2</span>
+                            <!-- ==================== REPLACE IMAGE HERE: Most Read Thumb 2 - Dr. Rashid Al-Hassan (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Dr. Rashid Al-Hassan Thumbnail" 
+                                 loading="lazy"
+                                 class="w-14 h-14 object-cover rounded shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-headline font-bold text-xs text-stone-900 group-hover:text-gs-orange transition leading-snug line-clamp-2">
+                                    Dr. Rashid Al-Hassan: How the South-South trade corridor changes economic rules
+                                </h4>
+                                <span class="text-[10px] text-gs-muted mt-0.5 block">Opinion • 165k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 3 -->
+                        <div class="flex items-center space-x-3 group cursor-pointer" onclick="openArticle('sec-1')">
+                            <span class="text-2xl font-black font-headline text-gs-orange group-hover:text-gs-slate transition w-5 shrink-0">3</span>
+                            <!-- ==================== REPLACE IMAGE HERE: Most Read Thumb 3 - Solar Irrigation (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Solar Irrigation Thumbnail" 
+                                 loading="lazy"
+                                 class="w-14 h-14 object-cover rounded shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-headline font-bold text-xs text-stone-900 group-hover:text-gs-orange transition leading-snug line-clamp-2">
+                                    Solar irrigation expansion increases drought resilience across East Africa
+                                </h4>
+                                <span class="text-[10px] text-gs-muted mt-0.5 block">Africa • 120k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 4 -->
+                        <div class="flex items-center space-x-3 group cursor-pointer" onclick="openArticle('bottom-left-feat')">
+                            <span class="text-2xl font-black font-headline text-gs-orange group-hover:text-gs-slate transition w-5 shrink-0">4</span>
+                            <!-- ==================== REPLACE IMAGE HERE: Most Read Thumb 4 - Red Sea Patrol / North Africa Clean Energy (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Red Sea Patrol Thumbnail" 
+                                 loading="lazy"
+                                 class="w-14 h-14 object-cover rounded shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-headline font-bold text-xs text-stone-900 group-hover:text-gs-orange transition leading-snug line-clamp-2">
+                                    Red Sea Alliance deploys autonomous hydrographic patrol fleet
+                                </h4>
+                                <span class="text-[10px] text-gs-muted mt-0.5 block">Middle East • 112k readers</span>
+                            </div>
+                        </div>
+
+                        <!-- Item 5 -->
+                        <div class="flex items-center space-x-3 group cursor-pointer" onclick="openArticle('tech-1')">
+                            <span class="text-2xl font-black font-headline text-gs-orange group-hover:text-gs-slate transition w-5 shrink-0">5</span>
+                            <!-- ==================== REPLACE IMAGE HERE: Most Read Thumb 5 - Satellite Methane Tracking (150x150) ==================== -->
+                            <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=150&q=80" 
+                                 alt="Satellite Constellation Thumbnail" 
+                                 loading="lazy"
+                                 class="w-14 h-14 object-cover rounded shrink-0">
+                            <!-- ========================================================================================================= -->
+                            <div class="flex-1 min-w-0">
+                                <h4 class="font-headline font-bold text-xs text-stone-900 group-hover:text-gs-orange transition leading-snug line-clamp-2">
+                                    Satellite constellation tracks methane leaks in real time globally
+                                </h4>
+                                <span class="text-[10px] text-gs-muted mt-0.5 block">Climate • 84k readers</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FULL INTERACTIVE ARTICLE MODAL READER -->
+    <div id="articleModal" class="fixed inset-0 bg-gs-slatedark/80 backdrop-blur-sm z-50 hidden overflow-y-auto flex justify-center p-2 sm:p-4 md:p-6">
+        <div class="bg-white w-full max-w-4xl rounded-lg shadow-2xl overflow-hidden my-auto flex flex-col max-h-[92vh]">
+            
+            <!-- Modal Header Bar -->
+            <div class="bg-gs-slate text-white px-6 py-3.5 flex justify-between items-center shrink-0 border-b-2 border-gs-orange">
+                <div class="flex items-center space-x-3">
+                    <span class="bg-gs-orange text-gs-slate font-extrabold text-xs px-2.5 py-1 rounded uppercase tracking-wider font-headline">GLOBAL SIGNAL</span>
+                    <span id="modalCategory" class="text-xs font-bold uppercase tracking-wider text-stone-300">Middle East</span>
+                </div>
+                <button onclick="closeModal()" class="text-white hover:text-gs-orange p-1 rounded transition focus:outline-none" title="Close Article">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body Content -->
+            <div class="p-6 sm:p-10 overflow-y-auto space-y-6 flex-1 font-sans text-stone-800" id="modalBody">
+                <!-- Dynamic Injection -->
+            </div>
+
+            <!-- Modal Footer Bar -->
+            <div class="bg-stone-100 px-6 py-3 border-t border-stone-200 flex justify-between items-center text-xs text-stone-500 shrink-0">
+                <span>Global Signal Network • Independent Field News</span>
+                <button onclick="closeModal()" class="bg-gs-slate hover:bg-gs-slatelight text-white font-bold px-4 py-1.5 rounded transition">
+                    Close Article
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AL JAZEERA-STYLE DEEP SLATE FOOTER -->
+    <footer class="bg-gs-slatedark text-white mt-16 border-t-4 border-gs-orange">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            
+            <!-- Top Footer Row -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/10 pb-8 mb-8 gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gs-orange rounded flex items-center justify-center p-1 shrink-0">
+                        <svg viewBox="0 0 100 100" class="w-full h-full fill-gs-slate">
+                            <path d="M50,5 C55,20 68,30 75,45 C82,60 80,75 70,85 C60,95 40,95 30,85 C20,75 18,60 25,45 C32,30 45,20 50,5 Z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-headline font-extrabold tracking-wider text-white uppercase">GLOBAL<span class="text-gs-orange">SIGNAL</span></h2>
+                </div>
+                
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-gs-slatelight hover:bg-white/20 text-xs font-bold px-4 py-2 rounded text-stone-200 border border-white/10 transition flex items-center gap-2">
+                    <span>Back to Top</span>
+                    <i class="fa-solid fa-arrow-up text-[10px]"></i>
+                </button>
+            </div>
+
+            <!-- Category Columns -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-8 mb-10 text-xs">
+                <div>
+                    <h4 class="font-headline font-bold text-gs-orange uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Regional News</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" onclick="filterCategory('Middle East')" class="hover:text-white transition">Middle East</a></li>
+                        <li><a href="#" onclick="filterCategory('Africa')" class="hover:text-white transition">Africa</a></li>
+                        <li><a href="#" onclick="filterCategory('Asia Pacific')" class="hover:text-white transition">Asia Pacific</a></li>
+                        <li><a href="#" onclick="filterCategory('Americas')" class="hover:text-white transition">Americas</a></li>
+                        <li><a href="#" onclick="filterCategory('Europe')" class="hover:text-white transition">Europe</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-headline font-bold text-gs-orange uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Sections</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" onclick="filterCategory('Economy')" class="hover:text-white transition">Economy & Trade</a></li>
+                        <li><a href="#" onclick="filterCategory('Climate')" class="hover:text-white transition">Climate & Tech</a></li>
+                        <li><a href="#" onclick="filterCategory('Opinion')" class="hover:text-white transition">Opinion Dispatches</a></li>
+                        <li><a href="#" class="hover:text-white transition">Human Rights Watch</a></li>
+                        <li><a href="#" class="hover:text-white transition">Visual Investigations</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-headline font-bold text-gs-orange uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Broadcast</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" class="hover:text-white transition">Live Satellite Stream</a></li>
+                        <li><a href="#" class="hover:text-white transition">Podcasts & Audio</a></li>
+                        <li><a href="#" class="hover:text-white transition">Documentary Series</a></li>
+                        <li><a href="#" class="hover:text-white transition">Correspondent Archives</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-headline font-bold text-gs-orange uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Organization</h4>
+                    <ul class="space-y-2 text-stone-300">
+                        <li><a href="#" class="hover:text-white transition">Editorial Governance</a></li>
+                        <li><a href="#" class="hover:text-white transition">Field Bureaus</a></li>
+                        <li><a href="#" class="hover:text-white transition">Press Center</a></li>
+                        <li><a href="#" class="hover:text-white transition">Ethics Code</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="font-headline font-bold text-gs-orange uppercase tracking-wider mb-3 border-b border-white/10 pb-2">Prop Information</h4>
+                    <p class="text-stone-400 text-[11px] leading-relaxed mb-3">
+                        "Global Signal" is a fictional news website created as a screen prop for film and television productions.
+                    </p>
+                    <div class="text-stone-400 font-mono text-[10px]">
+                        PROP ID: GS-AJ-PROP-2026 • READY
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Legal Bar -->
+            <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center text-[11px] text-stone-400 gap-4">
+                <div>
+                    © 2026 Global Signal Media Network. All rights reserved.
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="hover:underline">Privacy Charter</a>
+                    <span>•</span>
+                    <a href="#" class="hover:underline">Terms of Service</a>
+                    <span>•</span>
+                    <a href="#" class="hover:underline">Bureaus</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // Fictional Article Database
+        const articlesDB = {
+            'hero': {
+                category: 'MIDDLE EAST & ENERGY',
+                title: 'Global Energy Alliance Unveils Cross-Continent Hydrogen Grid Initiative in Cairo Summit',
+                author: 'By Tariq Al-Mansoor in Cairo',
+                date: '12 OCT 2026 • 2 hours ago',
+                image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Energy ministers and delegates gather at the Cairo International Conference Center.',
+                lead: 'CAIRO — Delegates representing twenty-eight nations across Africa, the Middle East, and Europe officially signed the landmark Cairo Accord on Thursday, sanctioning the immediate construction of a 6,000-kilometer clean hydrogen distribution grid.',
+                body: `
+                    <p class="mb-4">The ambitious infrastructure project aims to transport green hydrogen produced from solar arrays in the Sahara Desert and Mediterranean offshore wind facilities directly to industrial hubs across two continents.</p>
+
+                    <blockquote class="my-6 border-l-4 border-gs-orange pl-4 py-2 italic font-sans text-lg text-stone-800 bg-amber-50 rounded-r">
+                        "This agreement transforms regional energy trade from a source of conflict into an anchor of intercontinental stability and economic partnership."
+                        <span class="block text-xs font-headline font-bold text-stone-600 mt-1 uppercase tracking-wider">— Dr. Farida Al-Sayed, Alliance Co-Chair</span>
+                    </blockquote>
+
+                    <h3 class="text-lg font-bold font-headline text-stone-900 mt-6 mb-2 uppercase tracking-wide">Key Accord Objectives</h3>
+                    <ul class="list-disc pl-5 space-y-2 mb-4 text-stone-700">
+                        <li><strong>Cross-Border Transit Rights:</strong> Standardized customs protocols for clean gas pipeline corridors.</li>
+                        <li><strong>Shared Solar Infrastructures:</strong> Joint financing for 15 gigawatts of Saharan photovoltaic generation stations.</li>
+                        <li><strong>Local Community Reinvestment:</strong> Direct allocation of 12% of project royalties to regional water desalination plants.</li>
+                    </ul>
+
+                    <p class="mb-4">Initial construction on the Northern Conduit is scheduled to commence in early 2027, with first phase energy delivery expected by autumn 2029.</p>
+                `
+            },
+            'bottom-left-feat': {
+                category: 'MIDDLE EAST & TRADE',
+                title: 'Red Sea Maritime Alliance Deploys Autonomous Hydrographic Patrol Fleet',
+                author: 'By Tariq Al-Mansoor in Cairo',
+                date: '12 OCT 2026 • 4 hours ago',
+                image: 'https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Container vessel entering the Suez Canal maritime corridor guarded by uncrewed hydrographic survey craft.',
+                lead: 'CAIRO — In response to expanding regional sea trade and unpredictable weather phenomena, a nine-nation coalition of Mediterranean and Red Sea maritime authorities has deployed a fleet of thirty-two solar-powered autonomous hydrographic survey vessels.',
+                body: `
+                    <p class="mb-4">Equipped with multi-beam sonar arrays and real-time weather telemetry, the uncrewed craft continually map shifting sandbanks and underwater debris along crucial shipping lanes near the Suez Canal choke points.</p>
+                    <blockquote class="my-6 border-l-4 border-gs-orange pl-4 py-2 italic font-sans text-lg text-stone-800 bg-amber-50 rounded-r">
+                        "Real-time bathymetric mapping reduces container vessel grounding risks by over eighty percent while providing instant environmental monitoring data."
+                        <span class="block text-xs font-headline font-bold text-stone-600 mt-1 uppercase tracking-wider">— Admiral Yusuf Al-Hassan, Regional Maritime Directorate</span>
+                    </blockquote>
+                    <p class="mb-4">The initiative is expected to reduce maritime transit delays through the Gulf of Suez by an estimated 18 hours per vessel during high-density navigation cycles.</p>
+                `
+            },
+            'sec-1': {
+                category: 'AFRICA TECH',
+                title: 'Sub-Saharan Agricultural Tech Network Boosts Drought Resilience in East Africa',
+                author: 'By Grace Mutua in Nairobi',
+                date: '12 OCT 2026 • 5 hours ago',
+                image: 'https://images.unsplash.com/photo-1509099836639-18ba1795216d?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Solar-powered irrigation equipment deployed across smallholder farms in the Rift Valley.',
+                lead: 'NAIROBI — A regional consortium of agricultural tech cooperatives across Kenya, Uganda, and Tanzania has reported a 40% increase in crop yield stability during prolonged dry spells.',
+                body: `
+                    <p class="mb-4">By pairing low-cost solar water pumps with soil moisture telemetry sensors, smallholder farmers are able to optimize water usage down to the square meter.</p>
+                    <p class="mb-4">The open-source hardware initiative was funded through regional agricultural bonds, serving as a model for climate adaptation across arid equatorial regions.</p>
+                `
+            },
+            'sec-2': {
+                category: 'ASIA PACIFIC',
+                title: 'Pacific Nations Draft Historic Deep-Sea Mining Moratorium Accord',
+                author: 'By Sione Tuku in Suva',
+                date: '12 OCT 2026 • 7 hours ago',
+                image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Coral reef ocean monitoring equipment near Fiji.',
+                lead: 'SUVA — Representatives from nine Pacific island states have presented a unified draft convention to restrict seabed mineral dredging within their exclusive economic zones.',
+                body: `
+                    <p class="mb-4">The proposed convention establishes strict marine sanctuary zones to protect fragile benthic ecosystems while prioritizing eco-tourism and sustainable artisanal fisheries.</p>
+                `
+            },
+            'tech-1': {
+                category: 'CLIMATE & TECH',
+                title: 'New Satellite Constellation Tracks Methane Plumes in Real Time',
+                author: 'By Dr. Elena Rostova in Geneva',
+                date: '12 OCT 2026 • 9 hours ago',
+                image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Artist depiction of high-altitude environmental monitoring satellites.',
+                lead: 'GENEVA — The Orbital Environmental Sentinel Network began broadcasting open-access heat-map data identifying industrial greenhouse leaks globally with meter-level accuracy.',
+                body: `
+                    <p class="mb-4">Environmental regulatory bodies can now automatically log pipeline leaks and flare anomalies, allowing rapid emergency response and holding operators publicly accountable.</p>
+                `
+            },
+            'americas-1': {
+                category: 'AMERICAS',
+                title: 'Amazon Biodiversity Treaty Secures $4B Green Fund',
+                author: 'By Carlos Silva in Brasília',
+                date: '12 OCT 2026 • 11 hours ago',
+                image: 'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Canopy aerial research station in the Central Amazon Basin.',
+                lead: 'BRASÍLIA — Eight Pan-Amazonian nations ratified a sovereign environmental trust providing perpetual funding for rainforest monitoring and indigenous territory stewardship.',
+                body: `
+                    <p class="mb-4">The international trust fund will support local eco-agronomy enterprises and deploy remote satellite fire-prevention telemetry across thousands of square kilometers of rainforest.</p>
+                `
+            },
+            'opinion-1': {
+                category: 'PERSPECTIVES',
+                title: 'Why the South-South Trade Corridor is Redefining Global Economic Hegemony',
+                author: 'By Dr. Rashid Al-Hassan in Doha',
+                date: '12 OCT 2026 • Opinion Dispatch',
+                image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Dr. Rashid Al-Hassan, Senior Trade Economist.',
+                lead: 'DOHA — For decades, global trade routes revolved strictly around North-South industrial supply chains. Today, independent South-South finance agreements are rewriting the playbook.',
+                body: `
+                    <p class="mb-4">From joint hydrogen initiatives in North Africa to solar agricultural grids in the Rift Valley, developing nations are building direct economic alliances that bypass legacy financial intermediaries.</p>
+                `
+            },
+            'opinion-2': {
+                category: 'PERSPECTIVES',
+                title: 'Sub-Saharan Local Technology Proves Decentralized Energy Systems Work Best',
+                author: 'By Amara Okafor in Lagos',
+                date: '12 OCT 2026 • Opinion Dispatch',
+                image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Amara Okafor, Climate Resilience Fellow.',
+                lead: 'LAGOS — Mega-scale central grids are no longer the default path to universal electrification in emerging economies.',
+                body: `
+                    <p class="mb-4">Community micro-grids built around solar, battery storage, and peer-to-peer energy trading apps are achieving resilience far faster than top-down utility monopolies.</p>
+                `
+            },
+            'opinion-3': {
+                category: 'PERSPECTIVES',
+                title: 'The Pacific Seabed Accord Demonstrates the Power of Small Island State Diplomacy',
+                author: 'By Li Wei in Suva',
+                date: '12 OCT 2026 • Opinion Dispatch',
+                image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80',
+                imageCaption: 'Li Wei, Asia-Pacific Geopolitics Analyst.',
+                lead: 'SUVA — Small island developing states are transforming from climate-impact victims into primary architects of ocean conservation policy.',
+                body: `
+                    <p class="mb-4">By presenting a unified legal front on deep-sea dredging limits, Pacific negotiators have set a precedent for maritime environmental governance worldwide.</p>
+                `
+            }
+        };
+
+        // Open Modal Function
+        function openArticle(articleId) {
+            const article = articlesDB[articleId] || articlesDB['hero'];
+            const modal = document.getElementById('articleModal');
+            const modalCategory = document.getElementById('modalCategory');
+            const modalBody = document.getElementById('modalBody');
+
+            modalCategory.innerText = article.category;
+            modalBody.innerHTML = `
+                <div class="border-b border-stone-200 pb-4 mb-4">
+                    <h1 class="text-2xl sm:text-4xl font-black font-headline text-stone-900 uppercase leading-tight tracking-wide">${article.title}</h1>
+                    <div class="mt-4 flex flex-wrap items-center justify-between text-xs text-stone-600 gap-2">
+                        <span class="font-bold text-stone-900">${article.author}</span>
+                        <span class="text-gs-orange font-bold">${article.date}</span>
+                    </div>
+                </div>
+
+                <!-- Modal Image Container -->
+                <div class="relative rounded-lg overflow-hidden bg-gs-slatelight aspect-[16/9]">
+                    <!-- ==================== REPLACE IMAGE HERE: Inside Modal Article (1200x675) ==================== -->
+                    <img src="${article.image}" alt="${article.title}" class="w-full h-full object-cover">
+                    <!-- ============================================================================================ -->
+                </div>
+                <p class="text-xs text-stone-500 italic pb-2 border-b border-stone-200">${article.imageCaption}</p>
+
+                <div class="text-base sm:text-lg font-sans font-bold text-stone-900 leading-relaxed">
+                    ${article.lead}
+                </div>
+                <div class="text-stone-700 text-sm sm:text-base leading-relaxed space-y-4">
+                    ${article.body}
+                </div>
+            `;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Modal Function
+        function closeModal() {
+            const modal = document.getElementById('articleModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Close on Escape Key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Category Filter Logic
+        function filterCategory(category) {
+            const banner = document.getElementById('filterBanner');
+            const bannerName = document.getElementById('filterCategoryName');
+            const tabs = document.querySelectorAll('.nav-tab');
+            const storyCards = document.querySelectorAll('.story-card');
+
+            tabs.forEach(tab => {
+                if (tab.innerText.toLowerCase() === category.toLowerCase() || (category === 'All' && tab.innerText === 'News')) {
+                    tab.className = 'nav-tab text-white bg-gs-orange px-3.5 py-1.5 rounded transition whitespace-nowrap font-bold';
+                } else {
+                    tab.className = 'nav-tab text-stone-300 hover:text-white hover:bg-white/10 px-3.5 py-1.5 rounded transition whitespace-nowrap';
+                }
+            });
+
+            if (category === 'All') {
+                banner.classList.add('hidden');
+                storyCards.forEach(card => card.style.display = '');
+            } else {
+                banner.classList.remove('hidden');
+                bannerName.innerText = category;
+
+                storyCards.forEach(card => {
+                    const cardCat = card.getAttribute('data-category');
+                    if (cardCat && cardCat.toLowerCase().includes(category.toLowerCase())) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        // Live Search Filter
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const storyCards = document.querySelectorAll('.story-card');
+
+            storyCards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
