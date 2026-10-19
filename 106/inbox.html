@@ -73,7 +73,6 @@
             
             <!-- ========================================================================= -->
             <!-- ADD YOUR LOGO IMAGE LINK IN THE SRC ATTRIBUTE BELOW                       -->
-            <!-- Replace the placeholder URL with your actual image path/URL               -->
             <!-- ========================================================================= -->
             <img src="./chroniclelogo.png" alt="The Chronicle Logo" class="h-8 object-contain">
             
@@ -459,14 +458,14 @@
                                     </div>
                                     <div class="bg-black/50 rounded p-2 border border-gray-800/50">
                                         <div class="text-[11px] text-gray-500 mb-1">Email Address:</div>
-                                        <div class="text-sm text-blue-400 font-mono break-all">${email.senderEmail}</div>
+                                        <div class="text-base text-blue-400 font-mono font-medium break-all">${email.senderEmail}</div>
                                     </div>
                                 </div>
                             </div>
 
                             <div>
                                 <div class="text-base font-medium text-gray-200">${email.senderName}</div>
-                                <div class="text-xs text-gray-500 font-mono mt-0.5">&lt;${email.senderEmail}&gt;</div>
+                                <div class="text-base text-blue-400 font-mono font-medium mt-0.5">&lt;${email.senderEmail}&gt;</div>
                             </div>
                         </div>
                         <div class="text-xs text-gray-500 font-mono text-right hidden sm:block">
