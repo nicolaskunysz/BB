@@ -195,32 +195,36 @@
             transition: transform 0.3s;
         }
 
+        /* Center Layout: Moon Phase in center with Date next to Month title above, and badge below */
         #center-info {
             position: absolute;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             text-align: center;
             width: calc(var(--dial-radius) * 1.35);
             height: calc(var(--dial-radius) * 1.35);
             border-radius: 50%;
             z-index: 5;
             pointer-events: none;
-            /* Allow circular purple drop shadow filter to extend outward smoothly */
             overflow: visible;
+            padding: 1rem 0;
+            box-sizing: border-box;
         }
 
         #center-bg-moon {
             position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            height: 85%;
+            z-index: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            /* Uncropped circular glow filter */
             filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.55));
         }
         #center-bg-moon svg {
@@ -231,31 +235,36 @@
             overflow: hidden;
         }
 
-        #info-date {
-            font-size: clamp(4.5rem, 16vmin, 7.5rem);
-            font-weight: 700;
-            line-height: 1;
-            margin-bottom: 0;
-            /* Blurred drop shadow halo to boost contrast against the moon */
-            text-shadow: 0 0 25px rgba(8, 4, 15, 0.95), 0 0 45px rgba(0, 0, 0, 1), 0 0 10px rgba(255, 255, 255, 0.3);
+        .info-top {
+            position: relative;
+            z-index: 10;
+            margin-top: 0.2rem;
         }
+
+        .info-bottom {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 0.2rem;
+        }
+
         #info-phase {
-            font-size: clamp(0.85rem, 2.5vmin, 1.1rem);
+            font-size: clamp(0.95rem, 2.8vmin, 1.3rem);
             color: var(--text-main);
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            margin-top: -5px;
-            text-shadow: 0 0 12px rgba(0, 0, 0, 0.9);
+            letter-spacing: 3px;
+            font-weight: 700;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 0 10px rgba(168, 85, 247, 0.8);
         }
         
         .fertile-badge {
-            font-size: clamp(0.75rem, 2.5vmin, 1.05rem);
+            font-size: clamp(0.75rem, 2.4vmin, 1rem);
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 8px 20px;
+            padding: 6px 18px;
             border-radius: 9999px;
             transition: all 0.3s ease-out;
             border: 1px solid transparent;
@@ -329,7 +338,7 @@
             
             <div class="month-nav">
                 <div class="nav-arrow" id="btn-prev">&lt;</div>
-                <div id="month-year-display">August 2026</div>
+                <div><span id="month-display">August</span> <span id="info-date">26</span></div>
                 <div class="nav-arrow" id="btn-next">&gt;</div>
             </div>
 
@@ -344,10 +353,18 @@
 
         <div id="dial-wrapper">
             <div id="center-info">
+                <!-- Top Info Area (Phase Title above Moon) -->
+                <div class="info-top">
+                    <div id="info-phase">Full Moon</div>
+                </div>
+
+                <!-- Center Moon Sphere -->
                 <div id="center-bg-moon"></div>
-                <div id="info-date">26</div>
-                <div id="info-phase">Full Moon</div>
-                <div id="info-fertility" class="fertile-badge not-fertile">NOT FERTILE</div>
+
+                <!-- Bottom Info Area (Fertility Badge below Moon) -->
+                <div class="info-bottom">
+                    <div id="info-fertility" class="fertile-badge not-fertile">NOT FERTILE</div>
+                </div>
             </div>
             <div id="dial"></div>
         </div>
@@ -436,7 +453,7 @@
 
         const dial = document.getElementById('dial');
         const dialWrapper = document.getElementById('dial-wrapper');
-        const headerText = document.getElementById('month-year-display');
+        const monthText = document.getElementById('month-display');
         const loader = document.getElementById('loader');
         const moonShadow = document.getElementById('moon-shadow');
         const fertilityBadge = document.getElementById('info-fertility');
@@ -510,7 +527,7 @@
         }
 
         function renderDial() {
-            headerText.innerText = `${monthNames[currentMonth]} ${currentYear}`;
+            monthText.innerText = `${monthNames[currentMonth]}`;
             dial.innerHTML = '';
             
             const daysCount = getDaysInMonth(currentMonth, currentYear);
@@ -562,14 +579,13 @@
             if (activeIndex === daysCount) activeIndex = 0;
             selectedDay = activeIndex + 1;
 
-            // Highlight Active Dial Item with bigger scale (2.8x)
+            // Highlight Active Dial Item with 2.8x scale
             items.forEach(el => {
                 const isSelected = parseInt(el.dataset.day) === selectedDay;
                 if(isSelected) {
                     el.classList.add('selected');
                     el.style.color = '#ffffff';
                     el.style.textShadow = `0 0 15px ${el.dataset.color}`;
-                    /* Magnification increased to 2.8x */
                     el.style.transform += ' scale(2.8)';
                 } else {
                     el.classList.remove('selected');
