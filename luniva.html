@@ -195,10 +195,10 @@
             transition: transform 0.3s;
         }
 
-        /* External Text Anchors Placed Clear of the Whole Circle (Dial + 2.8x Scale Nodes) */
+        /* External Text Anchors Positioned Safely Clear of 2.8x Magnified Top Item & Bounds */
         .external-top-info {
             position: absolute;
-            top: calc(50% - var(--dial-radius) - 3.8rem);
+            top: calc(50% - var(--dial-radius) - 4.8rem);
             left: 50%;
             transform: translateX(-50%);
             z-index: 25;
@@ -209,7 +209,7 @@
 
         .external-bottom-info {
             position: absolute;
-            top: calc(50% + var(--dial-radius) + 2.2rem);
+            top: calc(50% + var(--dial-radius) + 3.2rem);
             left: 50%;
             transform: translateX(-50%);
             z-index: 25;
@@ -354,7 +354,7 @@
         </div>
 
         <div id="dial-wrapper">
-            <!-- Information placed further outside above the whole circle of dates and magnified icons -->
+            <!-- Information placed comfortably clear above the active magnified top date -->
             <div class="external-top-info">
                 <div id="info-phase">Full Moon</div>
             </div>
@@ -366,7 +366,7 @@
 
             <div id="dial"></div>
 
-            <!-- Information placed further outside below the whole circle of dates and magnified icons -->
+            <!-- Information placed comfortably clear below the bottom arc -->
             <div class="external-bottom-info">
                 <div id="info-fertility" class="fertile-badge not-fertile">NOT FERTILE</div>
             </div>
