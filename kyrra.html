@@ -498,11 +498,9 @@
 
         function calculateDayData(day, month, year) {
             // STRICT PLOT OVERRIDES (JS months are 0-indexed: April=3, July=6, August=7)
-            if (year === 2026) {
-                if (month === 3 && day === 30) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
-                if (month === 6 && day === 27) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
-                if (month === 7 && day === 26) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
-            }
+            if (month === 3 && day === 30) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
+            if (month === 6 && day === 28) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
+            if (month === 7 && day === 26) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
 
             let fertile = false;
             let color = '#6b7280'; // Base gray
