@@ -233,6 +233,28 @@
             box-sizing: border-box;
         }
 
+        /* Circular purple glow that fades completely to black/transparent at the date ring */
+        #center-info::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: calc(var(--dial-radius) * 2);
+            height: calc(var(--dial-radius) * 2);
+            border-radius: 50%;
+            background: radial-gradient(
+                circle,
+                rgba(168, 85, 247, 0.55) 0%,
+                rgba(168, 85, 247, 0.4) 38%,
+                rgba(168, 85, 247, 0.14) 55%,
+                rgba(8, 4, 15, 0) 68%,
+                rgba(8, 4, 15, 0) 100%
+            );
+            z-index: 0;
+            pointer-events: none;
+        }
+
         #center-bg-moon {
             position: absolute;
             width: 100%;
@@ -242,14 +264,12 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.55));
         }
         #center-bg-moon svg {
             width: 100%;
             height: 100%;
             display: block;
             border-radius: 50%;
-            overflow: hidden;
         }
 
         #info-phase {
@@ -359,7 +379,7 @@
                 <div id="info-phase">Full Moon</div>
             </div>
 
-            <!-- Central Area: Pure textured moon sphere -->
+            <!-- Central Area: Pure textured moon sphere with circular gradient glow -->
             <div id="center-info">
                 <div id="center-bg-moon"></div>
             </div>
