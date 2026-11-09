@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigurður Ólafsson - Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-y: scroll;
+        }
+        .text-primary { color: #050505; }
+        .text-secondary { color: #65676b; }
+        
+        .search-input-active:focus-within {
+            box-shadow: 0 0 0 2px #cbe4ff;
+        }
+
+        .btn-gray {
+            background-color: #e4e6eb;
+            color: #050505;
+            transition: background-color 0.2s ease;
+        }
+        .btn-gray:hover {
+            background-color: #d8dadf;
+        }
+        .btn-blue {
+            background-color: #1b74e4;
+            color: #ffffff;
+            transition: background-color 0.2s ease;
+        }
+        .btn-blue:hover {
+            background-color: #1865c9;
+        }
+        
+        /* Smooth image rendering */
+        img { object-fit: cover; }
+
+        /* Hover effect for clickable post cards */
+        .post-card {
+            transition: all 0.2s ease;
+        }
+        .post-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body class="antialiased pb-12">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full h-[60px] bg-gradient-to-r from-[#1b74e4] to-[#0a49a8] shadow-md flex items-center justify-between px-3 sm:px-4 z-50">
+        
+        <!-- Left side: Empty / Spacer (No logo as requested) -->
+        <div class="flex items-center gap-2 flex-1 md:w-[320px] md:flex-none">
+        </div>
+
+        <!-- Center: Search Bar -->
+        <div class="flex flex-1 justify-center max-w-[600px]">
+            <div class="search-input-active relative flex items-center bg-white/10 rounded-full px-3 py-2 w-full max-w-[400px] transition-all duration-200 shadow-inner hover:bg-white/20">
+                <i class="fa-solid fa-magnifying-glass text-white/70 mr-2 text-sm"></i>
+                <input type="text" placeholder="Search..." class="bg-transparent border-none outline-none w-full text-white placeholder-white/70 text-[15px]" disabled>
+            </div>
+        </div>
+
+        <!-- Right side: Profile and Icons -->
+        <div class="flex items-center justify-end gap-2 sm:gap-3 flex-1 md:w-[320px] md:flex-none">
+            <div class="w-10 h-10 bg-white/20 rounded-full hidden sm:flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors">
+                <i class="fa-solid fa-plus text-lg"></i>
+            </div>
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors">
+                <i class="fa-brands fa-facebook-messenger text-lg"></i>
+            </div>
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors relative">
+                <i class="fa-solid fa-bell text-lg"></i>
+            </div>
+            
+            <!-- Link back to reset using the top right profile picture -->
+            <a href="./profilesearch.html" class="w-10 h-10 rounded-full overflow-hidden sm:ml-2 border-2 border-white/50 cursor-pointer flex-shrink-0 shadow-sm hover:border-white transition-colors" title="Back to Search">
+                <!-- ====================================================================== -->
+                <!-- !!! EDIT HERE: LOGGED IN USER (SUNNA) PROFILE IMAGE URL HERE !!!       -->
+                <!-- ====================================================================== -->
+                <img src="https://placehold.co/150x150/9ca3af/ffffff?text=S" alt="Current User" class="w-full h-full">
+                <!-- ====================================================================== -->
+            </a>
+        </div>
+    </nav>
+
+    <!-- Profile Header Area -->
+    <div class="bg-white shadow-sm mb-4 pt-[60px]">
+        <div class="max-w-[1100px] mx-auto w-full relative">
+            
+            <!-- Cover Photo Area -->
+            <div class="w-full h-[150px] sm:h-[200px] md:h-[250px] bg-gray-200 rounded-b-xl overflow-hidden relative border border-gray-300 shadow-inner">
+                <!-- ====================================================================== -->
+                <!-- !!! EDIT HERE: SIGURDUR'S COVER PHOTO IMAGE URL !!!                    -->
+                <!-- ====================================================================== -->
+                <img src="https://placehold.co/1200x400/cbd5e1/64748b?text=Cover+Photo" alt="Cover Photo" class="w-full h-full object-cover">
+                <!-- ====================================================================== -->
+            </div>
+
+            <!-- Profile Info & Avatar (Overlapping) -->
+            <div class="px-4 sm:px-8 pb-4 relative flex flex-col md:flex-row items-center md:items-end -mt-16 md:-mt-8 mb-4">
+                
+                <!-- Avatar -->
+                <div class="relative w-[130px] h-[130px] sm:w-[168px] sm:h-[168px] rounded-full border-4 border-white overflow-hidden bg-white shadow-md z-10">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: SIGURDUR'S MAIN PROFILE IMAGE URL !!!                   -->
+                    <!-- ====================================================================== -->
+                    <img src="https://placehold.co/300x300/9ca3af/ffffff?text=Siggi" alt="Profile" class="w-full h-full object-cover">
+                    <!-- ====================================================================== -->
+                </div>
+
+                <!-- Name & Meta -->
+                <div class="mt-4 md:mt-0 md:ml-4 text-center md:text-left flex-1 mb-2 md:mb-4">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: SIGURDUR'S NAME !!!                                     -->
+                    <!-- ====================================================================== -->
+                    <h1 class="text-[32px] font-bold text-primary leading-tight">Sigurður Ólafsson</h1>
+                    <!-- ====================================================================== -->
+                    <p class="text-[15px] font-semibold text-secondary mt-1">342 Friends</p>
+                    
+                    <!-- Overlapping friends avatars miniature -->
+                    <div class="flex justify-center md:justify-start mt-2">
+                        <div class="flex -space-x-2">
+                            <img class="w-8 h-8 rounded-full border-2 border-white bg-gray-300" src="https://placehold.co/100x100/94a3b8/ffffff?text=F1" alt="friend">
+                            <img class="w-8 h-8 rounded-full border-2 border-white bg-gray-300" src="https://placehold.co/100x100/64748b/ffffff?text=F2" alt="friend">
+                            <img class="w-8 h-8 rounded-full border-2 border-white bg-gray-300" src="https://placehold.co/100x100/475569/ffffff?text=F3" alt="friend">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2 mt-4 md:mt-0 md:mb-4 w-full md:w-auto justify-center">
+                    <button class="btn-gray flex-1 md:flex-none px-3 py-2 rounded-md font-semibold text-[15px] flex items-center justify-center">
+                        <i class="fa-solid fa-user-check mr-2"></i> Friends
+                    </button>
+                    <button class="btn-blue flex-1 md:flex-none px-3 py-2 rounded-md font-semibold text-[15px] flex items-center justify-center">
+                        <i class="fa-brands fa-facebook-messenger mr-2"></i> Message
+                    </button>
+                    <button class="btn-gray px-3 py-2 rounded-md font-semibold text-[15px] flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-300 mx-4 md:mx-8"></div>
+            
+            <!-- Profile Nav -->
+            <div class="flex px-4 md:px-8 py-1 overflow-x-auto text-secondary font-semibold text-[15px]">
+                <div class="px-4 py-4 text-[#1b74e4] border-b-[3px] border-[#1b74e4] cursor-pointer">Posts</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">About</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">Friends</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">Photos</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors hidden sm:block">Videos</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">More <i class="fa-solid fa-caret-down ml-1"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container (2-Column Layout) -->
+    <main class="max-w-[1000px] mx-auto flex flex-col md:flex-row gap-4 px-2 sm:px-4">
+        
+        <!-- Left Column: Intro, Friends Grid -->
+        <div class="w-full md:w-[360px] flex flex-col gap-4 flex-shrink-0">
+            
+            <!-- Intro Card -->
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+                <h2 class="font-bold text-xl text-primary mb-4">Intro</h2>
+                
+                <div class="flex flex-col gap-4 text-[15px] text-primary">
+                    <div class="flex items-center text-center justify-center pb-4 border-b border-gray-200">
+                        <span class="text-[15px]">Hard work pays off.</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-briefcase text-gray-400 text-xl w-6 text-center"></i>
+                        <span>Self-Employed at <strong>Ólafsson Construction</strong></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-house text-gray-400 text-xl w-6 text-center"></i>
+                        <span>Lives in <strong>Kjalarnes, Iceland</strong></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-clock text-gray-400 text-xl w-6 text-center"></i>
+                        <span>Joined March 2012</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends Card -->
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+                <div class="flex justify-between items-center mb-1">
+                    <h2 class="font-bold text-xl text-primary">Friends</h2>
+                    <a href="#" class="text-[#1b74e4] text-[15px] hover:bg-gray-100 px-2 py-1 rounded">See all</a>
+                </div>
+                <p class="text-secondary text-[15px] mb-4">342 friends</p>
+                
+                <div class="grid grid-cols-3 gap-x-2 gap-y-4">
+                    <!-- Generic Friends Placeholders -->
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <img src="https://placehold.co/300x300/e2e8f0/9ca3af?text=F1" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Siggi Valur</p>
+                    </div>
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <img src="https://placehold.co/300x300/cbd5e1/9ca3af?text=F2" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Bryndís Ó.</p>
+                    </div>
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <img src="https://placehold.co/300x300/94a3b8/e2e8f0?text=F3" class="w-full h-full object-cover">
+                        </div>
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Jónas D.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-[13px] text-gray-500 mt-2 px-2 pb-6 flex flex-wrap gap-x-3 gap-y-1">
+                <a href="#" class="hover:underline">Privacy</a>
+                <a href="#" class="hover:underline">Terms</a>
+                <a href="#" class="hover:underline">More</a>
+                <span>FictionalSocial © 2026</span>
+            </div>
+        </div>
+
+        <!-- Right Column: Timeline / Feed -->
+        <div class="flex-1 flex flex-col gap-4 min-w-0 pb-10">
+            
+            <!-- Create Post (Fake Input) -->
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-300">
+                        <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Sunna" alt="Current User" class="w-full h-full object-cover">
+                    </div>
+                    <div class="bg-gray-100 hover:bg-gray-200 cursor-pointer rounded-full flex-1 px-4 py-2.5 text-secondary text-[15px] transition-colors">
+                        Write something to Sigurður...
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================================================================================== -->
+            <!-- !!! CRITICAL HERO PLOT ELEMENT: THE ASSAULT POST (CLICKABLE) !!!                                     -->
+            <!-- ==================================================================================================== -->
+            <div class="post-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer" onclick="openPostModal(this)">
+                <!-- Post Header -->
+                <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: SIGURDUR'S PROFILE PIC FOR THE POST HEADER !!!          -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Siggi" alt="Sigurður" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-[15px] text-primary hover:underline">Sigurður Ólafsson</h3>
+                            <div class="flex items-center text-secondary text-[13px]">
+                                <span>28 April at 14:37</span>
+                                <span class="mx-1">·</span>
+                                <i class="fa-solid fa-earth-americas text-[12px]" title="Public"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center cursor-pointer text-gray-500">
+                        <i class="fa-solid fa-ellipsis"></i>
+                    </div>
+                </div>
+
+                <!-- Post Text Content -->
+                <div class="px-4 pb-3">
+                    <p class="text-[15px] text-primary leading-normal whitespace-pre-wrap">So some little ninja in a mask thinks he can sneak up on me in Kjalarnes in the middle of the night. Takes a baseball bat to the van first. Very brave. Then he has a go at me. Not one word out of him.
+Few stitches, couple of ribs, one eye shut. I've had worse from friends 😂 The van is fucked though.
+Cops came, wrote it down, went home. Same as always. When it's me getting hit nobody's in a hurry.
+To the hero in the mask: you should have finished the job. I don't forget faces. Even the ones you hide.</p>
+                </div>
+
+                <!-- Post Main Images (2 Image Grid) -->
+                <div class="w-full grid grid-cols-2 gap-1 bg-white">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: HERO POST IMAGE 1 (SMASHED VAN) !!!                     -->
+                    <!-- ====================================================================== -->
+                    <img src="https://placehold.co/600x600/cbd5e1/475569?text=Van+Smashed" alt="Smashed Van" class="w-full h-[250px] sm:h-[350px] object-cover">
+                    
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: HERO POST IMAGE 2 (BRUISED SELFIE) !!!                  -->
+                    <!-- ====================================================================== -->
+                    <img src="https://placehold.co/600x600/94a3b8/ffffff?text=Bruised+Selfie" alt="Bruised Face" class="w-full h-[250px] sm:h-[350px] object-cover">
+                </div>
+
+                <!-- Post Stats & Actions -->
+                <div class="px-4 py-2 flex justify-between text-secondary text-[15px]">
+                    <div class="flex items-center gap-1 cursor-pointer hover:underline">
+                        <!-- Reaction Icons -->
+                        <div class="flex -space-x-1">
+                            <div class="w-5 h-5 bg-red-500 rounded-full border border-white flex items-center justify-center z-30">
+                                <i class="fa-solid fa-face-angry text-white text-[11px]"></i>
+                            </div>
+                            <div class="w-5 h-5 bg-yellow-500 rounded-full border border-white flex items-center justify-center z-20">
+                                <i class="fa-solid fa-face-surprise text-white text-[11px]"></i>
+                            </div>
+                            <div class="w-5 h-5 bg-[#1b74e4] rounded-full border border-white flex items-center justify-center z-10">
+                                <i class="fa-solid fa-thumbs-up text-white text-[10px]"></i>
+                            </div>
+                        </div>
+                        <span class="ml-1 text-[14px]">47</span>
+                    </div>
+                    <div class="flex gap-3 text-[14px]">
+                        <span class="cursor-pointer hover:underline">63 comments</span>
+                        <span class="cursor-pointer hover:underline">4 shares</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="px-2 py-1 flex justify-between border-y border-gray-200">
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
+                        <i class="fa-regular fa-thumbs-up text-xl"></i> Like
+                    </div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
+                        <i class="fa-regular fa-comment text-xl"></i> Comment
+                    </div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">
+                        <i class="fa-solid fa-share text-xl"></i> Share
+                    </div>
+                </div>
+
+                <!-- ==================================================================================================== -->
+                <!-- VISIBLE COMMENTS THREAD (AS REQUESTED) -->
+                <!-- ==================================================================================================== -->
+                <div class="px-4 pt-3 pb-4 bg-white">
+                    <p class="font-semibold text-secondary text-[14px] mb-3 hover:underline cursor-pointer">View more comments</p>
+                    
+                    <!-- Comment 1: Siggi Valur -->
+                    <div class="flex gap-2 mb-3">
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: SIGGI VALUR AVATAR !!!                                  -->
+                        <!-- ====================================================================== -->
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden cursor-pointer">
+                            <img src="https://placehold.co/100x100/e2e8f0/9ca3af?text=SV" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="bg-gray-100 rounded-2xl px-3 py-2">
+                                <span class="font-semibold text-primary text-[13px] hover:underline cursor-pointer">Siggi Valur</span>
+                                <p class="text-primary text-[15px] leading-snug mt-0.5">Jesus Siggi. Hope you're ok. Cameras on any of the houses there?</p>
+                            </div>
+                            <div class="text-[12px] text-secondary font-bold mt-1 ml-3 flex gap-4">
+                                <span class="cursor-pointer hover:underline">Like</span>
+                                <span class="cursor-pointer hover:underline">Reply</span>
+                                <span class="font-normal text-gray-400 hover:underline cursor-pointer">2 d</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comment 2: Bryndís Ó. -->
+                    <div class="flex gap-2 mb-3">
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: BRYNDÍS AVATAR !!!                                      -->
+                        <!-- ====================================================================== -->
+                        <div class="w-8 h-8 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden cursor-pointer">
+                            <img src="https://placehold.co/100x100/cbd5e1/9ca3af?text=BO" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="bg-gray-100 rounded-2xl px-3 py-2">
+                                <span class="font-semibold text-primary text-[13px] hover:underline cursor-pointer">Bryndís Ó.</span>
+                                <p class="text-primary text-[15px] leading-snug mt-0.5">Karma has a long memory.</p>
+                            </div>
+                            <div class="text-[12px] text-secondary font-bold mt-1 ml-3 flex gap-4">
+                                <span class="cursor-pointer hover:underline">Like</span>
+                                <span class="cursor-pointer hover:underline">Reply</span>
+                                <span class="font-normal text-gray-400 hover:underline cursor-pointer">1 d</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comment 3 (Reply): Sigurður Ólafsson -->
+                    <div class="flex gap-2 mb-1 ml-10">
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: SIGURDUR (AUTHOR) AVATAR !!!                            -->
+                        <!-- ====================================================================== -->
+                        <div class="w-6 h-6 rounded-full bg-gray-300 flex-shrink-0 overflow-hidden cursor-pointer">
+                            <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Siggi" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <div class="bg-gray-100 rounded-2xl px-3 py-2">
+                                <span class="font-semibold text-primary text-[13px] hover:underline cursor-pointer">Sigurður Ólafsson</span>
+                                <p class="text-primary text-[15px] leading-snug mt-0.5">@Bryndís come over and say that, sweetheart 😘</p>
+                            </div>
+                            <div class="text-[12px] text-secondary font-bold mt-1 ml-3 flex gap-4">
+                                <span class="cursor-pointer hover:underline">Like</span>
+                                <span class="cursor-pointer hover:underline">Reply</span>
+                                <span class="font-normal text-gray-400 hover:underline cursor-pointer">16 h</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEANINGLESS POST: FILLER (CLICKABLE) -->
+            <div class="post-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer" onclick="openPostModal(this)">
+                <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                            <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Siggi" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-[15px] text-primary hover:underline">Sigurður Ólafsson</h3>
+                            <div class="flex items-center text-secondary text-[13px]">
+                                <span>21 April</span>
+                                <span class="mx-1">·</span>
+                                <i class="fa-solid fa-user-group text-[12px]" title="Friends"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 pb-3">
+                    <p class="text-[15px] text-primary leading-normal">
+                        Finally got the site cleared out. Nothing beats an ice cold Fjall Lager after a brutal 12 hour shift. Have a good weekend everyone. 🍻
+                    </p>
+                </div>
+                
+                <div class="w-full bg-gray-100">
+                    <img src="https://placehold.co/800x500/94a3b8/ffffff?text=Beer+Bottle" class="w-full h-auto object-cover max-h-[500px]">
+                </div>
+
+                <div class="px-4 py-2 border-b border-gray-200 flex justify-between text-secondary text-[15px]">
+                    <div class="flex items-center gap-1 cursor-pointer hover:underline">
+                        <i class="fa-solid fa-thumbs-up text-white bg-[#1b74e4] rounded-full p-1 text-[10px]"></i>
+                        <span class="ml-1 text-[14px]">18</span>
+                    </div>
+                    <div class="flex gap-3 text-[14px]">
+                        <span class="cursor-pointer hover:underline">2 comments</span>
+                    </div>
+                </div>
+
+                <div class="px-2 py-1 flex justify-between">
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-thumbs-up text-xl"></i> Like</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-comment text-xl"></i> Comment</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-solid fa-share text-xl"></i> Share</div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center pt-2">
+                <button class="w-full py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-colors shadow-sm">
+                    Load More Posts
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Post Lightbox Modal -->
+    <div id="postModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4" onclick="closePostModal()">
+        <div class="bg-white rounded-xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl" onclick="event.stopPropagation()">
+            <button class="absolute top-3 right-4 text-gray-500 hover:text-black text-3xl font-bold z-10" onclick="closePostModal()">&times;</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function openPostModal(cardElement) {
+            const modal = document.getElementById('postModal');
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = cardElement.innerHTML;
+            modal.classList.remove('hidden');
+        }
+
+        function closePostModal() {
+            document.getElementById('postModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
