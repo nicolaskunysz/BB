@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikael Arason out after car crash | Football | The Broadview</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Editorial Serif & Clean Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bv: {
+                            navy: '#052962',
+                            navydark: '#021838',
+                            blue: '#005689',
+                            yellow: '#ffe500',
+                            yellowdark: '#e6cc00',
+                            red: '#c70000',
+                            opinionbg: '#fef9e7',
+                            cardbg: '#ffffff',
+                            pagebg: '#f6f6f6',
+                            border: '#dcdcdc',
+                            text: '#121212',
+                            muted: '#666666'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Merriweather', 'Georgia', 'serif'],
+                        sans: ['Inter', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f6f6f6;
+            color: #121212;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Continuous Ticker */
+        @keyframes tickerScroll {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .animate-ticker {
+            display: inline-flex;
+            white-space: nowrap;
+            animation: tickerScroll 48s linear infinite;
+        }
+        .animate-ticker:hover {
+            animation-play-state: paused;
+        }
+
+        /* Pulsing dot for live status */
+        @keyframes livePulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.15); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .pulse-live {
+            animation: livePulse 1.6s infinite ease-in-out;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 7px;
+            height: 7px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e5e5e5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #005689;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #052962;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+    <!-- TOP GUARDIAN-STYLE BRANDING HEADER -->
+    <header class="bg-bv-navy text-white sticky top-0 z-40 shadow-lg">
+        <!-- Top Utility Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-b border-white/10">
+            <div class="flex items-center justify-between h-12 text-xs">
+                
+                <!-- Left Edition Selector -->
+                <div class="flex items-center space-x-3">
+                    <span class="font-semibold text-bv-yellow uppercase tracking-wider text-[11px]">Edition:</span>
+                    <select id="editionSelect" class="bg-bv-navydark text-white font-medium px-2 py-1 rounded border border-white/20 outline-none cursor-pointer">
+                        <option value="international">International</option>
+                        <option value="uk">UK & Europe</option>
+                        <option value="nordic" selected>Nordic & Iceland</option>
+                        <option value="us">US Edition</option>
+                    </select>
+                </div>
+
+                <!-- Right Actions & Search -->
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Search news & sport..." 
+                            class="bg-white/10 text-white placeholder-white/60 text-xs rounded-full py-1 pl-7 pr-3 w-36 sm:w-56 focus:outline-none focus:ring-2 focus:ring-bv-yellow focus:bg-bv-navydark transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2 text-[10px] text-white/70"></i>
+                    </div>
+                    <button class="bg-bv-yellow text-bv-navy font-extrabold px-3 py-1 rounded text-xs hover:bg-bv-yellowdark transition">
+                        Support Us
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Masthead Banner -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex items-center justify-between border-b border-white/10">
+            <div>
+                <a href="#" class="group inline-block">
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-black font-serif tracking-tight text-white group-hover:text-bv-yellow transition">
+                        The Broadview
+                    </h1>
+                </a>
+                <p class="text-xs text-white/70 mt-1 font-sans tracking-wide uppercase">Independent Journalism • International Edition</p>
+            </div>
+
+            <div class="hidden md:flex items-center space-x-4 bg-white/5 border border-white/15 px-4 py-2.5 rounded-lg">
+                <div class="text-right">
+                    <span class="block text-xs font-bold text-bv-yellow uppercase">International Sport Desk</span>
+                    <span class="block text-[11px] text-white/80">Reykjavik & European Coverage</span>
+                </div>
+                <div class="w-8 h-8 rounded-full bg-bv-yellow text-bv-navy flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-futbol"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Primary Navigation Bar (Sport Active) -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center space-x-1 overflow-x-auto py-1 scrollbar-none text-sm font-semibold tracking-tight">
+                <a href="#" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">News</a>
+                <a href="#" class="nav-tab text-bv-navy bg-bv-yellow px-4 py-2 rounded-t font-bold transition whitespace-nowrap">Sport</a>
+                <a href="#" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap font-bold text-bv-yellow">Football</a>
+                <a href="#" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">World</a>
+                <a href="#" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Politics</a>
+                <a href="#" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Climate</a>
+                <a href="#" class="nav-tab text-white hover:bg-white/10 px-4 py-2 rounded-t transition whitespace-nowrap">Opinion</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- LIVE NEWS TICKER BANNER -->
+    <div class="bg-bv-navydark text-white border-b border-bv-blue/40 overflow-hidden flex items-stretch h-10 shadow-md">
+        <div class="bg-bv-red px-4 flex items-center shrink-0 z-10 font-black text-xs uppercase tracking-wider text-white">
+            <span class="w-2.5 h-2.5 bg-white rounded-full mr-2 pulse-live inline-block"></span>
+            Breaking Sport
+        </div>
+        <div class="flex-1 overflow-hidden relative flex items-center">
+            <div class="animate-ticker space-x-12 text-xs font-medium text-stone-200">
+                <span class="inline-flex items-center"><strong class="text-bv-yellow mr-1.5">[ICELAND SQUAD]:</strong> Mikael Arason to miss next three club games following car crash.</span>
+                <span class="inline-flex items-center"><strong class="text-bv-yellow mr-1.5">[QUALIFIERS]:</strong> National coach "relieved" as midfielder expected to return for September matches.</span>
+                <span class="inline-flex items-center"><strong class="text-bv-yellow mr-1.5">[TRANSFER WINDOW]:</strong> Deadline approaches as European clubs finalize remaining squad additions.</span>
+            </div>
+        </div>
+        <div class="bg-bv-navy px-3 hidden lg:flex items-center text-[11px] text-stone-300 border-l border-white/10 shrink-0 font-mono">
+            <i class="fa-solid fa-clock text-bv-yellow mr-2"></i> 27/08/2026, 19:14
+        </div>
+    </div>
+
+    <!-- MAIN PAGE CONTAINER: FULL DIRECT ARTICLE VIEW -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+
+            <!-- MAIN ARTICLE COLUMN (8 cols) -->
+            <article class="lg:col-span-8 bg-white border border-bv-border rounded-lg shadow-sm p-6 sm:p-10">
+                
+                <!-- Category Breadcrumb & Guardian-Style Topic Line -->
+                <div class="flex items-center gap-2 mb-4 border-b border-stone-200 pb-3">
+                    <span class="text-xs font-black uppercase tracking-widest text-bv-red">Sport</span>
+                    <span class="text-stone-300 font-bold">•</span>
+                    <span class="text-xs font-black uppercase tracking-widest text-bv-navy">Football</span>
+                </div>
+
+                <!-- Main Article Headline -->
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold font-serif text-stone-900 leading-[1.15] tracking-tight">
+                    Mikael Arason out after car crash
+                </h1>
+
+                <!-- Standfirst / Sub-Lead -->
+                <p class="mt-4 text-lg sm:text-xl font-serif text-stone-700 leading-relaxed font-normal border-l-4 border-bv-yellow pl-4 bg-stone-50 py-2">
+                    National team midfielder to miss next three club fixtures following a reported single-vehicle accident in heavy rain on Sunday night.
+                </p>
+
+                <!-- Byline & Timestamps -->
+                <div class="mt-6 pt-4 border-t border-stone-200 flex flex-wrap items-center justify-between text-xs text-stone-600 gap-3 font-sans">
+                    <div class="space-y-0.5">
+                        <div class="text-stone-900 font-bold text-sm">By Gunnar Steinn Pálsson</div>
+                        <div class="text-stone-500">
+                            <span>Published: 27 July 2026, 15:20</span>
+                            <span class="mx-1.5">•</span>
+                            <span class="text-stone-700 font-medium">Updated: 27/08/2026, 19:14</span>
+                        </div>
+                    </div>
+
+                    <!-- Social / Share Icons -->
+                    <div class="flex items-center space-x-2 text-stone-600">
+                        <button class="w-8 h-8 rounded-full border border-stone-300 hover:bg-stone-100 flex items-center justify-center transition" title="Share via X / Twitter">
+                            <i class="fa-brands fa-x-twitter text-xs"></i>
+                        </button>
+                        <button class="w-8 h-8 rounded-full border border-stone-300 hover:bg-stone-100 flex items-center justify-center transition" title="Share via Facebook">
+                            <i class="fa-brands fa-facebook-f text-xs"></i>
+                        </button>
+                        <button class="w-8 h-8 rounded-full border border-stone-300 hover:bg-stone-100 flex items-center justify-center transition" title="Share via Mail">
+                            <i class="fa-regular fa-envelope text-xs"></i>
+                        </button>
+                        <button class="w-8 h-8 rounded-full border border-stone-300 hover:bg-stone-100 flex items-center justify-center transition" title="Copy link">
+                            <i class="fa-solid fa-link text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ========================================================================= -->
+                <!-- >>> ENTER YOUR SPECIFIC CAR DAMAGE IMAGE URL HERE <<< -->
+                <!-- Note for graphics: The car in the photo has bat damage (every window 
+                     smashed, dents on top and sides) but is captioned as a crash. A sharp 
+                     viewer, and Sunna, can see it doesn't look like a car that went off 
+                     the road. -->
+                <!-- Replace the src attribute below with your image file path or web link -->
+                <!-- ========================================================================= -->
+                <figure class="my-8">
+                    <div class="relative overflow-hidden rounded-lg bg-stone-900 aspect-[16/10] sm:aspect-[16/9] border border-stone-200 shadow-inner">
+                        <img 
+                            src="https://images.unsplash.com/photo-1544648792-7cd0c07d3455?auto=format&fit=crop&w=1200&q=80" 
+                            alt="Mikael's car the morning after, on the back of a tow truck in the rain. Windscreen and side windows smashed, dents across the bonnet, roof and doors." 
+                            class="w-full h-full object-cover opacity-90"
+                        >
+                    </div>
+                    <!-- Caption & Photographer credits -->
+                    <figcaption class="mt-2.5 text-xs text-stone-500 font-sans flex items-start justify-between border-b border-stone-200 pb-3">
+                        <span><i class="fa-solid fa-camera mr-1.5 text-stone-400"></i>Mikael Arason's car after Sunday night's accident.</span>
+                        <span class="font-medium text-stone-600">Photo: [SPORT SITE]/[Photographer]</span>
+                    </figcaption>
+                </figure>
+                <!-- ========================================================================= -->
+
+                <!-- ARTICLE BODY CONTENT -->
+                <div class="prose max-w-none text-stone-800 font-sans text-base sm:text-lg leading-relaxed space-y-5">
+                    
+                    <p class="font-semibold text-stone-900 text-lg sm:text-xl font-serif leading-relaxed">
+                        National team midfielder Mikael Arason will miss his club's next three games after a car accident on his way home from training on Sunday night.
+                    </p>
+
+                    <p>
+                        According to a short statement from the club, Mikael lost control of his car in heavy rain and went off the road. He was treated for a broken nose and two broken fingers on his left hand, and lost several teeth. No other vehicle was involved, and police were not called to the scene.
+                    </p>
+
+                    <!-- Quote Callout -->
+                    <blockquote class="my-7 border-l-4 border-bv-yellow bg-bv-opinionbg p-5 rounded-r-lg">
+                        <p class="font-serif italic text-lg sm:text-xl text-stone-900 leading-snug">
+                            "I'm lucky it wasn't worse. Thanks for all the kind messages. I'll be back soon."
+                        </p>
+                        <footer class="mt-2 text-xs font-sans text-stone-600 font-medium">
+                            — Mikael Arason, writing in a brief message on Instagram
+                        </footer>
+                    </blockquote>
+
+                    <p>
+                        Mikael will miss league games against [Club A], [Club B] and [Club C]. The club expects him back before Iceland's qualifiers in September. The national team coach said he was "relieved it wasn't more serious".
+                    </p>
+
+                    <p>
+                        The club would not answer further questions about the accident.
+                    </p>
+
+                    <!-- Guardian-Style Inline "Related Links" Panel -->
+                    <div class="mt-10 p-6 bg-stone-50 border-t-2 border-bv-navy rounded-b-lg border-x border-b border-stone-200">
+                        <h3 class="text-xs font-black uppercase tracking-wider text-bv-navy flex items-center gap-1.5 mb-3">
+                            <i class="fa-solid fa-newspaper text-bv-yellow"></i>
+                            Related Coverage
+                        </h3>
+                        <ul class="space-y-2.5 text-sm font-medium text-stone-800">
+                            <li class="flex items-start gap-2 hover:text-bv-blue cursor-pointer transition">
+                                <span class="text-bv-yellow font-bold text-base leading-none">•</span>
+                                <a href="#" class="hover:underline">Iceland squad announcement next Thursday</a>
+                            </li>
+                            <li class="flex items-start gap-2 hover:text-bv-blue cursor-pointer transition">
+                                <span class="text-bv-yellow font-bold text-base leading-none">•</span>
+                                <a href="#" class="hover:underline">"We have no excuses" – coach ahead of Spain match</a>
+                            </li>
+                            <li class="flex items-start gap-2 hover:text-bv-blue cursor-pointer transition">
+                                <span class="text-bv-yellow font-bold text-base leading-none">•</span>
+                                <a href="#" class="hover:underline">Transfer window: who is still looking for a club?</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Article Bottom Share / Tag bar -->
+                <div class="mt-10 pt-6 border-t border-stone-200 flex flex-wrap items-center justify-between gap-4 text-xs text-stone-600">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-stone-900">Filed under:</span>
+                        <span class="bg-stone-100 hover:bg-stone-200 px-2.5 py-1 rounded cursor-pointer transition">Iceland Football</span>
+                        <span class="bg-stone-100 hover:bg-stone-200 px-2.5 py-1 rounded cursor-pointer transition">Injuries</span>
+                        <span class="bg-stone-100 hover:bg-stone-200 px-2.5 py-1 rounded cursor-pointer transition">Road Safety</span>
+                    </div>
+                    <div class="flex items-center space-x-3 text-stone-700">
+                        <button class="hover:text-bv-blue flex items-center gap-1"><i class="fa-regular fa-comment"></i> 348 comments</button>
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- RIGHT SIDEBAR (4 cols: Most Read in Sport & Context) -->
+            <aside class="lg:col-span-4 space-y-8">
+
+                <!-- MOST READ IN SPORT -->
+                <div class="bg-white rounded-lg p-5 border border-bv-border shadow-sm">
+                    <div class="flex items-center justify-between border-b-2 border-bv-navy pb-3 mb-4">
+                        <h3 class="font-serif font-bold text-base text-bv-navy tracking-tight flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 bg-bv-yellow inline-block rounded-full"></span>
+                            Most Read in Sport
+                        </h3>
+                        <span class="text-[10px] text-bv-muted font-mono uppercase">Live</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Rank 1 (Active story) -->
+                        <div class="flex items-start space-x-3 group cursor-pointer">
+                            <span class="text-3xl font-black text-bv-yellow font-serif leading-none w-6">1</span>
+                            <div class="border-b border-stone-100 pb-3 w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Mikael Arason out after car crash: club refuses follow-up questions
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">Football • 164k views</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 2 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer">
+                            <span class="text-3xl font-black text-bv-yellow font-serif leading-none w-6">2</span>
+                            <div class="border-b border-stone-100 pb-3 w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    "We have no excuses" – National head coach speaks ahead of Spain qualifier
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">Football • 98k views</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 3 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer">
+                            <span class="text-3xl font-black text-bv-yellow font-serif leading-none w-6">3</span>
+                            <div class="border-b border-stone-100 pb-3 w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Iceland squad announcement scheduled for next Thursday as injuries mount
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">Football • 73k views</span>
+                            </div>
+                        </div>
+
+                        <!-- Rank 4 -->
+                        <div class="flex items-start space-x-3 group cursor-pointer">
+                            <span class="text-3xl font-black text-bv-yellow font-serif leading-none w-6">4</span>
+                            <div class="w-full">
+                                <h4 class="font-serif font-bold text-sm text-stone-900 group-hover:text-bv-blue transition leading-snug">
+                                    Transfer window: Who is still searching for a club ahead of the autumn deadline?
+                                </h4>
+                                <span class="text-[11px] text-bv-muted mt-1 block">European Football • 56k views</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REYKJAVIK DISPATCH CALLOUT -->
+                <div class="bg-bv-navy text-white rounded-lg p-5 border border-bv-navydark shadow-md">
+                    <span class="text-[10px] font-mono uppercase tracking-wider text-bv-yellow block mb-2">
+                        <i class="fa-solid fa-satellite mr-1"></i> Reykjavik Bureau Dispatch
+                    </span>
+                    <h4 class="font-serif font-bold text-base text-white">September Qualifiers Relief</h4>
+                    <p class="text-xs text-stone-300 mt-2 leading-relaxed font-sans">
+                        Arason is expected to recover in time for next month's international fixtures, avoiding a major tactical headache for the national team setup.
+                    </p>
+                </div>
+
+            </aside>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-bv-navydark text-white mt-16 border-t-4 border-bv-yellow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-white/10 pb-8 mb-8 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif font-black text-white">The Broadview</h2>
+                    <p class="text-xs text-stone-400 mt-1">Global Coverage • Uncompromising Analysis • Independent Voice</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-white/10 hover:bg-white/20 text-xs font-bold px-4 py-2 rounded text-stone-200 border border-white/20 transition flex items-center gap-2">
+                        <span>Back to top</span>
+                        <i class="fa-solid fa-arrow-up text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Legal Bar -->
+            <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row justify-between items-center text-[11px] text-stone-400 gap-4">
+                <div>
+                    © The Broadview Publishing Group. All rights reserved.
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="#" class="hover:underline">Privacy Policy</a>
+                    <span>•</span>
+                    <a href="#" class="hover:underline">Terms of Service</a>
+                    <span>•</span>
+                    <a href="#" class="hover:underline">Editorial Guidelines</a>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+</body>
+</html>
