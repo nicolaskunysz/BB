@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ====================================================================== -->
+    <!-- !!! EDIT HERE: PAGE TITLE !!!                                          -->
+    <!-- ====================================================================== -->
+    <title>Sigríður Ólafsdóttir</title>
+    <!-- ====================================================================== -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-y: scroll;
+        }
+        .text-primary { color: #050505; }
+        .text-secondary { color: #65676b; }
+        
+        .search-input-active:focus-within {
+            box-shadow: 0 0 0 2px #cbe4ff;
+        }
+
+        .btn-gray {
+            background-color: #e4e6eb;
+            color: #050505;
+            transition: background-color 0.2s ease;
+        }
+        .btn-gray:hover {
+            background-color: #d8dadf;
+        }
+        .btn-blue {
+            background-color: #1b74e4;
+            color: #ffffff;
+            transition: background-color 0.2s ease;
+        }
+        .btn-blue:hover {
+            background-color: #1865c9;
+        }
+        
+        /* Smooth image rendering */
+        img { object-fit: cover; }
+
+        /* Hover effect for clickable post cards */
+        .post-card {
+            transition: all 0.2s ease;
+        }
+        .post-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body class="antialiased pb-12">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full h-[60px] bg-gradient-to-r from-[#1b74e4] to-[#0a49a8] shadow-md flex items-center justify-between px-3 sm:px-4 z-50">
+        
+        <!-- Left side: Spacer -->
+        <div class="flex items-center gap-2 flex-1 md:w-[320px] md:flex-none"></div>
+
+        <!-- Center: Search Bar -->
+        <div class="flex flex-1 justify-center max-w-[600px]">
+            <div class="search-input-active relative flex items-center bg-white/10 rounded-full px-3 py-2 w-full max-w-[400px] transition-all duration-200 shadow-inner hover:bg-white/20">
+                <i class="fa-solid fa-magnifying-glass text-white/70 mr-2 text-sm"></i>
+                <input type="text" placeholder="Search..." class="bg-transparent border-none outline-none w-full text-white placeholder-white/70 text-[15px]" disabled>
+            </div>
+        </div>
+
+        <!-- Right side: Profile and Icons -->
+        <div class="flex items-center justify-end gap-2 sm:gap-3 flex-1 md:w-[320px] md:flex-none">
+            <div class="w-10 h-10 bg-white/20 rounded-full hidden sm:flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors">
+                <i class="fa-solid fa-plus text-lg"></i>
+            </div>
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors">
+                <i class="fa-brands fa-facebook-messenger text-lg"></i>
+            </div>
+            <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white cursor-pointer hover:bg-white/30 transition-colors relative">
+                <i class="fa-solid fa-bell text-lg"></i>
+            </div>
+            
+            <!-- ====================================================================== -->
+            <!-- !!! EDIT HERE: RESET / BACK LINK & CURRENT USER (SUNNA) AVATAR !!!    -->
+            <!-- ====================================================================== -->
+            <a href="./profilesearch.html" class="w-10 h-10 rounded-full overflow-hidden sm:ml-2 border-2 border-white/50 cursor-pointer flex-shrink-0 shadow-sm hover:border-white transition-colors" title="Back to Search">
+                <img src="https://placehold.co/150x150/9ca3af/ffffff?text=S" alt="Current User" class="w-full h-full">
+            </a>
+            <!-- ====================================================================== -->
+        </div>
+    </nav>
+
+    <!-- Profile Header Area -->
+    <div class="bg-white shadow-sm mb-4 pt-[60px]">
+        <div class="max-w-[1100px] mx-auto w-full relative">
+            
+            <!-- Cover Photo Area -->
+            <div class="w-full h-[150px] sm:h-[200px] md:h-[250px] bg-gray-200 rounded-b-xl overflow-hidden relative border border-gray-300 shadow-inner">
+                <!-- ====================================================================== -->
+                <!-- !!! EDIT HERE: SIGRÍÐUR'S COVER PHOTO IMAGE URL !!!                    -->
+                <!-- ====================================================================== -->
+                <img src="https://placehold.co/1200x400/cbd5e1/64748b?text=Cover+Photo+-+Family+Cabin" alt="Cover Photo" class="w-full h-full object-cover">
+                <!-- ====================================================================== -->
+            </div>
+
+            <!-- Profile Info & Avatar (Overlapping) -->
+            <div class="px-4 sm:px-8 pb-4 relative flex flex-col md:flex-row items-center md:items-end -mt-16 md:-mt-8 mb-4">
+                
+                <!-- Avatar -->
+                <div class="relative w-[130px] h-[130px] sm:w-[168px] sm:h-[168px] rounded-full border-4 border-white overflow-hidden bg-white shadow-md z-10">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: SIGRÍÐUR'S MAIN PROFILE PICTURE URL !!!                 -->
+                    <!-- ====================================================================== -->
+                    <img src="https://placehold.co/300x300/9ca3af/ffffff?text=Sigr%C3%AD%C3%B0ur" alt="Sigríður Profile" class="w-full h-full object-cover">
+                    <!-- ====================================================================== -->
+                </div>
+
+                <!-- Name & Meta -->
+                <div class="mt-4 md:mt-0 md:ml-4 text-center md:text-left flex-1 mb-2 md:mb-4">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: NAME TEXT !!!                                           -->
+                    <!-- ====================================================================== -->
+                    <h1 class="text-[32px] font-bold text-primary leading-tight">Sigríður Ólafsdóttir</h1>
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: FRIEND COUNT SUBTITLE !!!                               -->
+                    <!-- ====================================================================== -->
+                    <p class="text-[15px] font-semibold text-secondary mt-1">842 Friends</p>
+                    <!-- ====================================================================== -->
+                    
+                    <!-- Overlapping friends miniature preview -->
+                    <div class="flex justify-center md:justify-start mt-2">
+                        <div class="flex -space-x-2">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: MINIATURE FRIEND ICONS !!!                              -->
+                            <!-- ====================================================================== -->
+                            <img class="w-8 h-8 rounded-full border-2 border-white bg-gray-300" src="./F1.png" alt="friend 1">
+                            <img class="w-8 h-8 rounded-full border-2 border-white bg-gray-300" src="./F2.png" alt="friend 2">
+                            <img class="w-8 h-8 rounded-full border-2 border-white bg-gray-300" src="./F3.png" alt="friend 3">
+                            <!-- ====================================================================== -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex gap-2 mt-4 md:mt-0 md:mb-4 w-full md:w-auto justify-center">
+                    <button class="btn-gray flex-1 md:flex-none px-3 py-2 rounded-md font-semibold text-[15px] flex items-center justify-center">
+                        <i class="fa-solid fa-user-check mr-2"></i> Friends
+                    </button>
+                    <button class="btn-blue flex-1 md:flex-none px-3 py-2 rounded-md font-semibold text-[15px] flex items-center justify-center">
+                        <i class="fa-brands fa-facebook-messenger mr-2"></i> Message
+                    </button>
+                    <button class="btn-gray px-3 py-2 rounded-md font-semibold text-[15px] flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-300 mx-4 md:mx-8"></div>
+            
+            <!-- Profile Navigation Tabs -->
+            <div class="flex px-4 md:px-8 py-1 overflow-x-auto text-secondary font-semibold text-[15px]">
+                <div class="px-4 py-4 text-[#1b74e4] border-b-[3px] border-[#1b74e4] cursor-pointer">Posts</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">About</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">Friends</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">Photos</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors hidden sm:block">Videos</div>
+                <div class="px-4 py-4 hover:bg-gray-100 rounded-lg cursor-pointer transition-colors">More <i class="fa-solid fa-caret-down ml-1"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container (2-Column Layout) -->
+    <main class="max-w-[1000px] mx-auto flex flex-col md:flex-row gap-4 px-2 sm:px-4">
+        
+        <!-- Left Column: Intro, Friends Grid & Sponsored Ads -->
+        <div class="w-full md:w-[360px] flex flex-col gap-4 flex-shrink-0">
+            
+            <!-- Intro Card -->
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+                <h2 class="font-bold text-xl text-primary mb-4">Intro</h2>
+                
+                <div class="flex flex-col gap-4 text-[15px] text-primary">
+                    <!-- Bio -->
+                    <div class="flex items-center text-center justify-center pb-4 border-b border-gray-200">
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: BIO / MOTTO TEXT !!!                                    -->
+                        <!-- ====================================================================== -->
+                        <span class="text-[15px] italic text-gray-700">Family, outdoor adventures & quiet moments 🌿</span>
+                        <!-- ====================================================================== -->
+                    </div>
+                    
+                    <!-- Details -->
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-briefcase text-gray-400 text-xl w-6 text-center"></i>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: WORKPLACE !!!                                           -->
+                        <!-- ====================================================================== -->
+                        <span>Works at <strong>Menntaskólinn í Reykjavík</strong></span>
+                        <!-- ====================================================================== -->
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-graduation-cap text-gray-400 text-xl w-6 text-center"></i>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: EDUCATION !!!                                           -->
+                        <!-- ====================================================================== -->
+                        <span>Studied at <strong>University of Iceland</strong></span>
+                        <!-- ====================================================================== -->
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-house text-gray-400 text-xl w-6 text-center"></i>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: LOCATION !!!                                            -->
+                        <!-- ====================================================================== -->
+                        <span>Lives in <strong>Reykjavík, Iceland</strong></span>
+                        <!-- ====================================================================== -->
+                    </div>
+                    
+                    <!-- CRITICAL SCENE DETAIL: MARRIAGE TO ARNAR VIGLUNDSSON -->
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-heart text-red-500 text-xl w-6 text-center"></i>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: MARITAL STATUS & SPOUSE NAME !!!                        -->
+                        <!-- ====================================================================== -->
+                        <span>Married to <strong class="text-black">Arnar Viglundsson</strong></span>
+                        <!-- ====================================================================== -->
+                    </div>
+                    
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-clock text-gray-400 text-xl w-6 text-center"></i>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: JOIN DATE !!!                                           -->
+                        <!-- ====================================================================== -->
+                        <span>Joined June 2009</span>
+                        <!-- ====================================================================== -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends Card (Grid of 6) -->
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+                <div class="flex justify-between items-center mb-1">
+                    <h2 class="font-bold text-xl text-primary">Friends</h2>
+                    <a href="#" class="text-[#1b74e4] text-[15px] hover:bg-gray-100 px-2 py-1 rounded">See all friends</a>
+                </div>
+                <p class="text-secondary text-[15px] mb-4">842 friends</p>
+                
+                <div class="grid grid-cols-3 gap-x-2 gap-y-4">
+                    <!-- Friend 1 -->
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: FRIEND 1 PHOTO URL !!!                                  -->
+                            <!-- ====================================================================== -->
+                            <img src="./F1.png" alt="Friend 1" class="w-full h-full object-cover">
+                        </div>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: FRIEND 1 NAME !!!                                       -->
+                        <!-- ====================================================================== -->
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Arnar V.</p>
+                    </div>
+
+                    <!-- Friend 2 -->
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: FRIEND 2 PHOTO URL !!!                                  -->
+                            <!-- ====================================================================== -->
+                            <img src="./F2.png" alt="Friend 2" class="w-full h-full object-cover">
+                        </div>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: FRIEND 2 NAME !!!                                       -->
+                        <!-- ====================================================================== -->
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Guðrún Ó.</p>
+                    </div>
+
+                    <!-- Friend 3 -->
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: FRIEND 3 PHOTO URL !!!                                  -->
+                            <!-- ====================================================================== -->
+                            <img src="./F3.png" alt="Friend 3" class="w-full h-full object-cover">
+                        </div>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: FRIEND 3 NAME !!!                                       -->
+                        <!-- ====================================================================== -->
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Tómas G.</p>
+                    </div>
+
+                    <!-- Friend 4 -->
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: FRIEND 4 PHOTO URL !!!                                  -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/94a3b8/ffffff?text=F4" alt="Friend 4" class="w-full h-full object-cover">
+                        </div>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: FRIEND 4 NAME !!!                                       -->
+                        <!-- ====================================================================== -->
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Helga B.</p>
+                    </div>
+
+                    <!-- Friend 5 -->
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: FRIEND 5 PHOTO URL !!!                                  -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/64748b/ffffff?text=F5" alt="Friend 5" class="w-full h-full object-cover">
+                        </div>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: FRIEND 5 NAME !!!                                       -->
+                        <!-- ====================================================================== -->
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">Sigrún K.</p>
+                    </div>
+
+                    <!-- Friend 6 -->
+                    <div>
+                        <div class="w-full aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer mb-1">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: FRIEND 6 PHOTO URL !!!                                  -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/475569/ffffff?text=F6" alt="Friend 6" class="w-full h-full object-cover">
+                        </div>
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: FRIEND 6 NAME !!!                                       -->
+                        <!-- ====================================================================== -->
+                        <p class="text-[13px] font-semibold text-primary leading-tight hover:underline cursor-pointer">María L.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SPONSORED ADS (MATCHING SEARCH PAGE) -->
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+                <h3 class="font-semibold text-[15px] text-gray-500 mb-3">Sponsored</h3>
+                
+                <!-- Ad 1 -->
+                <div class="flex items-center p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors mb-2">
+                    <div class="w-[90px] h-[90px] rounded-lg overflow-hidden flex-shrink-0 border border-gray-100 mr-3">
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: AD 1 IMAGE URL !!!                                      -->
+                        <!-- ====================================================================== -->
+                        <img src="./expedition.png" alt="Ad 1" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <p class="font-semibold text-[14px] text-primary leading-tight">Nordic Winter Expeditions</p>
+                        <p class="text-[12px] text-gray-500 mt-1">Book your glacier tour today.</p>
+                    </div>
+                </div>
+
+                <!-- Ad 2 -->
+                <div class="flex items-center p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors">
+                    <div class="w-[90px] h-[90px] rounded-lg overflow-hidden flex-shrink-0 border border-gray-100 mr-3">
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: AD 2 IMAGE URL !!!                                      -->
+                        <!-- ====================================================================== -->
+                        <img src="./techconference.png" alt="Ad 2" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <p class="font-semibold text-[14px] text-primary leading-tight">Reykjavík Tech Conference</p>
+                        <p class="text-[12px] text-gray-500 mt-1">Join the future of innovation.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Discreet Footer -->
+            <div class="text-[13px] text-gray-500 mt-2 px-2 pb-6 flex flex-wrap gap-x-3 gap-y-1">
+                <a href="#" class="hover:underline">Privacy</a>
+                <a href="#" class="hover:underline">Terms</a>
+                <a href="#" class="hover:underline">Advertising</a>
+                <a href="#" class="hover:underline">Cookies</a>
+                <a href="#" class="hover:underline">More</a>
+                <span>FictionalSocial © 2026</span>
+            </div>
+
+        </div>
+
+        <!-- Right Column: Timeline / Feed -->
+        <div class="flex-1 flex flex-col gap-4 min-w-0 pb-10">
+            
+            <!-- Create Post Box (Faux UI) -->
+            <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-200">
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-300">
+                        <img src="https://placehold.co/150x150/9ca3af/ffffff?text=S" alt="Current User" class="w-full h-full object-cover">
+                    </div>
+                    <div class="bg-gray-100 hover:bg-gray-200 cursor-pointer rounded-full flex-1 px-4 py-2.5 text-secondary text-[15px] transition-colors">
+                        Write something to Sigríður...
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 pt-3 flex justify-between px-2 sm:px-6">
+                    <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg text-secondary font-semibold text-[15px] flex-1 justify-center transition-colors">
+                        <i class="fa-solid fa-video text-red-500 text-xl"></i> <span class="hidden sm:inline">Live video</span>
+                    </div>
+                    <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg text-secondary font-semibold text-[15px] flex-1 justify-center transition-colors">
+                        <i class="fa-solid fa-images text-green-500 text-xl"></i> <span class="hidden sm:inline">Photo/video</span>
+                    </div>
+                    <div class="flex items-center gap-2 cursor-pointer hover:bg-gray-100 p-2 rounded-lg text-secondary font-semibold text-[15px] flex-1 justify-center transition-colors">
+                        <i class="fa-solid fa-flag text-blue-400 text-xl"></i> <span class="hidden sm:inline">Life event</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==================================================================================================== -->
+            <!-- POST 1: CHEERFUL FAMILY SHOT (AUTUMN WALK / CABIN) (CLICKABLE) -->
+            <!-- ==================================================================================================== -->
+            <div class="post-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer" onclick="openPostModal(this)">
+                <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: SIGRÍÐUR AVATAR FOR POST 1 !!!                          -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Sigr%C3%AD%C3%B0ur" alt="Sigríður" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-[15px] text-primary hover:underline">Sigríður Ólafsdóttir</h3>
+                            <div class="flex items-center text-secondary text-[13px]">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: POST 1 TIMESTAMP !!!                                    -->
+                                <!-- ====================================================================== -->
+                                <span>Yesterday at 16:20</span>
+                                <span class="mx-1">·</span>
+                                <i class="fa-solid fa-earth-americas text-[12px]" title="Public"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 pb-3">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: POST 1 CAPTION (FAMILY CABIN / CHEERFUL SHOTS) !!!      -->
+                    <!-- ====================================================================== -->
+                    <p class="text-[15px] text-primary leading-normal">
+                        Nothing beats family time at the summer cabin before the winter storms roll in! ❤️🍂
+                    </p>
+                    <!-- ====================================================================== -->
+                </div>
+                
+                <div class="w-full bg-gray-100">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: POST 1 IMAGE URL (FAMILY SHOT) !!!                      -->
+                    <!-- ====================================================================== -->
+                    <img src="https://placehold.co/800x500/cbd5e1/475569?text=Family+At+Cabin+Photo" alt="Family Cabin" class="w-full h-auto object-cover max-h-[500px]">
+                    <!-- ====================================================================== -->
+                </div>
+
+                <div class="px-4 py-2 border-b border-gray-200 flex justify-between text-secondary text-[15px]">
+                    <div class="flex items-center gap-1 cursor-pointer hover:underline">
+                        <i class="fa-solid fa-heart text-white bg-red-500 rounded-full p-1 text-[10px]"></i>
+                        <i class="fa-solid fa-thumbs-up text-white bg-[#1b74e4] rounded-full p-1 text-[10px] -ml-2"></i>
+                        <span class="ml-1 text-[14px]">89</span>
+                    </div>
+                    <div class="flex gap-3 text-[14px]">
+                        <span class="cursor-pointer hover:underline">12 comments</span>
+                    </div>
+                </div>
+
+                <div class="px-2 py-1 flex justify-between">
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-thumbs-up text-xl"></i> Like</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-comment text-xl"></i> Comment</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-solid fa-share text-xl"></i> Share</div>
+                </div>
+            </div>
+
+            <!-- ==================================================================================================== -->
+            <!-- !!! KEY SCRIPT MONTAGE POST: DINNER PHOTO WITH ARNAR (59) & COLLEAGUES (CLICKABLE) !!!                -->
+            <!-- (WHERE SUPERINTENDENT ESTHER IS TAGGED IN THE PHOTO / CAPTION)                                       -->
+            <!-- ==================================================================================================== -->
+            <div class="post-card bg-white rounded-xl shadow-sm border-2 border-blue-200 overflow-hidden cursor-pointer relative" onclick="openPostModal(this)">
+                <span class="absolute top-2 right-2 bg-blue-100 text-blue-700 text-xs px-2 py-0.5 rounded font-semibold">Hero Scene Post</span>
+                
+                <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: SIGRÍÐUR AVATAR FOR HERO POST !!!                       -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Sigr%C3%AD%C3%B0ur" alt="Sigríður" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-[15px] text-primary hover:underline">Sigríður Ólafsdóttir</h3>
+                            <div class="flex items-center text-secondary text-[13px]">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: HERO POST TIMESTAMP !!!                                 -->
+                                <!-- ====================================================================== -->
+                                <span>October 12 at 21:15</span>
+                                <span class="mx-1">·</span>
+                                <i class="fa-solid fa-user-group text-[12px]" title="Friends"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 pb-3">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: DINNER PHOTO CAPTION & TAGS (ARNAR + ESTHER) !!!        -->
+                    <!-- ====================================================================== -->
+                    <p class="text-[15px] text-primary leading-normal">
+                        Celebrating another milestone with Arnar and his fantastic team from the station. So proud of you all! 🥂
+                        — with <a href="./profile.html" class="text-[#1b74e4] font-semibold hover:underline">Arnar Viglundsson</a> and <a href="./profile.html" class="text-[#1b74e4] font-semibold hover:underline">Esther Jónsdóttir</a>.
+                    </p>
+                    <!-- ====================================================================== -->
+                </div>
+                
+                <div class="w-full bg-gray-100">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: HERO DINNER PHOTO IMAGE URL (ARNAR & COLLEAGUES) !!!    -->
+                    <!-- ====================================================================== -->
+                    <img src="./thepost.jpg" alt="Dinner Photo" class="w-full h-auto object-cover max-h-[550px]">
+                    <!-- ====================================================================== -->
+                </div>
+
+                <div class="px-4 py-2 border-b border-gray-200 flex justify-between text-secondary text-[15px]">
+                    <div class="flex items-center gap-1 cursor-pointer hover:underline">
+                        <i class="fa-solid fa-thumbs-up text-white bg-[#1b74e4] rounded-full p-1 text-[10px]"></i>
+                        <i class="fa-solid fa-heart text-white bg-red-500 rounded-full p-1 text-[10px] -ml-2"></i>
+                        <span class="ml-1 text-[14px]">174</span>
+                    </div>
+                    <div class="flex gap-3 text-[14px]">
+                        <span class="cursor-pointer hover:underline">28 comments</span>
+                        <span class="cursor-pointer hover:underline">3 shares</span>
+                    </div>
+                </div>
+
+                <div class="px-2 py-1 flex justify-between">
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-thumbs-up text-xl"></i> Like</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-comment text-xl"></i> Comment</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-solid fa-share text-xl"></i> Share</div>
+                </div>
+            </div>
+
+            <!-- ==================================================================================================== -->
+            <!-- POST 3: CHEERFUL FAMILY FILLER POST (GARDEN / BIRTHDAY) (CLICKABLE) -->
+            <!-- ==================================================================================================== -->
+            <div class="post-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer" onclick="openPostModal(this)">
+                <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: SIGRÍÐUR AVATAR FOR POST 3 !!!                          -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Sigr%C3%AD%C3%B0ur" alt="Sigríður" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-[15px] text-primary hover:underline">Sigríður Ólafsdóttir</h3>
+                            <div class="flex items-center text-secondary text-[13px]">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: POST 3 TIMESTAMP !!!                                    -->
+                                <!-- ====================================================================== -->
+                                <span>September 24</span>
+                                <span class="mx-1">·</span>
+                                <i class="fa-solid fa-earth-americas text-[12px]" title="Public"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 pb-3">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: POST 3 CAPTION TEXT !!!                                 -->
+                    <!-- ====================================================================== -->
+                    <p class="text-[15px] text-primary leading-normal">
+                        Sunday afternoon coffee in the garden. Autumn colors are arriving early this year! ☕🏡
+                    </p>
+                    <!-- ====================================================================== -->
+                </div>
+                
+                <div class="w-full bg-gray-100">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: POST 3 IMAGE URL !!!                                    -->
+                    <!-- ====================================================================== -->
+                    <img src="https://placehold.co/800x480/94a3b8/ffffff?text=Autumn+Garden+Coffee" alt="Garden" class="w-full h-auto object-cover max-h-[500px]">
+                    <!-- ====================================================================== -->
+                </div>
+
+                <div class="px-4 py-2 border-b border-gray-200 flex justify-between text-secondary text-[15px]">
+                    <div class="flex items-center gap-1 cursor-pointer hover:underline">
+                        <i class="fa-solid fa-thumbs-up text-white bg-[#1b74e4] rounded-full p-1 text-[10px]"></i>
+                        <span class="ml-1 text-[14px]">54</span>
+                    </div>
+                </div>
+
+                <div class="px-2 py-1 flex justify-between">
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-thumbs-up text-xl"></i> Like</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-comment text-xl"></i> Comment</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-solid fa-share text-xl"></i> Share</div>
+                </div>
+            </div>
+
+            <!-- ==================================================================================================== -->
+            <!-- POST 4: BOTTOM FILLER (SUMMER HIKE) (CLICKABLE) -->
+            <!-- ==================================================================================================== -->
+            <div class="post-card bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden cursor-pointer" onclick="openPostModal(this)">
+                <div class="p-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-10 h-10 rounded-full overflow-hidden bg-gray-300">
+                            <!-- ====================================================================== -->
+                            <!-- !!! EDIT HERE: SIGRÍÐUR AVATAR FOR POST 4 !!!                          -->
+                            <!-- ====================================================================== -->
+                            <img src="https://placehold.co/150x150/9ca3af/ffffff?text=Sigr%C3%AD%C3%B0ur" alt="Sigríður" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-[15px] text-primary hover:underline">Sigríður Ólafsdóttir</h3>
+                            <div class="flex items-center text-secondary text-[13px]">
+                                <!-- ====================================================================== -->
+                                <!-- !!! EDIT HERE: POST 4 TIMESTAMP !!!                                    -->
+                                <!-- ====================================================================== -->
+                                <span>August 14</span>
+                                <span class="mx-1">·</span>
+                                <i class="fa-solid fa-earth-americas text-[12px]" title="Public"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-4 pb-3">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: POST 4 CAPTION TEXT !!!                                 -->
+                    <!-- ====================================================================== -->
+                    <p class="text-[15px] text-primary leading-normal">
+                        Annual mountain walk with the extended family. Perfect visibility over the bay today!
+                    </p>
+                    <!-- ====================================================================== -->
+                </div>
+                
+                <div class="w-full bg-gray-100">
+                    <!-- ====================================================================== -->
+                    <!-- !!! EDIT HERE: POST 4 IMAGE URL !!!                                    -->
+                    <!-- ====================================================================== -->
+                    <img src="./esja.png" alt="Mountain Walk" class="w-full h-auto object-cover max-h-[500px]">
+                    <!-- ====================================================================== -->
+                </div>
+
+                <div class="px-4 py-2 border-b border-gray-200 flex justify-between text-secondary text-[15px]">
+                    <div class="flex items-center gap-1 cursor-pointer hover:underline">
+                        <i class="fa-solid fa-thumbs-up text-white bg-[#1b74e4] rounded-full p-1 text-[10px]"></i>
+                        <span class="ml-1 text-[14px]">62</span>
+                    </div>
+                </div>
+
+                <div class="px-2 py-1 flex justify-between">
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-thumbs-up text-xl"></i> Like</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-regular fa-comment text-xl"></i> Comment</div>
+                    <div class="flex-1 flex items-center justify-center gap-2 p-2 text-secondary font-semibold text-[15px] hover:bg-gray-100 rounded-lg cursor-pointer transition-colors"><i class="fa-solid fa-share text-xl"></i> Share</div>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="text-center pt-2">
+                <button class="w-full py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold rounded-xl transition-colors shadow-sm">
+                    Load More Posts
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Post Lightbox Modal -->
+    <div id="postModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4" onclick="closePostModal()">
+        <div class="bg-white rounded-xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto shadow-2xl" onclick="event.stopPropagation()">
+            <button class="absolute top-3 right-4 text-gray-500 hover:text-black text-3xl font-bold z-10" onclick="closePostModal()">&times;</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        function openPostModal(cardElement) {
+            const modal = document.getElementById('postModal');
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = cardElement.innerHTML;
+            modal.classList.remove('hidden');
+        }
+
+        function closePostModal() {
+            document.getElementById('postModal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
