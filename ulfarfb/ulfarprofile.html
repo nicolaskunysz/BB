@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Úlfar Andresson - Profile Photo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #000000;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        .btn-action {
+            transition: background-color 0.2s ease;
+        }
+        .btn-action:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-black text-[#e4e6eb] select-none flex flex-col min-h-screen">
+
+    <!-- Top Floating Toolbar -->
+    <header class="h-[60px] px-4 flex items-center justify-between z-30 bg-black/80 backdrop-blur-sm fixed top-0 w-full border-b border-[#242526]">
+        <!-- Left: Close / Back Navigation -->
+        <div class="flex items-center gap-3">
+            <a href="#" class="w-10 h-10 rounded-full bg-[#3a3b3c] hover:bg-[#4e4f50] flex items-center justify-center text-white transition-colors" title="Close">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </a>
+            <div class="hidden sm:flex items-center gap-2 pl-2">
+                <span class="font-semibold text-[15px] text-white">Úlfar Andresson's Profile Picture</span>
+            </div>
+        </div>
+
+        <!-- Right: Photo Viewer Quick Actions -->
+        <div class="flex items-center gap-1 sm:gap-2">
+            <button class="w-10 h-10 rounded-full btn-action flex items-center justify-center text-white/90" title="Zoom in">
+                <i class="fa-solid fa-magnifying-glass-plus text-base"></i>
+            </button>
+            <button class="w-10 h-10 rounded-full btn-action flex items-center justify-center text-white/90" title="Full screen">
+                <i class="fa-solid fa-expand text-base"></i>
+            </button>
+            <button class="w-10 h-10 rounded-full btn-action flex items-center justify-center text-white/90" title="Options">
+                <i class="fa-solid fa-ellipsis text-base"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Viewport: Vertical Column (Photo Top, Comments & Info Directly Underneath) -->
+    <main class="w-full flex-1 flex flex-col items-center pt-[60px]">
+
+        <!-- Upper Canvas: Profile Image Display -->
+        <section class="w-full bg-black flex items-center justify-center py-6 px-4">
+            <div class="relative max-w-full flex items-center justify-center">
+                <!-- ====================================================================== -->
+                <!-- !!! EDIT HERE: ÚLFAR ANDRESSON'S PROFILE PICTURE URL BELOW !!!        -->
+                <!-- Replace the URL in the src="" attribute below with your image link     -->
+                <!-- ====================================================================== -->
+                <img 
+                    src="./ulfarprofile.png" 
+                    alt="Úlfar Andresson Profile Photo" 
+                    class="max-h-[70vh] w-auto max-w-[95vw] md:max-w-[720px] object-contain rounded-md shadow-2xl"
+                >
+                <!-- ====================================================================== -->
+            </div>
+        </section>
+
+        <!-- Lower Section: Attribution, Reactions & Comments Thread Placed Under Image -->
+        <section class="w-full max-w-[720px] bg-[#242526] border border-[#393a3b] rounded-t-xl p-4 sm:p-5 mb-8">
+            
+            <!-- User Attribution Header -->
+            <div class="flex items-center justify-between pb-3 border-b border-[#393a3b]">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-full overflow-hidden border border-[#3e4042] bg-[#3a3b3c] flex-shrink-0">
+                        <!-- ====================================================================== -->
+                        <!-- !!! EDIT HERE: ÚLFAR THUMBNAIL AVATAR URL BELOW !!!                   -->
+                        <!-- Replace the URL in the src="" attribute below with your avatar link    -->
+                        <!-- ====================================================================== -->
+                        <img src="./ulfarprofile.png" alt="Úlfar Andresson" class="w-full h-full object-cover">
+                        <!-- ====================================================================== -->
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-[15px] text-white hover:underline cursor-pointer leading-tight">Úlfar Andresson</h2>
+                        <div class="flex items-center text-[#b0b3b8] text-[13px] mt-0.5">
+                            <span>Updated profile picture</span>
+                            <span class="mx-1">·</span>
+                            <i class="fa-solid fa-earth-americas text-[11px]" title="Public"></i>
+                        </div>
+                    </div>
+                </div>
+                <button class="w-8 h-8 rounded-full btn-action flex items-center justify-center text-[#b0b3b8]">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+            </div>
+
+            <!-- Engagement & Reaction Counter -->
+            <div class="py-2.5 flex items-center justify-between text-[#b0b3b8] text-[13px] border-b border-[#393a3b]">
+                <div class="flex items-center gap-1.5">
+                    <div class="flex -space-x-1">
+                        <span class="w-4 h-4 rounded-full bg-[#1b74e4] flex items-center justify-center text-[9px] text-white">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                        </span>
+                        <span class="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center text-[9px] text-white">
+                            <i class="fa-solid fa-heart"></i>
+                        </span>
+                    </div>
+                    <span>24</span>
+                </div>
+                <div>
+                    <span class="cursor-pointer hover:underline">3 comments</span>
+                </div>
+            </div>
+
+            <!-- Like / Comment / Share Action Buttons -->
+            <div class="grid grid-cols-3 py-1 border-b border-[#393a3b] text-[#b0b3b8] text-[14px] font-semibold text-center">
+                <button class="py-2 rounded-md btn-action flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-thumbs-up"></i> Like
+                </button>
+                <button class="py-2 rounded-md btn-action flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-comment"></i> Comment
+                </button>
+                <button class="py-2 rounded-md btn-action flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-share"></i> Share
+                </button>
+            </div>
+
+            <!-- Comments List -->
+            <div class="pt-4 space-y-3">
+                <!-- Comment 1 -->
+                <div class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-[#3a3b3c] flex-shrink-0 overflow-hidden">
+                        <img src="https://placehold.co/100x100/475569/ffffff?text=GE" alt="Gunnar" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <div class="bg-[#3a3b3c] rounded-2xl px-3 py-2 text-[14px]">
+                            <span class="font-bold text-white text-[13px] block">Gunnar E.</span>
+                            Looking sharp, Úlfar!
+                        </div>
+                        <div class="text-[11px] text-[#b0b3b8] ml-3 mt-1 flex gap-3">
+                            <span class="cursor-pointer hover:underline font-semibold">Like</span>
+                            <span class="cursor-pointer hover:underline font-semibold">Reply</span>
+                            <span>3w</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comment 2 -->
+                <div class="flex gap-2">
+                    <div class="w-8 h-8 rounded-full bg-[#3a3b3c] flex-shrink-0 overflow-hidden">
+                        <img src="https://placehold.co/100x100/64748b/ffffff?text=SK" alt="Sigrún" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <div class="bg-[#3a3b3c] rounded-2xl px-3 py-2 text-[14px]">
+                            <span class="font-bold text-white text-[13px] block">Sigrún Kristjánsdóttir</span>
+                            Frábær mynd af þér!
+                        </div>
+                        <div class="text-[11px] text-[#b0b3b8] ml-3 mt-1 flex gap-3">
+                            <span class="cursor-pointer hover:underline font-semibold">Like</span>
+                            <span class="cursor-pointer hover:underline font-semibold">Reply</span>
+                            <span>2w</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comment Input Box -->
+            <div class="pt-4 mt-3 border-t border-[#393a3b]">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-[#3a3b3c] flex-shrink-0 overflow-hidden">
+                        <img src="https://placehold.co/100x100/94a3b8/ffffff?text=Me" alt="User Avatar" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 bg-[#3a3b3c] rounded-full px-4 py-2 flex items-center justify-between text-[#b0b3b8] text-[14px]">
+                        <span>Write a comment...</span>
+                        <div class="flex items-center gap-3 text-sm text-[#b0b3b8]">
+                            <i class="fa-regular fa-face-smile cursor-pointer hover:text-white"></i>
+                            <i class="fa-solid fa-camera cursor-pointer hover:text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+</body>
+</html>
