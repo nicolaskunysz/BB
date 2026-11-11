@@ -463,6 +463,23 @@
 
         const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         
+        // Exact Full Moon dates per month (0-indexed: Jan=0 ... Dec=11)
+        const fullMoonDaysByMonth = {
+            0: 2,   // Jan 2
+            1: 1,   // Feb 1
+            2: 2,   // March 2
+            3: 30,  // April 30
+            4: 30,  // May 30
+            5: 28,  // June 28
+            6: 28,  // July 28
+            7: 26,  // Aug 26
+            8: 25,  // Sept 25
+            9: 25,  // Oct 25
+            10: 24, // Nov 24
+            11: 24  // Dec 24
+        };
+
+        // Initial launch state: August 26
         let currentMonth = 7; // August
         let currentYear = 2026;
         let selectedDay = 26;
@@ -489,7 +506,7 @@
             setTimeout(() => { if(loader.style.opacity === '0') loader.style.display = 'none'; }, 2500);
         });
 
-        // App Reset Logic
+        // App Reset Logic (Resets back to August 26)
         document.getElementById('reset-btn').addEventListener('click', () => {
             cancelAnimationFrame(animationFrameId);
             velocity = 0;
@@ -517,10 +534,12 @@
         }
 
         function calculateDayData(day, month, year) {
-            // STRICT PLOT OVERRIDES (JS months are 0-indexed: April=3, July=6, August=7)
-            if (month === 3 && day === 30) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
-            if (month === 6 && day === 28) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
-            if (month === 7 && day === 26) return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
+            const fullMoonDay = fullMoonDaysByMonth[month];
+
+            // STRICT FULL MOON OVERRIDES FOR ALL MONTHS (Not Fertile)
+            if (day === fullMoonDay) {
+                return { phase: 'Full Moon', fertile: false, color: '#6b7280' };
+            }
 
             let fertile = false;
             let color = '#6b7280'; // Base gray
@@ -537,8 +556,16 @@
                 color = `rgb(${r}, ${g}, ${b})`;
             }
 
+            // Realistic lunar progression anchored to the month's Full Moon date
+            // Guarantees non-full-moon days cycle smoothly through the other 7 phases
             const phases = Object.keys(moonSVGs);
-            let phaseIndex = (day + (month * 2)) % 8;
+            const cycleLength = 29.53;
+            let diff = day - fullMoonDay;
+            let normalizedOffset = ((diff / cycleLength) % 1 + 1) % 1;
+            let phaseIndex = (4 + Math.round(normalizedOffset * 8)) % 8;
+            if (phaseIndex === 4) {
+                phaseIndex = diff > 0 ? 5 : 3;
+            }
             
             return {
                 phase: phases[phaseIndex],
