@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karl Ebeneser Karlsson</title>
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #fafafa;
+            /* Softened dark grey instead of stark black */
+            color: #4a4a4a; 
+            line-height: 1.6;
+        }
+
+        /* --- Header / Top Banner --- */
+        .site-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #eaeaea;
+            padding: 20px 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-inner {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Logo Area - Centered vertically on Y axis */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #4a4a4a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Logo Image - Scaled & slightly lowered/centered */
+        .logo-area img {
+            max-height: 75px;
+            width: auto;
+            margin-right: 15px;
+            margin-top: 4px; /* Slightly lowers logo on Y axis */
+            display: block;
+            object-fit: contain;
+        }
+
+        /* Header Controls (Search & Menu) */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-bar {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            width: 180px;
+            outline: none;
+            transition: border-color 0.3s;
+            color: #4a4a4a;
+        }
+
+        .search-bar::placeholder {
+            color: #aaa;
+        }
+
+        .search-bar:focus {
+            border-color: #8e735b;
+        }
+
+        /* Three strokes square menu in soft brown */
+        .menu-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 36px;
+            height: 36px;
+            border: 1px solid #8e735b;
+            border-radius: 4px;
+            background: #fff;
+            padding: 6px;
+            cursor: pointer;
+            box-sizing: border-box;
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #8e735b;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            max-width: 1100px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .obituary-layout {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        /* Left Column: Elliptic Photo & Dates */
+        .photo-column {
+            flex: 0 0 35%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px; /* Lowers photo block to align on Y axis with text header */
+        }
+
+        .photo-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 3 / 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Elliptic Portrait Mask with Soft Blurred Shadow */
+        .portrait-ellipse {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            clip-path: ellipse(48% 48% at 50% 50%);
+            filter: drop-shadow(0px 0px 18px rgba(142, 115, 91, 0.45));
+            display: block;
+        }
+
+        /* Dates positioned underneath the photograph */
+        .photo-dates {
+            font-size: 1.3rem;
+            color: #8e735b; /* Soft brown */
+            margin-top: 22px;
+            letter-spacing: 1.5px;
+            font-family: 'Georgia', serif;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Right Column: Text */
+        .text-column {
+            flex: 1;
+        }
+
+        .deceased-name {
+            font-family: 'Georgia', serif;
+            font-size: 3.5rem;
+            margin: 0 0 20px 0;
+            color: #3a3a3a; /* Soft dark grey */
+            line-height: 1.1;
+            border-bottom: 1px solid #eaeaea;
+            padding-bottom: 20px;
+        }
+
+        .obituary-text {
+            color: #4a4a4a;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+
+        .obituary-text p {
+            margin-top: 0;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        /* --- Footer --- */
+        .site-footer {
+            margin-top: 80px;
+            padding: 30px 20px;
+            background-color: #f0f0f0;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsive / Mobile Adjustments --- */
+        @media (max-width: 850px) {
+            .obituary-layout {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .photo-column {
+                width: 100%;
+                max-width: 320px;
+                margin: 0 auto;
+            }
+            .deceased-name {
+                font-size: 2.5rem;
+                text-align: center;
+            }
+            .search-bar {
+                width: 120px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-controls {
+                gap: 10px;
+            }
+            .search-bar {
+                display: none;
+            }
+            .logo-area img {
+                max-height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP BANNER -->
+    <header class="site-header">
+        <div class="header-inner">
+            
+            <div class="logo-area">
+                <!-- ========================================================= -->
+                <!-- EDIT HERE: LOGO                                           -->
+                <!-- ========================================================= -->
+                <img src="./obituarylogo.png" alt="Memorial Site Logo">
+            </div>
+
+            <div class="header-controls">
+                <input type="text" class="search-bar" placeholder="Search obituaries...">
+                
+                <!-- Square Three-Strokes Menu (Soft Brown) -->
+                <div class="menu-btn" title="Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- MAIN OBITUARY CONTENT -->
+    <main class="main-content">
+        <div class="obituary-layout">
+            
+            <!-- LEFT COLUMN: ELLIPTIC PHOTO & DATES UNDERNEATH -->
+            <div class="photo-column">
+                <div class="photo-wrapper">
+                    <!-- ========================================================= -->
+                    <!-- EDIT HERE: ELLIPTIC PORTRAIT PHOTO                        -->
+                    <!-- ========================================================= -->
+                    <img src="./karlold.png" alt="Karl Ebeneser Karlsson" class="portrait-ellipse">
+                </div>
+
+                <!-- ========================================================= -->
+                <!-- EDIT HERE: DATES UNDER PHOTOGRAPH (Soft Brown)            -->
+                <!-- ========================================================= -->
+                <div class="photo-dates">1950 &ndash; 2024</div>
+            </div>
+
+            <!-- RIGHT COLUMN: NAME & TEXT -->
+            <div class="text-column">
+                
+                <!-- ========================================================= -->
+                <!-- EDIT HERE: DECEASED NAME                                  -->
+                <!-- ========================================================= -->
+                <h1 class="deceased-name">Karl Ebeneser Karlsson ✝</h1>
+
+                <!-- ========================================================= -->
+                <!-- EDIT HERE: OBITUARY PARAGRAPHS                            -->
+                <!-- ========================================================= -->
+                <div class="obituary-text">
+                    <p>
+                        Some people belong to a particular time in our lives, but never quite leave us.
+                    </p>
+                    <p>
+                        I first met Karl many years ago, when our lives crossed paths. We spent a great deal of time together in those years, and I came to know a man who could be stubborn, funny, generous and fiercely loyal.
+                    </p>
+                    <p>
+                        Karl had a rare ability to make people feel seen. He understood that sometimes what a person needs most is simply someone willing to listen and be there.
+                    </p>
+                    <p>
+                        We shared countless cups of coffee, long conversations and occasional disagreements. Karl could be stubborn. Those who knew him well would smile at that. But his stubbornness came from conviction. He believed deeply in second chances. In later years, life took us in different directions. We did not see each other for a long time, but I often thought of him and of the years we shared.
+                    </p>
+                    <p>
+                        Karl was a complicated man. But I will remember the good he tried to do. And I will remember the things we carried together.
+                    </p>
+                    <p>
+                        Rest in peace, old friend.
+                    </p>
+                    <p>
+                        <b>Halldóra</b>
+                    </p>
+                </div>
+                
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <!-- ========================================================= -->
+        <!-- EDIT HERE: FOOTER TEXT                                    -->
+        <!-- ========================================================= -->
+        <p>&copy; Farewell.is - All rights reserved. | <a href="#" style="color: #777;">Privacy Policy</a> | <a href="#" style="color: #777;">Terms of Service</a></p>
+    </footer>
+
+</body>
+</html>
