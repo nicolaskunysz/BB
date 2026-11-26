@@ -1,0 +1,3272 @@
+<!DOCTYPE html>
+<html lang="is">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Þjóðskjalasafn Íslands — Pósthólf (contact@thjodskjalasafn.is)</title>
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS & NORDIC INSTITUTIONAL THEME
+       ========================================================================== */
+    :root {
+      --navy-900: #0F2238;
+      --navy-800: #142B47;
+      --navy-700: #1E3D63;
+      --navy-100: #EBF1F8;
+      --navy-50:  #F4F7FB;
+
+      --surface-bg: #F6F7F9;
+      --surface-white: #FFFFFF;
+      --surface-subtle: #F9F9F8;
+      --surface-hover: #F1F4F8;
+      --surface-selected: #E9F0F8;
+
+      --border-warm: #E2DFDA;
+      --border-subtle: #ECEAE5;
+      --border-strong: #CFCBC4;
+
+      --text-primary: #1A2433;
+      --text-secondary: #4B5565;
+      --text-muted: #737E8F;
+
+      --star-active: #D99B26;
+      --danger: #B42318;
+      --danger-bg: #FEF3F2;
+      --success: #067647;
+      --success-bg: #ECFDF3;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-pill: 9999px;
+
+      --shadow-xs: 0 1px 2px rgba(15, 34, 56, 0.05);
+      --shadow-sm: 0 2px 6px rgba(15, 34, 56, 0.07);
+      --shadow-lg: 0 18px 40px rgba(15, 34, 56, 0.16);
+
+      --header-h: 64px;
+      --sidebar-w: 252px;
+      --list-w: 380px;
+
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      background-color: var(--surface-bg);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    button, input, textarea, select {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    /* Subtle custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5D2CC;
+      border-radius: 99px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B8B4AC;
+    }
+
+    /* ==========================================================================
+       APP SHELL & TOP HEADER
+       ========================================================================== */
+    .app-shell {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .topbar {
+      height: var(--header-h);
+      min-height: var(--header-h);
+      background: var(--surface-white);
+      border-bottom: 1px solid var(--border-warm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      gap: 16px;
+      z-index: 30;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      align-items: center;
+      justify-content: center;
+      color: var(--navy-800);
+      transition: background 0.15s;
+    }
+    .menu-toggle:hover {
+      background: var(--surface-hover);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-emblem {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .brand-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--navy-800);
+      letter-spacing: -0.015em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Search Bar */
+    .search-wrap {
+      flex: 1;
+      max-width: 480px;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--text-muted);
+      pointer-events: none;
+      display: flex;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 36px 0 38px;
+      background: var(--surface-bg);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      color: var(--text-primary);
+      transition: all 0.15s ease;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-input:focus {
+      outline: none;
+      background: var(--surface-white);
+      border-color: var(--navy-800);
+      box-shadow: 0 0 0 3px rgba(20, 43, 71, 0.1);
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+    .search-clear.visible {
+      display: flex;
+    }
+    .search-clear:hover {
+      background: var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    /* Topbar Right Controls */
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .lang-toggle {
+      display: inline-flex;
+      background: var(--surface-bg);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-sm);
+      padding: 2px;
+    }
+
+    .lang-btn {
+      padding: 4px 9px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 4px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+
+    .lang-btn.active {
+      background: var(--navy-800);
+      color: #FFFFFF;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .account-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px 5px 7px;
+      background: var(--navy-50);
+      border: 1px solid #D5E0EE;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--navy-800);
+      transition: background 0.15s;
+    }
+
+    .account-badge:hover {
+      background: var(--navy-100);
+    }
+
+    .account-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--navy-800);
+      color: #FFFFFF;
+      font-size: 10.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: 0.02em;
+    }
+
+    /* ==========================================================================
+       THREE-PANE MAIN WORKSPACE
+       ========================================================================== */
+    .workspace {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* --- LEFT SIDEBAR --- */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      background: var(--surface-subtle);
+      border-right: 1px solid var(--border-warm);
+      display: flex;
+      flex-direction: column;
+      padding: 16px 12px 12px;
+      overflow-y: auto;
+      z-index: 20;
+      transition: transform 0.22s ease;
+    }
+
+    .compose-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 11px 16px;
+      background: var(--navy-800);
+      color: #FFFFFF;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+      transition: background 0.15s, transform 0.1s;
+      margin-bottom: 18px;
+    }
+
+    .compose-btn:hover {
+      background: var(--navy-700);
+    }
+    .compose-btn:active {
+      transform: translateY(1px);
+    }
+
+    .nav-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      padding: 0 10px;
+      margin: 14px 0 6px;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 11px;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: background 0.14s, color 0.14s;
+      text-align: left;
+    }
+
+    .nav-item:hover {
+      background: var(--surface-hover);
+      color: var(--text-primary);
+    }
+
+    .nav-item.active {
+      background: var(--navy-100);
+      color: var(--navy-800);
+      font-weight: 600;
+    }
+
+    .nav-item-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .nav-item-left svg {
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .nav-item.active .nav-item-left svg {
+      opacity: 1;
+    }
+
+    .nav-count {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .nav-item.active .nav-count {
+      background: var(--navy-800);
+      color: #FFFFFF;
+    }
+
+    .label-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 14px 10px 4px;
+      border-top: 1px solid var(--border-subtle);
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .sidebar-footer strong {
+      color: var(--text-secondary);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 34, 56, 0.35);
+      z-index: 15;
+    }
+
+    /* --- MIDDLE PANE: EMAIL LIST --- */
+    .list-pane {
+      width: var(--list-w);
+      min-width: 310px;
+      background: var(--surface-white);
+      border-right: 1px solid var(--border-warm);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .list-header {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--surface-white);
+    }
+
+    .list-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .list-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--navy-800);
+      letter-spacing: -0.01em;
+    }
+
+    .list-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 6px;
+    }
+
+    .filter-chip {
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--surface-bg);
+      border: 1px solid transparent;
+      transition: all 0.14s;
+    }
+
+    .filter-chip:hover {
+      background: var(--surface-hover);
+      color: var(--text-primary);
+    }
+
+    .filter-chip.active {
+      background: var(--navy-800);
+      color: #FFFFFF;
+    }
+
+    .email-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .email-row {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: relative;
+      transition: background 0.12s;
+      border-left: 3px solid transparent;
+    }
+
+    .email-row:hover {
+      background: var(--surface-hover);
+    }
+
+    .email-row.unread {
+      background: #FCFDFE;
+    }
+
+    .email-row.selected {
+      background: var(--surface-selected);
+      border-left-color: var(--navy-800);
+    }
+
+    .row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .row-sender-wrap {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .unread-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--navy-800);
+      flex-shrink: 0;
+    }
+
+    .row-sender {
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-row.unread .row-sender {
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .row-date {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .email-row.unread .row-date {
+      color: var(--navy-800);
+      font-weight: 600;
+    }
+
+    .row-subject {
+      font-size: 13px;
+      color: var(--text-primary);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-row.unread .row-subject {
+      font-weight: 700;
+    }
+
+    .row-snippet {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      line-height: 1.4;
+    }
+
+    .row-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 4px;
+      gap: 8px;
+    }
+
+    .row-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .label-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      border: 1px solid transparent;
+    }
+
+    .row-icons {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+    }
+
+    .star-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      color: #B4BCC8;
+      transition: background 0.14s, color 0.14s;
+    }
+
+    .star-btn:hover {
+      background: rgba(217, 155, 38, 0.12);
+      color: var(--star-active);
+    }
+
+    .star-btn.starred {
+      color: var(--star-active);
+    }
+
+    .empty-list {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* --- RIGHT PANE: READING VIEW --- */
+    .reading-pane {
+      flex: 1;
+      background: var(--surface-white);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    .reading-toolbar {
+      padding: 10px 20px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: var(--surface-subtle);
+    }
+
+    .toolbar-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .back-btn {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy-800);
+      background: var(--navy-100);
+    }
+
+    .tool-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--surface-white);
+      border: 1px solid var(--border-warm);
+      transition: all 0.14s;
+    }
+
+    .tool-btn:hover {
+      background: var(--surface-hover);
+      color: var(--navy-800);
+      border-color: var(--border-strong);
+    }
+
+    .tool-btn.primary {
+      background: var(--navy-800);
+      color: #FFFFFF;
+      border-color: var(--navy-800);
+    }
+
+    .tool-btn.primary:hover {
+      background: var(--navy-700);
+    }
+
+    .tool-btn.danger:hover {
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-color: #FECDCA;
+    }
+
+    .tool-btn.starred-active {
+      color: var(--star-active);
+      border-color: #F2D69B;
+      background: #FFFBF2;
+    }
+
+    .reading-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 26px 32px 36px;
+    }
+
+    .reading-container {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .reading-subject-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .reading-subject {
+      font-size: 21px;
+      font-weight: 700;
+      color: var(--navy-900);
+      line-height: 1.3;
+      letter-spacing: -0.015em;
+    }
+
+    .message-card {
+      background: var(--surface-white);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .message-card.reply-card {
+      background: var(--navy-50);
+      border-color: #D5E0EE;
+    }
+
+    .message-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 18px;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--navy-800);
+      color: #FFFFFF;
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+    }
+
+    .meta-grid {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .meta-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .meta-sender {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .meta-email {
+      font-size: 12.5px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-left: 4px;
+    }
+
+    .meta-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .meta-details {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .meta-details span strong {
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .message-body {
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* Attachments Section */
+    .attachments-box {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .attachments-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .attachment-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .attachment-card {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 14px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      text-align: left;
+      transition: all 0.15s;
+      max-width: 100%;
+    }
+
+    .attachment-card:hover {
+      background: var(--navy-50);
+      border-color: var(--navy-800);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .file-badge {
+      padding: 5px 7px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+
+    .file-badge.pdf {
+      background: #FEE4E2;
+      color: #B42318;
+    }
+
+    .file-badge.xlsx {
+      background: #DCFAE6;
+      color: #067647;
+    }
+
+    .attachment-info {
+      min-width: 0;
+    }
+
+    .attachment-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+
+    .attachment-meta {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* Inline Reply Box */
+    .reply-box {
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-top: 22px;
+    }
+
+    .reply-header {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .reply-header strong {
+      color: var(--navy-800);
+    }
+
+    .reply-textarea {
+      width: 100%;
+      min-height: 110px;
+      padding: 12px 14px;
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      background: var(--surface-white);
+      resize: vertical;
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+
+    .reply-textarea:focus {
+      outline: none;
+      border-color: var(--navy-800);
+      box-shadow: 0 0 0 3px rgba(20, 43, 71, 0.1);
+    }
+
+    .reply-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .reply-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Empty Reading State */
+    .empty-reading {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--text-muted);
+      gap: 12px;
+    }
+
+    .empty-reading h3 {
+      font-size: 16px;
+      color: var(--navy-800);
+      font-weight: 600;
+    }
+
+    .empty-reading p {
+      max-width: 340px;
+      font-size: 13.5px;
+    }
+
+    /* ==========================================================================
+       MODALS (COMPOSE & ATTACHMENT PREVIEW)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 34, 56, 0.45);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 640px;
+      max-height: 90vh;
+      background: var(--surface-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border-warm);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalIn 0.16s ease-out;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(10px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      background: var(--navy-800);
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .modal-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      color: rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.14s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+    }
+
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-sm);
+      background: var(--surface-white);
+      font-size: 13.5px;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--navy-800);
+      box-shadow: 0 0 0 3px rgba(20, 43, 71, 0.1);
+    }
+
+    .form-textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.55;
+    }
+
+    .form-error {
+      font-size: 12.5px;
+      color: var(--danger);
+      background: var(--danger-bg);
+      border: 1px solid #FECDCA;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      display: none;
+    }
+
+    .form-error.visible {
+      display: block;
+    }
+
+    .modal-footer {
+      padding: 14px 20px;
+      background: var(--surface-subtle);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Attachment Preview Styling */
+    .doc-preview-meta {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      background: var(--surface-subtle);
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      font-size: 12.5px;
+    }
+
+    .doc-meta-item span {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .doc-meta-item strong {
+      color: var(--navy-800);
+      font-weight: 600;
+    }
+
+    .doc-paper {
+      background: #FCFBF9;
+      border: 1px solid var(--border-warm);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-primary);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .doc-paper-header {
+      border-bottom: 2px solid var(--navy-800);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .doc-paper-header h4 {
+      color: var(--navy-800);
+      font-size: 14.5px;
+    }
+
+    .doc-ref {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 12.5px;
+    }
+
+    .doc-table th, .doc-table td {
+      border: 1px solid var(--border-warm);
+      padding: 7px 9px;
+      text-align: left;
+    }
+
+    .doc-table th {
+      background: var(--navy-50);
+      color: var(--navy-800);
+      font-weight: 600;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      background: var(--navy-900);
+      color: #FFFFFF;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(12px);
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==========================================================================
+       RESPONSIVE BREAKPOINTS (TABLET & MOBILE)
+       ========================================================================== */
+    @media (max-width: 1120px) {
+      :root {
+        --sidebar-w: 224px;
+        --list-w: 330px;
+      }
+      .account-email-text {
+        display: none;
+      }
+      .account-badge {
+        padding: 4px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: var(--header-h);
+        bottom: 0;
+        left: 0;
+        transform: translateX(-100%);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-backdrop.open {
+        display: block;
+      }
+
+      .list-pane {
+        width: 100%;
+        min-width: 0;
+        border-right: none;
+      }
+
+      .reading-pane {
+        display: none;
+        width: 100%;
+      }
+
+      .workspace.mobile-reading .list-pane {
+        display: none;
+      }
+
+      .workspace.mobile-reading .reading-pane {
+        display: flex;
+      }
+
+      .back-btn {
+        display: inline-flex;
+      }
+
+      .reading-scroll {
+        padding: 18px 16px 28px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding: 0 12px;
+        gap: 8px;
+      }
+
+      .brand-subtitle {
+        display: none;
+      }
+
+      .search-wrap {
+        max-width: none;
+      }
+
+      .form-row, .doc-preview-meta {
+        grid-template-columns: 1fr;
+      }
+
+      .message-card {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- ======================================================================
+         TOP HEADER
+         ====================================================================== -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="menuToggleBtn" aria-label="Opna valmynd">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="brand">
+          <!-- Minimalist Nordic Archival Emblem / Monogram for Þjóðskjalasafn Íslands -->
+          <div class="brand-emblem" aria-hidden="true">
+            <svg width="38" height="38" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1.5" y="1.5" width="37" height="37" rx="9" fill="#142B47"/>
+              <rect x="4.5" y="4.5" width="31" height="31" rx="6.5" stroke="#8CA6C5" stroke-opacity="0.45" stroke-width="1"/>
+              <!-- Archival columns & ledger motif -->
+              <path d="M11 13.5H29" stroke="#FFFFFF" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M13.5 17V25.5M20 17V25.5M26.5 17V25.5" stroke="#D7E3F0" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M10.5 28.5H29.5" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round"/>
+              <circle cx="20" cy="10" r="1.4" fill="#D99B26"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title" id="brandTitle">Þjóðskjalasafn Íslands — Pósthólf</span>
+            <span class="brand-subtitle" id="brandSubtitle">Opinber skjalavarsla · Laugavegur 162, Reykjavík</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Search -->
+      <div class="search-wrap">
+        <span class="search-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="11" cy="11" r="7"></circle>
+            <line x1="20" y1="20" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Leita í pósti, sendendum eða viðhengjum..." autocomplete="off">
+        <button id="searchClearBtn" class="search-clear" title="Hreinsa leit" aria-label="Hreinsa leit">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Language Toggle & Account Badge -->
+      <div class="topbar-right">
+        <div class="lang-toggle" role="group" aria-label="Tungumál viðmóts">
+          <button class="lang-btn active" id="langIsBtn" data-lang="is">IS</button>
+          <button class="lang-btn" id="langEnBtn" data-lang="en">EN</button>
+        </div>
+
+        <button class="account-badge" id="accountBadgeBtn" title="Smelltu til að afrita netfang">
+          <span class="account-dot">ÞÍ</span>
+          <span class="account-email-text">contact@thjodskjalasafn.is</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ======================================================================
+         THREE-PANE WORKSPACE
+         ====================================================================== -->
+    <main class="workspace" id="workspace">
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+      <!-- LEFT SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <button class="compose-btn" id="composeOpenBtn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          <span id="composeBtnText">Nýr póstur</span>
+        </button>
+
+        <ul class="nav-list" id="folderList"></ul>
+
+        <div class="nav-section-title" id="labelsHeading">Merki</div>
+        <ul class="nav-list" id="labelList"></ul>
+
+        <div class="sidebar-footer">
+          <strong id="footerInstitution">Þjóðskjalasafn Íslands</strong>
+          <span id="footerNote">Sýnishorn af vefpósti (skáldað pósthólf). Engin raunveruleg gögn send.</span>
+        </div>
+      </aside>
+
+      <!-- MIDDLE PANE: EMAIL LIST -->
+      <section class="list-pane" aria-label="Póstlisti">
+        <div class="list-header">
+          <div class="list-title-row">
+            <h1 class="list-title" id="currentViewTitle">Innhólf</h1>
+            <span class="list-meta" id="listCountMeta">0 skeyti</span>
+          </div>
+          <div class="filter-bar" id="filterBar">
+            <button class="filter-chip active" data-filter="all" id="filterAll">Allt</button>
+            <button class="filter-chip" data-filter="unread" id="filterUnread">Ólesið</button>
+            <button class="filter-chip" data-filter="attachments" id="filterAttachments">Viðhengi</button>
+          </div>
+        </div>
+        <div class="email-list" id="emailList"></div>
+      </section>
+
+      <!-- RIGHT PANE: READING VIEW -->
+      <section class="reading-pane" id="readingPane" aria-label="Lestur skeytis"></section>
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       COMPOSE MODAL
+       ======================================================================== -->
+  <div class="modal-overlay" id="composeModal" role="dialog" aria-modal="true" aria-labelledby="composeModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="composeModalTitle">Nýr póstur</div>
+        <button class="modal-close" id="composeCloseBtn" aria-label="Loka">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-error" id="composeError"></div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="composeTo" id="lblComposeTo">Til</label>
+            <input type="text" id="composeTo" class="form-input" placeholder="nafn@example.is">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="composeCc" id="lblComposeCc">Afrit (valfrjálst)</label>
+            <input type="text" id="composeCc" class="form-input" placeholder="afrit@thjodskjalasafn.is">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label" for="composeSubject" id="lblComposeSubject">Efni</label>
+            <input type="text" id="composeSubject" class="form-input" placeholder="Efni skeytis...">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="composeLabel" id="lblComposeLabel">Merki</label>
+            <select id="composeLabel" class="form-select"></select>
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="composeBody" id="lblComposeBody">Skilaboð</label>
+          <textarea id="composeBody" class="form-textarea" placeholder="Skrifaðu skeyti hér..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="tool-btn" id="composeSaveDraftBtn">Vista drög</button>
+        <div class="modal-footer-right">
+          <button class="tool-btn" id="composeCancelBtn">Hætta við</button>
+          <button class="tool-btn primary" id="composeSendBtn">Senda</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       ATTACHMENT PREVIEW MODAL
+       ======================================================================== -->
+  <div class="modal-overlay" id="attachmentModal" role="dialog" aria-modal="true" aria-labelledby="attachmentModalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="attachmentModalTitle">Forskoðun viðhengis</div>
+        <button class="modal-close" id="attachmentCloseBtn" aria-label="Loka">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body" id="attachmentModalBody"></div>
+      <div class="modal-footer">
+        <span class="reply-hint" id="attachmentFooterNote">Skjalaforskoðun · Þjóðskjalasafn Íslands</span>
+        <div class="modal-footer-right">
+          <button class="tool-btn" id="attachmentCloseBtn2">Loka</button>
+          <button class="tool-btn primary" id="attachmentDownloadBtn">Sækja skjal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      /* ======================================================================
+         LOCALIZATION DICTIONARY (IS / EN)
+         ====================================================================== */
+      const I18N = {
+        is: {
+          brandTitle: 'Þjóðskjalasafn Íslands — Pósthólf',
+          brandSubtitle: 'Opinber skjalavarsla · Laugavegur 162, Reykjavík',
+          searchPlaceholder: 'Leita í pósti, sendendum eða viðhengjum...',
+          compose: 'Nýr póstur',
+          labelsHeading: 'Merki',
+          footerInstitution: 'Þjóðskjalasafn Íslands',
+          footerNote: 'Sýnishorn af vefpósti (skáldað pósthólf). Engin raunveruleg gögn send.',
+          folders: {
+            inbox: 'Innhólf',
+            starred: 'Stjörnumerkt',
+            sent: 'Sent',
+            drafts: 'Drög',
+            archive: 'Geymsla',
+            trash: 'Rusl'
+          },
+          labels: {
+            aettfraedi: 'Ættfræði',
+            afhending: 'Afhending skjala',
+            lestrarsalur: 'Lestrarsalur',
+            forvarsla: 'Forvarsla',
+            erlent: 'Erlent',
+            innanhuss: 'Innanhúss'
+          },
+          filters: {
+            all: 'Allt',
+            unread: 'Ólesið',
+            attachments: 'Viðhengi'
+          },
+          countSingle: 'skeyti',
+          countPlural: 'skeyti',
+          emptyListTitle: 'Engin skeyti fundust',
+          emptyListSub: 'Prófaðu að breyta síu eða leitarorði.',
+          emptyReadingTitle: 'Veldu skeyti til að lesa',
+          emptyReadingSub: 'Veldu póst úr listanum til vinstri til að skoða efni, viðhengi og svara.',
+          backToList: 'Til baka',
+          actions: {
+            reply: 'Svara',
+            star: 'Stjörnumerkja',
+            unstar: 'Taka stjörnu af',
+            markUnread: 'Merkja ólesið',
+            markRead: 'Merkja lesið',
+            archive: 'Geyma',
+            moveInbox: 'Færa í innhólf',
+            delete: 'Eyða',
+            deleteForever: 'Eyða varanlega',
+            editDraft: 'Halda áfram í drögum'
+          },
+          headers: {
+            from: 'Frá:',
+            to: 'Til:',
+            cc: 'Afrit:',
+            date: 'Dagsetning:'
+          },
+          attachmentsTitle: 'Viðhengi',
+          clickToPreview: 'Smelltu til að forskoða',
+          replyToPrefix: 'Svara:',
+          replyPlaceholder: 'Skrifaðu svar frá contact@thjodskjalasafn.is...',
+          replyHint: 'Svarið bætist við þráðinn hér að ofan.',
+          sendReply: 'Senda svar',
+          composeModal: {
+            titleNew: 'Nýr póstur',
+            titleEdit: 'Breyta drögum',
+            to: 'Til',
+            cc: 'Afrit (valfrjálst)',
+            subject: 'Efni',
+            label: 'Merki',
+            body: 'Skilaboð',
+            saveDraft: 'Vista drög',
+            cancel: 'Hætta við',
+            send: 'Senda',
+            errRequired: 'Vinsamlegast fylltu út bæði viðtakanda (Til) og efni skeytis.'
+          },
+          attachmentModal: {
+            title: 'Forskoðun viðhengis',
+            refNo: 'Skjalanúmer',
+            fileType: 'Skráartegund',
+            fileSize: 'Stærð',
+            classification: 'Flokkun',
+            footerNote: 'Hermd skjalaforskoðun · Þjóðskjalasafn Íslands',
+            close: 'Loka',
+            download: 'Sækja skjal'
+          },
+          toasts: {
+            copiedEmail: 'Netfangið contact@thjodskjalasafn.is afritað.',
+            sent: 'Skeyti sent og vistað í Sent.',
+            draftSaved: 'Drög vistuð í Drög.',
+            replySent: 'Svar sent og bætt við þráðinn.',
+            archived: 'Skeyti fært í Geymslu.',
+            movedInbox: 'Skeyti fært aftur í Innhólf.',
+            trashed: 'Skeyti fært í Rusl.',
+            deletedForever: 'Skeyti eytt varanlega.',
+            markedUnread: 'Merkt sem ólesið.',
+            markedRead: 'Merkt sem lesið.',
+            downloadSim: 'Hermd niðurhalning: '
+          },
+          toPrefix: 'Til: ',
+          draftTag: '[Drög] ',
+          monthsShort: ['jan.', 'feb.', 'mar.', 'apr.', 'maí', 'jún.', 'júl.', 'ágú.', 'sep.', 'okt.', 'nóv.', 'des.']
+        },
+        en: {
+          brandTitle: 'National Archives of Iceland — Mailbox',
+          brandSubtitle: 'Public Records Office · Laugavegur 162, Reykjavík',
+          searchPlaceholder: 'Search mail, senders, or attachments...',
+          compose: 'Compose',
+          labelsHeading: 'Labels',
+          footerInstitution: 'National Archives of Iceland',
+          footerNote: 'Fictional webmail simulation. No real messages are transmitted.',
+          folders: {
+            inbox: 'Inbox',
+            starred: 'Starred',
+            sent: 'Sent',
+            drafts: 'Drafts',
+            archive: 'Archive',
+            trash: 'Trash'
+          },
+          labels: {
+            aettfraedi: 'Genealogy',
+            afhending: 'Records Transfer',
+            lestrarsalur: 'Reading Room',
+            forvarsla: 'Conservation',
+            erlent: 'International',
+            innanhuss: 'Internal'
+          },
+          filters: {
+            all: 'All',
+            unread: 'Unread',
+            attachments: 'Attachments'
+          },
+          countSingle: 'message',
+          countPlural: 'messages',
+          emptyListTitle: 'No messages found',
+          emptyListSub: 'Try adjusting your filter or search query.',
+          emptyReadingTitle: 'Select a message to read',
+          emptyReadingSub: 'Choose an email from the list on the left to inspect its contents, attachments, or reply.',
+          backToList: 'Back',
+          actions: {
+            reply: 'Reply',
+            star: 'Star',
+            unstar: 'Unstar',
+            markUnread: 'Mark unread',
+            markRead: 'Mark read',
+            archive: 'Archive',
+            moveInbox: 'Move to Inbox',
+            delete: 'Delete',
+            deleteForever: 'Delete permanently',
+            editDraft: 'Continue editing draft'
+          },
+          headers: {
+            from: 'From:',
+            to: 'To:',
+            cc: 'Cc:',
+            date: 'Date:'
+          },
+          attachmentsTitle: 'Attachments',
+          clickToPreview: 'Click to preview',
+          replyToPrefix: 'Reply to:',
+          replyPlaceholder: 'Write a reply from contact@thjodskjalasafn.is...',
+          replyHint: 'Your reply will be appended to the conversation thread above.',
+          sendReply: 'Send Reply',
+          composeModal: {
+            titleNew: 'New Message',
+            titleEdit: 'Edit Draft',
+            to: 'To',
+            cc: 'Cc (optional)',
+            subject: 'Subject',
+            label: 'Label',
+            body: 'Message',
+            saveDraft: 'Save Draft',
+            cancel: 'Cancel',
+            send: 'Send',
+            errRequired: 'Please enter both a recipient (To) and a subject.'
+          },
+          attachmentModal: {
+            title: 'Attachment Preview',
+            refNo: 'Archival Reference',
+            fileType: 'File Type',
+            fileSize: 'Size',
+            classification: 'Classification',
+            footerNote: 'Simulated archival preview · National Archives of Iceland',
+            close: 'Close',
+            download: 'Download File'
+          },
+          toasts: {
+            copiedEmail: 'Copied contact@thjodskjalasafn.is to clipboard.',
+            sent: 'Message sent and added to Sent.',
+            draftSaved: 'Draft saved to Drafts.',
+            replySent: 'Reply sent and appended to thread.',
+            archived: 'Message moved to Archive.',
+            movedInbox: 'Message moved back to Inbox.',
+            trashed: 'Message moved to Trash.',
+            deletedForever: 'Message permanently deleted.',
+            markedUnread: 'Marked as unread.',
+            markedRead: 'Marked as read.',
+            downloadSim: 'Simulated download: '
+          },
+          toPrefix: 'To: ',
+          draftTag: '[Draft] ',
+          monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        }
+      };
+
+      /* Color-coded archival labels */
+      const LABEL_META = {
+        aettfraedi:   { color: '#B45309', bg: '#FEF3C7', border: '#FDE68A' },
+        afhending:    { color: '#1D4ED8', bg: '#DBEAFE', border: '#BFDBFE' },
+        lestrarsalur: { color: '#15803D', bg: '#DCFCE7', border: '#BBF7D0' },
+        forvarsla:    { color: '#0F766E', bg: '#CCFBF1', border: '#99F6E4' },
+        erlent:       { color: '#6D28D9', bg: '#EDE9FE', border: '#DDD6FE' },
+        innanhuss:    { color: '#475569', bg: '#F1F5F9', border: '#CBD5E1' }
+      };
+
+      /* ======================================================================
+         PRE-POPULATED FICTIONAL EMAILS (15 TOTAL · NOVEMBER 2026)
+         ====================================================================== */
+      let emails = [
+        /* 1. Inbox (IS) */
+        {
+          id: 'mail-1',
+          folder: 'inbox',
+          fromName: 'Sigríður Jónsdóttir',
+          fromEmail: 'sigridur.j@domstolar.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Afhending skjala frá Héraðsdómi Suðurlands – Dómabækur 1985–1995',
+          date: '2026-11-26T10:42:00',
+          unread: true,
+          starred: false,
+          label: 'afhending',
+          body: `Góðan dag,
+
+Með vísan til laga um opinber skjalasöfn nr. 77/2014 og reglna Þjóðskjalasafns Íslands um frágang og afhendingu pappírsskjala óskar Héraðsdómur Suðurlands eftir að bóka afhendingu á dómabókum og þingbókum frá árunum 1985–1995.
+
+Um er að ræða alls 24 hillumetra í 186 sýrufríum skjalaöskjum sem búið er að merkja samkvæmt afhendingarreglum. Meðfylgjandi er nákvæmur afhendingarlisti í Excel-formi með öskjunúmerum og árabilum.
+
+Gætum við fengið tíma fyrir móttöku við vörumóttöku á Laugavegi 162 í fyrstu viku desembermánaðar?
+
+Með bestu kveðju,
+Sigríður Jónsdóttir
+Skjalastjóri · Héraðsdómur Suðurlands
+Austurvegur 4, 800 Selfoss`,
+          attachments: [
+            {
+              name: 'Afhendingarlisti_1985-1995.xlsx',
+              type: 'xlsx',
+              size: '148 KB',
+              refNo: 'ÞÍ-AFH-2026-0412',
+              classification: 'Afhendingarskyldur aðili · Dómstólar',
+              summary: 'Yfirlit yfir 186 skjalaöskjur (24 hillumetrar) frá Héraðsdómi Suðurlands, tímabilið 1985–1995.',
+              table: {
+                headers: ['Askja nr.', 'Skjalaflokkur', 'Tímabil', 'Fjöldi binda'],
+                rows: [
+                  ['HSU-001 – HSU-058', 'Dómabækur einkamála', '1985–1995', '58 bindi'],
+                  ['HSU-059 – HSU-114', 'Dómabækur sakamála', '1985–1995', '56 bindi'],
+                  ['HSU-115 – HSU-162', 'Þingbækur og sáttabækur', '1985–1992', '48 bindi'],
+                  ['HSU-163 – HSU-186', 'Skiftabækur og dánarbú', '1986–1995', '24 bindi']
+                ]
+              }
+            }
+          ],
+          replies: []
+        },
+
+        /* 2. Inbox (IS) */
+        {
+          id: 'mail-2',
+          folder: 'inbox',
+          fromName: 'Jón Einarsson',
+          fromEmail: 'jon.einarsson@simnet.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Fyrirspurn um manntal 1920 – Skagafjarðarsýsla',
+          date: '2026-11-26T09:15:00',
+          unread: true,
+          starred: false,
+          label: 'aettfraedi',
+          body: `Sæl og blessuð,
+
+Ég er að vinna að ættfræðirannsókn um langafa minn, Guðmund Jónsson (f. 1878), og fjölskyldu hans í Rípurhreppi í Skagafjarðarsýslu.
+
+Ég fann færsluna þeirra í manntalinu 1920 á manntal.is, en á ljósmyndinni af frumskjalinu er blekið nokkuð dauft í dálkinum fyrir fæðingarstað og athugasemdir. Er mögulegt að panta hágæða stafræna ljósmynd (skönnun) af viðkomandi opnu úr frumritinu hjá ykkur?
+
+Ég veit að líklega þarf að greiða afritunargjald samkvæmt gjaldskrá og er að sjálfsögðu reiðubúinn til þess.
+
+Með þökk og kveðju,
+Jón Einarsson`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 3. Inbox (EN) */
+        {
+          id: 'mail-10',
+          folder: 'inbox',
+          fromName: 'Sarah Thorvaldson',
+          fromEmail: 'sarah.thorvaldson@example.ca',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Genealogy Inquiry: Emigration records to Gimli, Manitoba (1887)',
+          date: '2026-11-25T19:45:00',
+          unread: true,
+          starred: false,
+          label: 'erlent',
+          body: `Dear National Archives of Iceland,
+
+I am writing from Winnipeg, Manitoba, researching my great-great-grandfather, Þorvaldur Sigurðsson, who emigrated from Eyjafjörður to Gimli, Manitoba in the summer of 1887 with his wife Sigrún and two young daughters.
+
+Could you advise whether the Vesturfaraskrár (emigration lists) for Akureyri and Eyjafjarðarsýsla from 1887 are digitized, and which parish records (kirkjubækur) would list their departure certificate (brottflutningsvottorð)?
+
+Thank you very much for your assistance and for preserving our shared heritage.
+
+Warm regards,
+Sarah Thorvaldson
+Winnipeg, Canada`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 4. Inbox (IS) */
+        {
+          id: 'mail-3',
+          folder: 'inbox',
+          fromName: 'Katrín Ólafsdóttir',
+          fromEmail: 'katrin.olafsdottir@hi.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Bókun í lestrarsal – Skjöl Landshöfðingja Íslands',
+          date: '2026-11-25T16:28:00',
+          unread: true,
+          starred: false,
+          label: 'lestrarsalur',
+          body: `Komdu sæl,
+
+Ég óska eftir að bóka lesborð í lestrarsal Þjóðskjalasafns þriðjudagsmorguninn 1. desember kl. 09:00–13:00.
+
+Vegna rannsóknarverkefnis við Sagnfræðistofnun Háskóla Íslands vildi ég panta fram eftirtaldar öskjur úr skjalasafni Landshöfðingja Íslands (1874–1904):
+- LhÍ. Bréfabækur 1876–1878 (öskjur nr. 14 og 15)
+- LhÍ. Innkomin bréf frá amtmanni norðan og austan 1877 (askja nr. 42)
+
+Vinsamlegast látið mig vita ef skjölin verða tilbúin við opnun.
+
+Kær kveðja,
+Katrín Ólafsdóttir
+Dósent í sagnfræði · Háskóli Íslands`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 5. Inbox (IS) */
+        {
+          id: 'mail-4',
+          folder: 'inbox',
+          fromName: 'Skjalavarsla Árborgar',
+          fromEmail: 'skjalavorsla@arborg.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Beiðni um grisjunarheimild – Sveitarfélagið Árborg',
+          date: '2026-11-25T13:10:00',
+          unread: false,
+          starred: false,
+          label: 'afhending',
+          body: `Góðan dag,
+
+Sveitarfélagið Árborg sendir hér með formlega beiðni um grisjunarheimild á grundvelli 24. gr. laga um opinber skjalasöfn nr. 77/2014.
+
+Beiðnin tekur til almennra fylgiskjala bókhalds, tímaskráninga og afrita af innkaupapöntunum frá árunum 2010–2016 sem ekki hafa varðveislugildi að mati skjalavörslu og fallin eru úr gildi samkvæmt bókhaldslögum.
+
+Í viðhengi er útfyllt eyðublað ásamt skrá yfir viðkomandi skjalaflokka og rökstuðningi.
+
+Virðingarfyllst,
+Skjalavarsla Sveitarfélagsins Árborgar`,
+          attachments: [
+            {
+              name: 'Grisjunarbeidni_2026.pdf',
+              type: 'pdf',
+              size: '312 KB',
+              refNo: 'ÁRB-2026-11-089',
+              classification: 'Grisjunarbeiðni sveitarfélags',
+              summary: 'Umsókn Sveitarfélagsins Árborgar um heimild til grisjunar á fylgiskjölum bókhalds 2010–2016 (alls 11,5 hillumetrar). Undirrituð af skjalastjóra og fjármálastjóra.',
+              table: {
+                headers: ['Flokkur', 'Lýsing skjala', 'Árabil', 'Magn'],
+                rows: [
+                  ['B-01', 'Almenn fylgiskjöl bókhalds (reikningar)', '2010–2016', '8,0 hm'],
+                  ['B-04', 'Vinnuskýrslur og tímaseðlar (afrit)', '2011–2015', '2,5 hm'],
+                  ['B-09', 'Innkaupabeiðnir og kvittanir', '2012–2016', '1,0 hm']
+                ]
+              }
+            }
+          ],
+          replies: []
+        },
+
+        /* 6. Inbox (IS) */
+        {
+          id: 'mail-5',
+          folder: 'inbox',
+          fromName: 'Kristín Björnsdóttir',
+          fromEmail: 'kristin.b@example.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Gjöf einkaskjala – Bréfasafn frá Búðardal (1912–1988)',
+          date: '2026-11-24T15:04:00',
+          unread: false,
+          starred: true,
+          label: 'aettfraedi',
+          body: `Sæl veriði,
+
+Við systkinin erum að ganga frá dánarbúi móður okkar í Búðardal og höfum fundið merkilegt safn einkaskjala frá afa okkar og ömmu. Um er að ræða sendibréf frá tímabilinu 1912–1988, nokkrar handskrifaðar dagbækur um búskap og veðurfar í Dalasýslu, auk kassa með um 40 gömlum glerplötum (ljósmyndafilmur).
+
+Okkur langar mikið til að gefa Þjóðskjalasafni Íslands þessi gögn til varanlegrar varðveislu svo þau glatist ekki og nýtist fræðimönnum í framtíðinni.
+
+Hvernig berum við okkur að við afhendingu einkaskjala? Í viðhengi er gróf skrá sem ég tók saman um innihaldið.
+
+Með kærri kveðju,
+Kristín Björnsdóttir`,
+          attachments: [
+            {
+              name: 'Skra_yfir_bref_og_ljosmyndir.pdf',
+              type: 'pdf',
+              size: '224 KB',
+              refNo: 'EINKA-TILBOD-2026-19',
+              classification: 'Einkaskjalasafn · Gjöf',
+              summary: 'Bráðabirgðaskrá fjölskyldu yfir einkaskjöl og ljósmyndaplötur frá Búðardal í Dalasýslu (1912–1988).',
+              table: {
+                headers: ['Kassi', 'Innihald', 'Tímabil', 'Ástand'],
+                rows: [
+                  ['Kassi 1', 'Sendibréf innanlands og frá Vesturheimi', '1912–1964', 'Gott'],
+                  ['Kassi 2', 'Dagbækur um búskap og tíðarfar (14 bækur)', '1931–1988', 'Mjög gott'],
+                  ['Kassi 3', 'Glerplötur (u.þ.b. 40 stk.) í upprunalegum öskjum', 'ca. 1920–1945', 'Þarfnast forvörslu']
+                ]
+              }
+            }
+          ],
+          replies: []
+        },
+
+        /* 7. Inbox (IS) */
+        {
+          id: 'mail-6',
+          folder: 'inbox',
+          fromName: 'Forvörsludeild',
+          fromEmail: 'forvarsla@thjodskjalasafn.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: 'rekstur@thjodskjalasafn.is',
+          subject: 'Skýrsla forvörsludeildar: Rakastig í geymslu B-3',
+          date: '2026-11-24T08:50:00',
+          unread: false,
+          starred: false,
+          label: 'forvarsla',
+          body: `Sæl öll,
+
+Stutt stöðuuppfærsla eftir suðvestan storminn í Reykjavík um helgina:
+
+Rakastig í skjalageymslu B-3 (þar sem eldri pappírskjöl og skinnhandrit eru varðveitt) sveiflaðist stuttlega upp í 51% RH aðfaranótt sunnudags, en loftræstikerfið náði fljótt að jafna ástandið.
+
+Samkvæmt síritum í morgun er rakastigið nú stöðugt í 47% RH og hitastig 17,5 °C, sem er innan allra viðmiðunarmarka ISO 11799 staðalsins. Engin merki eru um raka eða leka við ytri veggi.
+
+Kveðja,
+Forvörsludeild Þjóðskjalasafns Íslands`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 8. Inbox (IS) */
+        {
+          id: 'mail-7',
+          folder: 'inbox',
+          fromName: 'Útgáfudeild Bókaforlagsins',
+          fromEmail: 'utgafa@bokaforlag-daemi.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Fyrirspurn vegna ljósmyndasafns – Síldarárin á Siglufirði',
+          date: '2026-11-23T14:22:00',
+          unread: false,
+          starred: false,
+          label: 'lestrarsalur',
+          body: `Góðan daginn,
+
+Við erum að undirbúa útgáfu á veglegri sagnfræðibók um síldarárin á Siglufirði sem áætlað er að komi út haustið 2027.
+
+Í ljósmyndasafni Þjóðskjalasafns höfum við séð 12 einstakar myndir af síldarsöltun á bryggjum Siglufjarðar frá árunum 1952–1958. Gætum við fengið upplýsingar um birtingarleyfi, höfundarréttarstöðu þessara mynda og verð fyrir óþjappaðar TIFF-skrár í 600 DPI upplausn?
+
+Með bestu kveðju,
+Útgáfudeild Bókaforlagsins`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 9. Inbox (EN) */
+        {
+          id: 'mail-11',
+          folder: 'inbox',
+          fromName: 'Mads Lindholm',
+          fromEmail: 'm.lindholm@rigsarkivet.dk',
+          to: 'contact@thjodskjalasafn.is',
+          cc: 'exhibitions@rigsarkivet.dk',
+          subject: 'Exhibition Loan Request: 18th-Century Icelandic Cartography',
+          date: '2026-11-23T11:18:00',
+          unread: false,
+          starred: true,
+          label: 'erlent',
+          body: `Dear Colleagues at Þjóðskjalasafn Íslands,
+
+Rigsarkivet in Copenhagen is curating a joint Nordic cartography exhibition scheduled to open in October 2027, exploring maritime navigation and coastal mapping across the North Atlantic during the 1700s.
+
+We would be honoured to inquire about either a short-term archival loan or a high-resolution master facsimile of your 1734 manuscript coastal map of Westfjords (Kortasafn ÞÍ, nr. K-1734-04). I have attached our preliminary draft loan agreement outlining climate, security, and insurance specifications.
+
+We look forward to discussing this collaboration with your conservation and curatorial teams.
+
+Best regards,
+Mads Lindholm
+Senior Curator · Rigsarkivet, Copenhagen`,
+          attachments: [
+            {
+              name: 'Loan_Agreement_Draft_2027.pdf',
+              type: 'pdf',
+              size: '418 KB',
+              refNo: 'RA-DK-LOAN-2027-08',
+              classification: 'International Exhibition Loan Draft',
+              summary: 'Draft inter-institutional loan agreement between Rigsarkivet (Denmark) and Þjóðskjalasafn Íslands for Autumn 2027 Nordic Cartography Exhibition.',
+              table: {
+                headers: ['Parameter', 'Specification'],
+                rows: [
+                  ['Requested Item', 'Manuscript Map of Vestfirðir (1734), Ref. K-1734-04'],
+                  ['Exhibition Dates', '15 October 2027 – 20 February 2028'],
+                  ['Display Climate', '18–20 °C, 45–50% RH, Max 50 Lux illumination'],
+                  ['Insurance Coverage', 'Nail-to-nail Government Indemnity (Denmark)']
+                ]
+              }
+            }
+          ],
+          replies: []
+        },
+
+        /* 10. Inbox (IS) */
+        {
+          id: 'mail-8',
+          folder: 'inbox',
+          fromName: 'Lögfræðisvið',
+          fromEmail: 'logfraedi@thjodskjalasafn.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: 'lestrarsalur@thjodskjalasafn.is',
+          subject: 'Minnisblað: Aðgangsbeiðni og 80 ára reglan (lög nr. 77/2014)',
+          date: '2026-11-22T11:35:00',
+          unread: false,
+          starred: false,
+          label: 'innanhuss',
+          body: `Sæl,
+
+Í framhaldi af fyrirspurn um aðgang að gögnum barnaverndarnefndar frá sjötta áratugnum fylgir hér stutt minnisblað frá lögfræðisviði um beitingu 80 ára aðgangstakmörkunar samkvæmt 27. gr. laga um opinber skjalasöfn nr. 77/2014.
+
+Þar sem skjölin innihalda viðkvæmar persónuupplýsingar um einkamálefni einstaklinga þarf umsækjandi að sækja um undanþágu til fræðirannsókna með skriflegri þagnarskylduyfirlýsingu.
+
+Bestu kveðjur,
+Lögfræðisvið Þjóðskjalasafns Íslands`,
+          attachments: [
+            {
+              name: 'Minnisblad_80ara_regla.pdf',
+              type: 'pdf',
+              size: '164 KB',
+              refNo: 'ÞÍ-LÖG-2026-112',
+              classification: 'Innanhúss · Lögfræðiálit',
+              summary: 'Samantekt um 80 ára reglu um aðgang að skjölum með viðkvæmum persónuupplýsingum skv. 27. og 28. gr. laga nr. 77/2014.',
+              table: {
+                headers: ['Lagaákvæði', 'Efni'],
+                rows: [
+                  ['26. gr. laga 77/2014', 'Almenn 30 ára aðgangsregla fyrir opinber skjöl'],
+                  ['27. gr. laga 77/2014', '80 ára takmörkun vegna viðkvæmra einkamálefna'],
+                  ['28. gr. laga 77/2014', 'Skilyrði fyrir undanþágu til vísindarannsókna']
+                ]
+              }
+            }
+          ],
+          replies: []
+        },
+
+        /* 11. Inbox (EN) */
+        {
+          id: 'mail-12',
+          folder: 'inbox',
+          fromName: 'Dr. Eleanor Henderson',
+          fromEmail: 'e.henderson@ed.ac.uk',
+          to: 'contact@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Visiting Researcher Access – Icelandic Maritime History (1900–1945)',
+          date: '2026-11-21T14:50:00',
+          unread: false,
+          starred: false,
+          label: 'erlent',
+          body: `Hello,
+
+I am a maritime historian at the University of Edinburgh and will be visiting Reykjavík from 12 to 22 January 2027 to consult shipping registers and harbour authority records (1900–1945) held at Þjóðskjalasafn Íslands.
+
+Could you please confirm your reading room opening hours at Laugavegur 162, whether foreign researchers need to register in advance, and whether personal handheld photography (without flash) is permitted for private research notes?
+
+Many thanks in advance,
+Dr. Eleanor Henderson
+School of History, Classics and Archaeology · University of Edinburgh`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 12. Inbox (IS) */
+        {
+          id: 'mail-9',
+          folder: 'inbox',
+          fromName: 'Hrafn Guðmundsson',
+          fromEmail: 'hrafn@stjornarradid.is',
+          to: 'contact@thjodskjalasafn.is',
+          cc: 'stafraen@thjodskjalasafn.is',
+          subject: 'Stafræn varðveisla og OAIS-staðallinn – Vinnustofa í desember',
+          date: '2026-11-20T10:05:00',
+          unread: false,
+          starred: false,
+          label: 'innanhuss',
+          body: `Sæl og blessuð,
+
+Boðað er til sameiginlegrar vinnustofu ráðuneyta, héraðsskjalasafna og Þjóðskjalasafns Íslands um langtímavarðveislu rafrænna gagna þann 10. desember nk. kl. 13:00–16:00.
+
+Á dagskrá verður innleiðing á OAIS-tilvísunarlíkaninu (ISO 14721), samræmd skjalavörsluform (SIP/AIP pakkar) og reynsla af sjálfvirkum skilum úr málaskrárkerfum ríkisstofnana.
+
+Vinsamlegast staðfestið þátttöku fulltrúa frá Þjóðskjalasafni fyrir 3. desember.
+
+Með kveðju,
+Hrafn Guðmundsson
+Sérfræðingur í stafrænni stjórnsýslu · Stjórnarráð Íslands`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 13. Sent (IS) */
+        {
+          id: 'mail-13',
+          folder: 'sent',
+          fromName: 'Þjóðskjalasafn Íslands',
+          fromEmail: 'contact@thjodskjalasafn.is',
+          to: 'Björn Guðmundsson <bjorn.gudmundsson@example.is>',
+          cc: '',
+          subject: 'Sv: Fyrirspurn um kirkjubækur í Rangárvallasýslu',
+          date: '2026-11-24T13:40:00',
+          unread: false,
+          starred: false,
+          label: 'aettfraedi',
+          body: `Sæll Björn,
+
+Takk fyrir fyrirspurnina. Stór hluti kirkjubóka úr Rangárvallasýslu (þ. á m. Oddaprestakall og Breiðabólstaðarprestakall) hefur þegar verið myndaður stafrænt og er aðgengilegur gjaldfrjálst á vef Þjóðskjalasafns á skjalasafn.is.
+
+Fyrir yngri tímabil eða bækur sem ekki hafa enn verið myndaðar er hægt að panta frumritin í lestrarsal okkar á Laugavegi 162. Við mælum með að senda pöntun með a.m.k. eins dags fyrirvara.
+
+Endilega hafðu samband ef við getum aðstoðað frekar.
+
+Með bestu kveðju,
+Upplýsinga- og þjónustusvið
+Þjóðskjalasafn Íslands · Laugavegur 162, 105 Reykjavík`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 14. Sent (EN) */
+        {
+          id: 'mail-14',
+          folder: 'sent',
+          fromName: 'Þjóðskjalasafn Íslands',
+          fromEmail: 'contact@thjodskjalasafn.is',
+          to: 'Lukas Müller <l.mueller@uni-hamburg.de>',
+          cc: '',
+          subject: 'Re: Visiting Researcher Inquiry – Reading Room Guidelines',
+          date: '2026-11-22T15:12:00',
+          unread: false,
+          starred: false,
+          label: 'erlent',
+          body: `Dear Mr. Müller,
+
+Thank you for contacting the National Archives of Iceland. We will be pleased to welcome you to our reading room at Laugavegur 162, Reykjavík.
+
+Reading Room Hours:
+- Monday to Friday: 09:00 – 16:00 (closed on public holidays)
+
+Key Guidelines:
+1. Reader registration takes place at the reception desk upon arrival (please bring a valid photo ID).
+2. Coats, bags, and pens must be stored in the lockers provided; only pencils, laptops, and cameras/smartphones are permitted at the reading desks.
+3. Non-flash handheld photography for personal research purposes is allowed for unrestricted records.
+
+Please send us your archival reference numbers 24 hours prior to your visit so we can retrieve the boxes in advance.
+
+Kind regards,
+Reading Room Services
+National Archives of Iceland (Þjóðskjalasafn Íslands)`,
+          attachments: [],
+          replies: []
+        },
+
+        /* 15. Drafts (IS) */
+        {
+          id: 'mail-15',
+          folder: 'drafts',
+          fromName: 'Þjóðskjalasafn Íslands',
+          fromEmail: 'contact@thjodskjalasafn.is',
+          to: 'fjolmidlar@thjodskjalasafn.is',
+          cc: '',
+          subject: 'Drög: Fréttatilkynning – Nýjar stafrænar myndir úr Jarðabók Árna Magnússonar',
+          date: '2026-11-26T11:30:00',
+          unread: false,
+          starred: false,
+          label: 'innanhuss',
+          body: `[DRÖG TIL YFIRLESTRAR]
+
+Fréttatilkynning – Þjóðskjalasafn Íslands opnar aðgang að nýjum hágæða stafrænum myndum úr Jarðabók Árna Magnússonar og Páls Vídalíns (1702–1714)
+
+Þjóðskjalasafn Íslands hefur lokið við stafræna ljósmyndun á yfir 3.400 blaðsíðum úr Jarðabók Árna Magnússonar og Páls Vídalíns fyrir Vestur- og Austur-Skaftafellssýslu auk Múlasýslna.
+
+Myndirnar eru nú aðgengilegar almenningi og fræðimönnum í hárri upplausn á vef safnsins. Jarðabókin er ein mikilvægasta heimild um íslenskt samfélag, búskaparhætti og örnefni í upphafi 18. aldar.
+
+[Bæta við tilvitnun frá þjóðskjalaverði og tengli á myndasafn fyrir útsendingu.]`,
+          attachments: [],
+          replies: []
+        }
+      ];
+
+      /* ======================================================================
+         APPLICATION STATE
+         ====================================================================== */
+      const state = {
+        lang: 'is',
+        activeFolder: 'inbox',   // 'inbox' | 'starred' | 'sent' | 'drafts' | 'archive' | 'trash'
+        activeLabel: null,       // null or label key
+        filter: 'all',           // 'all' | 'unread' | 'attachments'
+        searchQuery: '',
+        selectedId: 'mail-1',
+        editingDraftId: null,
+        activeAttachment: null
+      };
+
+      /* ======================================================================
+         DOM REFERENCES
+         ====================================================================== */
+      const dom = {
+        workspace: document.getElementById('workspace'),
+        sidebar: document.getElementById('sidebar'),
+        sidebarBackdrop: document.getElementById('sidebarBackdrop'),
+        menuToggleBtn: document.getElementById('menuToggleBtn'),
+        brandTitle: document.getElementById('brandTitle'),
+        brandSubtitle: document.getElementById('brandSubtitle'),
+        searchInput: document.getElementById('searchInput'),
+        searchClearBtn: document.getElementById('searchClearBtn'),
+        langIsBtn: document.getElementById('langIsBtn'),
+        langEnBtn: document.getElementById('langEnBtn'),
+        accountBadgeBtn: document.getElementById('accountBadgeBtn'),
+        composeOpenBtn: document.getElementById('composeOpenBtn'),
+        composeBtnText: document.getElementById('composeBtnText'),
+        folderList: document.getElementById('folderList'),
+        labelsHeading: document.getElementById('labelsHeading'),
+        labelList: document.getElementById('labelList'),
+        footerInstitution: document.getElementById('footerInstitution'),
+        footerNote: document.getElementById('footerNote'),
+        currentViewTitle: document.getElementById('currentViewTitle'),
+        listCountMeta: document.getElementById('listCountMeta'),
+        filterAll: document.getElementById('filterAll'),
+        filterUnread: document.getElementById('filterUnread'),
+        filterAttachments: document.getElementById('filterAttachments'),
+        emailList: document.getElementById('emailList'),
+        readingPane: document.getElementById('readingPane'),
+
+        // Compose Modal
+        composeModal: document.getElementById('composeModal'),
+        composeModalTitle: document.getElementById('composeModalTitle'),
+        composeCloseBtn: document.getElementById('composeCloseBtn'),
+        composeCancelBtn: document.getElementById('composeCancelBtn'),
+        composeSaveDraftBtn: document.getElementById('composeSaveDraftBtn'),
+        composeSendBtn: document.getElementById('composeSendBtn'),
+        composeError: document.getElementById('composeError'),
+        composeTo: document.getElementById('composeTo'),
+        composeCc: document.getElementById('composeCc'),
+        composeSubject: document.getElementById('composeSubject'),
+        composeLabel: document.getElementById('composeLabel'),
+        composeBody: document.getElementById('composeBody'),
+        lblComposeTo: document.getElementById('lblComposeTo'),
+        lblComposeCc: document.getElementById('lblComposeCc'),
+        lblComposeSubject: document.getElementById('lblComposeSubject'),
+        lblComposeLabel: document.getElementById('lblComposeLabel'),
+        lblComposeBody: document.getElementById('lblComposeBody'),
+
+        // Attachment Modal
+        attachmentModal: document.getElementById('attachmentModal'),
+        attachmentModalTitle: document.getElementById('attachmentModalTitle'),
+        attachmentModalBody: document.getElementById('attachmentModalBody'),
+        attachmentFooterNote: document.getElementById('attachmentFooterNote'),
+        attachmentCloseBtn: document.getElementById('attachmentCloseBtn'),
+        attachmentCloseBtn2: document.getElementById('attachmentCloseBtn2'),
+        attachmentDownloadBtn: document.getElementById('attachmentDownloadBtn'),
+
+        // Toast
+        toast: document.getElementById('toast')
+      };
+
+      /* ======================================================================
+         UTILITY HELPERS
+         ====================================================================== */
+      function t() {
+        return I18N[state.lang];
+      }
+
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function getInitials(name) {
+        if (!name) return 'ÞÍ';
+        const parts = name.trim().split(/\s+/);
+        if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      }
+
+      function formatShortDate(isoStr) {
+        const d = new Date(isoStr);
+        const day = d.getDate();
+        const mon = t().monthsShort[d.getMonth()];
+        if (state.lang === 'is') {
+          return `${day}. ${mon}`;
+        }
+        return `${mon} ${day}`;
+      }
+
+      function formatFullDate(isoStr) {
+        const d = new Date(isoStr);
+        const day = d.getDate();
+        const mon = t().monthsShort[d.getMonth()];
+        const year = d.getFullYear();
+        const hh = String(d.getHours()).padStart(2, '0');
+        const mm = String(d.getMinutes()).padStart(2, '0');
+        if (state.lang === 'is') {
+          return `${day}. ${mon} ${year}, kl. ${hh}:${mm}`;
+        }
+        return `${mon} ${day}, ${year} at ${hh}:${mm}`;
+      }
+
+      let toastTimer = null;
+      function showToast(message) {
+        dom.toast.textContent = message;
+        dom.toast.classList.add('visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          dom.toast.classList.remove('visible');
+        }, 2800);
+      }
+
+      function copyToClipboard(text) {
+        try {
+          const temp = document.createElement('textarea');
+          temp.value = text;
+          temp.style.position = 'fixed';
+          temp.style.opacity = '0';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      function closeMobileSidebar() {
+        dom.sidebar.classList.remove('open');
+        dom.sidebarBackdrop.classList.remove('open');
+      }
+
+      /* ======================================================================
+         SVG ICONS
+         ====================================================================== */
+      const ICONS = {
+        inbox: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>',
+        starred: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+        starFilled: '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+        starOutline: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
+        sent: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>',
+        drafts: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>',
+        archive: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',
+        trash: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+        paperclip: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>',
+        reply: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>',
+        mailUnread: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',
+        back: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>'
+      };
+
+      /* ======================================================================
+         FILTERING & DATA QUERIES
+         ====================================================================== */
+      function getFilteredEmails() {
+        const q = state.searchQuery.trim().toLowerCase();
+
+        return emails
+          .filter(mail => {
+            // Folder or Label selection
+            if (state.activeLabel) {
+              if (mail.folder === 'trash') return false;
+              if (mail.label !== state.activeLabel) return false;
+            } else if (state.activeFolder === 'starred') {
+              if (!mail.starred || mail.folder === 'trash') return false;
+            } else {
+              if (mail.folder !== state.activeFolder) return false;
+            }
+
+            // Secondary filter chips
+            if (state.filter === 'unread' && !mail.unread) return false;
+            if (state.filter === 'attachments' && (!mail.attachments || mail.attachments.length === 0)) return false;
+
+            // Live search query
+            if (q) {
+              const hay = [
+                mail.fromName,
+                mail.fromEmail,
+                mail.to,
+                mail.cc,
+                mail.subject,
+                mail.body,
+                t().labels[mail.label] || '',
+                ...(mail.attachments || []).map(a => a.name),
+                ...(mail.replies || []).map(r => r.body)
+              ].join(' ').toLowerCase();
+              if (!hay.includes(q)) return false;
+            }
+
+            return true;
+          })
+          .sort((a, b) => new Date(b.date) - new Date(a.date));
+      }
+
+      /* ======================================================================
+         RENDERING FUNCTIONS
+         ====================================================================== */
+      function renderStaticChrome() {
+        const dict = t();
+        document.documentElement.lang = state.lang;
+        dom.brandTitle.textContent = dict.brandTitle;
+        dom.brandSubtitle.textContent = dict.brandSubtitle;
+        dom.searchInput.placeholder = dict.searchPlaceholder;
+        dom.composeBtnText.textContent = dict.compose;
+        dom.labelsHeading.textContent = dict.labelsHeading;
+        dom.footerInstitution.textContent = dict.footerInstitution;
+        dom.footerNote.textContent = dict.footerNote;
+
+        dom.filterAll.textContent = dict.filters.all;
+        dom.filterUnread.textContent = dict.filters.unread;
+        dom.filterAttachments.textContent = dict.filters.attachments;
+
+        dom.langIsBtn.classList.toggle('active', state.lang === 'is');
+        dom.langEnBtn.classList.toggle('active', state.lang === 'en');
+
+        // Compose labels
+        dom.lblComposeTo.textContent = dict.composeModal.to;
+        dom.lblComposeCc.textContent = dict.composeModal.cc;
+        dom.lblComposeSubject.textContent = dict.composeModal.subject;
+        dom.lblComposeLabel.textContent = dict.composeModal.label;
+        dom.lblComposeBody.textContent = dict.composeModal.body;
+        dom.composeSaveDraftBtn.textContent = dict.composeModal.saveDraft;
+        dom.composeCancelBtn.textContent = dict.composeModal.cancel;
+        dom.composeSendBtn.textContent = dict.composeModal.send;
+
+        // Attachment modal labels
+        dom.attachmentModalTitle.textContent = dict.attachmentModal.title;
+        dom.attachmentFooterNote.textContent = dict.attachmentModal.footerNote;
+        dom.attachmentCloseBtn2.textContent = dict.attachmentModal.close;
+        dom.attachmentDownloadBtn.textContent = dict.attachmentModal.download;
+
+        // Populate compose label dropdown
+        const currentLabelVal = dom.composeLabel.value || 'innanhuss';
+        dom.composeLabel.innerHTML = Object.keys(LABEL_META)
+          .map(key => `<option value="${key}">${escapeHtml(dict.labels[key])}</option>`)
+          .join('');
+        dom.composeLabel.value = currentLabelVal;
+      }
+
+      function renderSidebar() {
+        const dict = t();
+        const counts = {
+          inbox: emails.filter(m => m.folder === 'inbox' && m.unread).length,
+          starred: emails.filter(m => m.starred && m.folder !== 'trash').length,
+          sent: 0,
+          drafts: emails.filter(m => m.folder === 'drafts').length,
+          archive: 0,
+          trash: emails.filter(m => m.folder === 'trash').length
+        };
+
+        const folderKeys = ['inbox', 'starred', 'sent', 'drafts', 'archive', 'trash'];
+        dom.folderList.innerHTML = folderKeys.map(key => {
+          const isActive = !state.activeLabel && state.activeFolder === key;
+          const badge = counts[key] > 0 ? `<span class="nav-count">${counts[key]}</span>` : '';
+          return `
+            <li>
+              <button class="nav-item ${isActive ? 'active' : ''}" data-folder="${key}">
+                <span class="nav-item-left">
+                  ${ICONS[key]}
+                  <span>${escapeHtml(dict.folders[key])}</span>
+                </span>
+                ${badge}
+              </button>
+            </li>
+          `;
+        }).join('');
+
+        dom.labelList.innerHTML = Object.keys(LABEL_META).map(key => {
+          const isActive = state.activeLabel === key;
+          const count = emails.filter(m => m.label === key && m.folder !== 'trash').length;
+          return `
+            <li>
+              <button class="nav-item ${isActive ? 'active' : ''}" data-label="${key}">
+                <span class="nav-item-left">
+                  <span class="label-dot" style="background:${LABEL_META[key].color}"></span>
+                  <span>${escapeHtml(dict.labels[key])}</span>
+                </span>
+                ${count > 0 ? `<span class="nav-count">${count}</span>` : ''}
+              </button>
+            </li>
+          `;
+        }).join('');
+      }
+
+      function renderLabelPill(labelKey) {
+        const meta = LABEL_META[labelKey] || LABEL_META.innanhuss;
+        const text = t().labels[labelKey] || labelKey;
+        return `<span class="label-pill" style="color:${meta.color};background:${meta.bg};border-color:${meta.border};">${escapeHtml(text)}</span>`;
+      }
+
+      function renderEmailList() {
+        const dict = t();
+        const filtered = getFilteredEmails();
+
+        // Update heading & count
+        if (state.activeLabel) {
+          dom.currentViewTitle.textContent = dict.labels[state.activeLabel];
+        } else {
+          dom.currentViewTitle.textContent = dict.folders[state.activeFolder];
+        }
+
+        const unit = filtered.length === 1 ? dict.countSingle : dict.countPlural;
+        dom.listCountMeta.textContent = `${filtered.length} ${unit}`;
+
+        // Update filter buttons
+        [dom.filterAll, dom.filterUnread, dom.filterAttachments].forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.filter === state.filter);
+        });
+
+        if (filtered.length === 0) {
+          dom.emailList.innerHTML = `
+            <div class="empty-list">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#9AA5B4" stroke-width="1.5">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              <strong>${escapeHtml(dict.emptyListTitle)}</strong>
+              <p>${escapeHtml(dict.emptyListSub)}</p>
+            </div>
+          `;
+          return;
+        }
+
+        dom.emailList.innerHTML = filtered.map(mail => {
+          const isSelected = mail.id === state.selectedId;
+          const isOutbound = mail.folder === 'sent' || mail.folder === 'drafts';
+          const displayParty = isOutbound
+            ? (mail.folder === 'drafts' ? dict.draftTag : dict.toPrefix) + mail.to.split('<')[0].trim()
+            : mail.fromName;
+          const snippet = mail.body.replace(/\s+/g, ' ').trim();
+          const hasAttach = mail.attachments && mail.attachments.length > 0;
+
+          return `
+            <article class="email-row ${mail.unread ? 'unread' : ''} ${isSelected ? 'selected' : ''}" data-id="${mail.id}">
+              <div class="row-top">
+                <div class="row-sender-wrap">
+                  ${mail.unread ? '<span class="unread-dot" aria-label="Ólesið"></span>' : ''}
+                  <span class="row-sender">${escapeHtml(displayParty)}</span>
+                </div>
+                <span class="row-date">${escapeHtml(formatShortDate(mail.date))}</span>
+              </div>
+              <div class="row-subject">${escapeHtml(mail.subject)}</div>
+              <div class="row-snippet">${escapeHtml(snippet)}</div>
+              <div class="row-footer">
+                <div class="row-badges">
+                  ${renderLabelPill(mail.label)}
+                </div>
+                <div class="row-icons">
+                  ${hasAttach ? `<span title="${escapeHtml(dict.attachmentsTitle)}">${ICONS.paperclip}</span>` : ''}
+                  <button class="star-btn ${mail.starred ? 'starred' : ''}" data-star-id="${mail.id}" title="${escapeHtml(mail.starred ? dict.actions.unstar : dict.actions.star)}" aria-label="Stjörnumerkja">
+                    ${mail.starred ? ICONS.starFilled : ICONS.starOutline}
+                  </button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      function renderReadingPane() {
+        const dict = t();
+        const mail = emails.find(m => m.id === state.selectedId);
+
+        if (!mail) {
+          dom.readingPane.innerHTML = `
+            <div class="empty-reading">
+              <svg width="54" height="54" viewBox="0 0 40 40" fill="none">
+                <rect x="2" y="2" width="36" height="36" rx="9" fill="#EBF1F8"/>
+                <path d="M11 14H29M13.5 17.5V25.5M20 17.5V25.5M26.5 17.5V25.5M10.5 28.5H29.5" stroke="#142B47" stroke-opacity="0.45" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <h3>${escapeHtml(dict.emptyReadingTitle)}</h3>
+              <p>${escapeHtml(dict.emptyReadingSub)}</p>
+            </div>
+          `;
+          return;
+        }
+
+        const inArchiveOrTrash = mail.folder === 'archive' || mail.folder === 'trash';
+        const isDraft = mail.folder === 'drafts';
+
+        const attachmentsHtml = (mail.attachments && mail.attachments.length > 0)
+          ? `
+            <div class="attachments-box">
+              <div class="attachments-title">${ICONS.paperclip} ${escapeHtml(dict.attachmentsTitle)} (${mail.attachments.length})</div>
+              <div class="attachment-list">
+                ${mail.attachments.map((att, idx) => `
+                  <button class="attachment-card" data-attach-index="${idx}">
+                    <span class="file-badge ${escapeHtml(att.type)}">${escapeHtml(att.type.toUpperCase())}</span>
+                    <div class="attachment-info">
+                      <div class="attachment-name">${escapeHtml(att.name)}</div>
+                      <div class="attachment-meta">${escapeHtml(att.size)} · ${escapeHtml(dict.clickToPreview)}</div>
+                    </div>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+          `
+          : '';
+
+        const repliesHtml = (mail.replies || []).map(rep => `
+          <div class="message-card reply-card">
+            <div class="message-header">
+              <div class="avatar">ÞÍ</div>
+              <div class="meta-grid">
+                <div class="meta-top">
+                  <div>
+                    <span class="meta-sender">Þjóðskjalasafn Íslands</span>
+                    <span class="meta-email">&lt;contact@thjodskjalasafn.is&gt;</span>
+                  </div>
+                  <span class="meta-date">${escapeHtml(formatFullDate(rep.date))}</span>
+                </div>
+                <div class="meta-details">
+                  <span><strong>${escapeHtml(dict.headers.to)}</strong> ${escapeHtml(rep.to)}</span>
+                </div>
+              </div>
+            </div>
+            <div class="message-body">${escapeHtml(rep.body)}</div>
+          </div>
+        `).join('');
+
+        const replyRecipient = mail.folder === 'sent' ? mail.to : `${mail.fromName} <${mail.fromEmail}>`;
+
+        dom.readingPane.innerHTML = `
+          <div class="reading-toolbar">
+            <div class="toolbar-group">
+              <button class="back-btn" id="mobileBackBtn">${ICONS.back} ${escapeHtml(dict.backToList)}</button>
+              ${isDraft
+                ? `<button class="tool-btn primary" id="btnEditDraft">${escapeHtml(dict.actions.editDraft)}</button>`
+                : `<button class="tool-btn primary" id="btnFocusReply">${ICONS.reply} ${escapeHtml(dict.actions.reply)}</button>`
+              }
+              <button class="tool-btn ${mail.starred ? 'starred-active' : ''}" id="btnToggleStar">
+                ${mail.starred ? ICONS.starFilled : ICONS.starOutline}
+                <span>${escapeHtml(mail.starred ? dict.actions.unstar : dict.actions.star)}</span>
+              </button>
+              <button class="tool-btn" id="btnToggleUnread">
+                ${ICONS.mailUnread}
+                <span>${escapeHtml(mail.unread ? dict.actions.markRead : dict.actions.markUnread)}</span>
+              </button>
+            </div>
+            <div class="toolbar-group">
+              <button class="tool-btn" id="btnArchive">
+                ${ICONS.archive}
+                <span>${escapeHtml(inArchiveOrTrash ? dict.actions.moveInbox : dict.actions.archive)}</span>
+              </button>
+              <button class="tool-btn danger" id="btnDelete">
+                ${ICONS.trash}
+                <span>${escapeHtml(mail.folder === 'trash' ? dict.actions.deleteForever : dict.actions.delete)}</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="reading-scroll" id="readingScroll">
+            <div class="reading-container">
+              <div class="reading-subject-row">
+                <h2 class="reading-subject">${escapeHtml(mail.subject)}</h2>
+                ${renderLabelPill(mail.label)}
+              </div>
+
+              <div class="message-card">
+                <div class="message-header">
+                  <div class="avatar">${escapeHtml(getInitials(mail.fromName))}</div>
+                  <div class="meta-grid">
+                    <div class="meta-top">
+                      <div>
+                        <span class="meta-sender">${escapeHtml(mail.fromName)}</span>
+                        <span class="meta-email">&lt;${escapeHtml(mail.fromEmail)}&gt;</span>
+                      </div>
+                      <span class="meta-date">${escapeHtml(formatFullDate(mail.date))}</span>
+                    </div>
+                    <div class="meta-details">
+                      <span><strong>${escapeHtml(dict.headers.from)}</strong> ${escapeHtml(mail.fromName)} &lt;${escapeHtml(mail.fromEmail)}&gt;</span>
+                      <span><strong>${escapeHtml(dict.headers.to)}</strong> ${escapeHtml(mail.to)}</span>
+                      ${mail.cc ? `<span><strong>${escapeHtml(dict.headers.cc)}</strong> ${escapeHtml(mail.cc)}</span>` : ''}
+                      <span><strong>${escapeHtml(dict.headers.date)}</strong> ${escapeHtml(formatFullDate(mail.date))}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-body">${escapeHtml(mail.body)}</div>
+                ${attachmentsHtml}
+              </div>
+
+              ${repliesHtml}
+
+              ${!isDraft ? `
+                <div class="reply-box" id="inlineReplyBox">
+                  <div class="reply-header">
+                    ${ICONS.reply}
+                    <span>${escapeHtml(dict.replyToPrefix)} <strong>${escapeHtml(replyRecipient)}</strong></span>
+                  </div>
+                  <textarea id="inlineReplyText" class="reply-textarea" placeholder="${escapeHtml(dict.replyPlaceholder)}"></textarea>
+                  <div class="reply-actions">
+                    <span class="reply-hint">${escapeHtml(dict.replyHint)}</span>
+                    <button class="tool-btn primary" id="btnSendReply">${ICONS.sent} ${escapeHtml(dict.sendReply)}</button>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+
+        bindReadingPaneEvents(mail, replyRecipient);
+      }
+
+      function renderAll() {
+        renderStaticChrome();
+        renderSidebar();
+        renderEmailList();
+        renderReadingPane();
+      }
+
+      /* ======================================================================
+         READING PANE INTERACTIONS
+         ====================================================================== */
+      function bindReadingPaneEvents(mail, replyRecipient) {
+        const dict = t();
+
+        const mobileBackBtn = document.getElementById('mobileBackBtn');
+        if (mobileBackBtn) {
+          mobileBackBtn.addEventListener('click', () => {
+            dom.workspace.classList.remove('mobile-reading');
+          });
+        }
+
+        const btnFocusReply = document.getElementById('btnFocusReply');
+        if (btnFocusReply) {
+          btnFocusReply.addEventListener('click', () => {
+            const box = document.getElementById('inlineReplyText');
+            if (box) {
+              box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              setTimeout(() => box.focus(), 200);
+            }
+          });
+        }
+
+        const btnEditDraft = document.getElementById('btnEditDraft');
+        if (btnEditDraft) {
+          btnEditDraft.addEventListener('click', () => openComposeModal(mail));
+        }
+
+        const btnToggleStar = document.getElementById('btnToggleStar');
+        if (btnToggleStar) {
+          btnToggleStar.addEventListener('click', () => {
+            mail.starred = !mail.starred;
+            renderSidebar();
+            renderEmailList();
+            renderReadingPane();
+          });
+        }
+
+        const btnToggleUnread = document.getElementById('btnToggleUnread');
+        if (btnToggleUnread) {
+          btnToggleUnread.addEventListener('click', () => {
+            mail.unread = !mail.unread;
+            showToast(mail.unread ? dict.toasts.markedUnread : dict.toasts.markedRead);
+            renderSidebar();
+            renderEmailList();
+            renderReadingPane();
+          });
+        }
+
+        const btnArchive = document.getElementById('btnArchive');
+        if (btnArchive) {
+          btnArchive.addEventListener('click', () => {
+            if (mail.folder === 'archive' || mail.folder === 'trash') {
+              mail.folder = 'inbox';
+              showToast(dict.toasts.movedInbox);
+            } else {
+              mail.folder = 'archive';
+              showToast(dict.toasts.archived);
+            }
+            selectNextAvailable();
+            renderAll();
+          });
+        }
+
+        const btnDelete = document.getElementById('btnDelete');
+        if (btnDelete) {
+          btnDelete.addEventListener('click', () => {
+            if (mail.folder === 'trash') {
+              emails = emails.filter(m => m.id !== mail.id);
+              showToast(dict.toasts.deletedForever);
+            } else {
+              mail.folder = 'trash';
+              showToast(dict.toasts.trashed);
+            }
+            selectNextAvailable();
+            renderAll();
+          });
+        }
+
+        const btnSendReply = document.getElementById('btnSendReply');
+        if (btnSendReply) {
+          btnSendReply.addEventListener('click', () => {
+            const textarea = document.getElementById('inlineReplyText');
+            const text = textarea ? textarea.value.trim() : '';
+            if (!text) return;
+
+            mail.replies.push({
+              date: new Date().toISOString(),
+              to: replyRecipient,
+              body: text
+            });
+            showToast(dict.toasts.replySent);
+            renderReadingPane();
+            const scrollEl = document.getElementById('readingScroll');
+            if (scrollEl) scrollEl.scrollTop = scrollEl.scrollHeight;
+          });
+        }
+
+        // Attachment preview clicks
+        dom.readingPane.querySelectorAll('.attachment-card').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = Number(btn.dataset.attachIndex);
+            const att = mail.attachments[idx];
+            if (att) openAttachmentModal(att);
+          });
+        });
+      }
+
+      function selectNextAvailable() {
+        const filtered = getFilteredEmails();
+        if (filtered.length > 0) {
+          state.selectedId = filtered[0].id;
+        } else {
+          state.selectedId = null;
+          dom.workspace.classList.remove('mobile-reading');
+        }
+      }
+
+      /* ======================================================================
+         COMPOSE MODAL LOGIC
+         ====================================================================== */
+      function openComposeModal(draftMail = null) {
+        const dict = t();
+        dom.composeError.classList.remove('visible');
+        dom.composeError.textContent = '';
+
+        if (draftMail) {
+          state.editingDraftId = draftMail.id;
+          dom.composeModalTitle.textContent = dict.composeModal.titleEdit;
+          dom.composeTo.value = draftMail.to || '';
+          dom.composeCc.value = draftMail.cc || '';
+          dom.composeSubject.value = draftMail.subject || '';
+          dom.composeLabel.value = draftMail.label || 'innanhuss';
+          dom.composeBody.value = draftMail.body || '';
+        } else {
+          state.editingDraftId = null;
+          dom.composeModalTitle.textContent = dict.composeModal.titleNew;
+          dom.composeTo.value = '';
+          dom.composeCc.value = '';
+          dom.composeSubject.value = '';
+          dom.composeLabel.value = 'innanhuss';
+          dom.composeBody.value = '';
+        }
+
+        dom.composeModal.classList.add('open');
+        setTimeout(() => dom.composeTo.focus(), 60);
+      }
+
+      function closeComposeModal() {
+        dom.composeModal.classList.remove('open');
+        state.editingDraftId = null;
+      }
+
+      function handleComposeSubmit(asDraft) {
+        const dict = t();
+        const toVal = dom.composeTo.value.trim();
+        const ccVal = dom.composeCc.value.trim();
+        const subjectVal = dom.composeSubject.value.trim();
+        const labelVal = dom.composeLabel.value || 'innanhuss';
+        const bodyVal = dom.composeBody.value.trim();
+
+        if (!asDraft && (!toVal || !subjectVal)) {
+          dom.composeError.textContent = dict.composeModal.errRequired;
+          dom.composeError.classList.add('visible');
+          return;
+        }
+
+        const nowIso = new Date().toISOString();
+
+        if (state.editingDraftId) {
+          const existing = emails.find(m => m.id === state.editingDraftId);
+          if (existing) {
+            existing.to = toVal || '(Enginn viðtakandi)';
+            existing.cc = ccVal;
+            existing.subject = subjectVal || '(Án efnis)';
+            existing.label = labelVal;
+            existing.body = bodyVal;
+            existing.date = nowIso;
+            existing.folder = asDraft ? 'drafts' : 'sent';
+          }
+        } else {
+          const newMail = {
+            id: 'mail-' + Date.now(),
+            folder: asDraft ? 'drafts' : 'sent',
+            fromName: 'Þjóðskjalasafn Íslands',
+            fromEmail: 'contact@thjodskjalasafn.is',
+            to: toVal || '(Enginn viðtakandi)',
+            cc: ccVal,
+            subject: subjectVal || '(Án efnis)',
+            date: nowIso,
+            unread: false,
+            starred: false,
+            label: labelVal,
+            body: bodyVal,
+            attachments: [],
+            replies: []
+          };
+          emails.unshift(newMail);
+          if (!asDraft) {
+            state.activeLabel = null;
+            state.activeFolder = 'sent';
+            state.selectedId = newMail.id;
+          } else {
+            state.activeLabel = null;
+            state.activeFolder = 'drafts';
+            state.selectedId = newMail.id;
+          }
+        }
+
+        closeComposeModal();
+        showToast(asDraft ? dict.toasts.draftSaved : dict.toasts.sent);
+        renderAll();
+      }
+
+      /* ======================================================================
+         ATTACHMENT PREVIEW MODAL
+         ====================================================================== */
+      function openAttachmentModal(att) {
+        const dict = t();
+        state.activeAttachment = att;
+        dom.attachmentModalTitle.textContent = `${dict.attachmentModal.title} — ${att.name}`;
+
+        const tableHtml = att.table
+          ? `
+            <table class="doc-table">
+              <thead>
+                <tr>${att.table.headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+              </thead>
+              <tbody>
+                ${att.table.rows.map(r => `<tr>${r.map(c => `<td>${escapeHtml(c)}</td>`).join('')}</tr>`).join('')}
+              </tbody>
+            </table>
+          `
+          : '';
+
+        dom.attachmentModalBody.innerHTML = `
+          <div class="doc-preview-meta">
+            <div class="doc-meta-item">
+              <span>${escapeHtml(dict.attachmentModal.refNo)}</span>
+              <strong>${escapeHtml(att.refNo || 'ÞÍ-2026-001')}</strong>
+            </div>
+            <div class="doc-meta-item">
+              <span>${escapeHtml(dict.attachmentModal.classification)}</span>
+              <strong>${escapeHtml(att.classification || 'Skjalasafn')}</strong>
+            </div>
+            <div class="doc-meta-item">
+              <span>${escapeHtml(dict.attachmentModal.fileType)}</span>
+              <strong>${escapeHtml(att.type.toUpperCase())}</strong>
+            </div>
+            <div class="doc-meta-item">
+              <span>${escapeHtml(dict.attachmentModal.fileSize)}</span>
+              <strong>${escapeHtml(att.size)}</strong>
+            </div>
+          </div>
+
+          <div class="doc-paper">
+            <div class="doc-paper-header">
+              <h4>${escapeHtml(att.name)}</h4>
+              <span class="doc-ref">${escapeHtml(att.refNo || '')}</span>
+            </div>
+            <p>${escapeHtml(att.summary || '')}</p>
+            ${tableHtml}
+          </div>
+        `;
+
+        dom.attachmentModal.classList.add('open');
+      }
+
+      function closeAttachmentModal() {
+        dom.attachmentModal.classList.remove('open');
+        state.activeAttachment = null;
+      }
+
+      /* ======================================================================
+         GLOBAL EVENT LISTENERS
+         ====================================================================== */
+      // Sidebar folder clicks
+      dom.folderList.addEventListener('click', e => {
+        const btn = e.target.closest('[data-folder]');
+        if (!btn) return;
+        state.activeFolder = btn.dataset.folder;
+        state.activeLabel = null;
+        state.filter = 'all';
+        dom.workspace.classList.remove('mobile-reading');
+        closeMobileSidebar();
+        selectNextAvailable();
+        renderAll();
+      });
+
+      // Sidebar label clicks
+      dom.labelList.addEventListener('click', e => {
+        const btn = e.target.closest('[data-label]');
+        if (!btn) return;
+        const key = btn.dataset.label;
+        state.activeLabel = (state.activeLabel === key) ? null : key;
+        state.filter = 'all';
+        dom.workspace.classList.remove('mobile-reading');
+        closeMobileSidebar();
+        selectNextAvailable();
+        renderAll();
+      });
+
+      // Filter chips
+      document.getElementById('filterBar').addEventListener('click', e => {
+        const btn = e.target.closest('[data-filter]');
+        if (!btn) return;
+        state.filter = btn.dataset.filter;
+        selectNextAvailable();
+        renderEmailList();
+        renderReadingPane();
+      });
+
+      // Email list selection & star toggle
+      dom.emailList.addEventListener('click', e => {
+        const starBtn = e.target.closest('[data-star-id]');
+        if (starBtn) {
+          e.stopPropagation();
+          const id = starBtn.dataset.starId;
+          const m = emails.find(x => x.id === id);
+          if (m) {
+            m.starred = !m.starred;
+            renderSidebar();
+            renderEmailList();
+            if (state.selectedId === id) renderReadingPane();
+          }
+          return;
+        }
+
+        const row = e.target.closest('.email-row');
+        if (!row) return;
+        const id = row.dataset.id;
+        const mail = emails.find(x => x.id === id);
+        if (!mail) return;
+
+        state.selectedId = id;
+        if (mail.unread) mail.unread = false;
+        dom.workspace.classList.add('mobile-reading');
+        renderSidebar();
+        renderEmailList();
+        renderReadingPane();
+      });
+
+      // Live search
+      dom.searchInput.addEventListener('input', e => {
+        state.searchQuery = e.target.value;
+        dom.searchClearBtn.classList.toggle('visible', state.searchQuery.length > 0);
+        renderEmailList();
+      });
+
+      dom.searchClearBtn.addEventListener('click', () => {
+        dom.searchInput.value = '';
+        state.searchQuery = '';
+        dom.searchClearBtn.classList.remove('visible');
+        renderEmailList();
+        dom.searchInput.focus();
+      });
+
+      // Language toggle
+      [dom.langIsBtn, dom.langEnBtn].forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.lang = btn.dataset.lang;
+          renderAll();
+        });
+      });
+
+      // Account badge copy
+      dom.accountBadgeBtn.addEventListener('click', () => {
+        copyToClipboard('contact@thjodskjalasafn.is');
+        showToast(t().toasts.copiedEmail);
+      });
+
+      // Mobile drawer
+      dom.menuToggleBtn.addEventListener('click', () => {
+        dom.sidebar.classList.toggle('open');
+        dom.sidebarBackdrop.classList.toggle('open');
+      });
+      dom.sidebarBackdrop.addEventListener('click', closeMobileSidebar);
+
+      // Compose modal events
+      dom.composeOpenBtn.addEventListener('click', () => {
+        closeMobileSidebar();
+        openComposeModal(null);
+      });
+      dom.composeCloseBtn.addEventListener('click', closeComposeModal);
+      dom.composeCancelBtn.addEventListener('click', closeComposeModal);
+      dom.composeSaveDraftBtn.addEventListener('click', () => handleComposeSubmit(true));
+      dom.composeSendBtn.addEventListener('click', () => handleComposeSubmit(false));
+      dom.composeModal.addEventListener('click', e => {
+        if (e.target === dom.composeModal) closeComposeModal();
+      });
+
+      // Attachment modal events
+      dom.attachmentCloseBtn.addEventListener('click', closeAttachmentModal);
+      dom.attachmentCloseBtn2.addEventListener('click', closeAttachmentModal);
+      dom.attachmentDownloadBtn.addEventListener('click', () => {
+        if (state.activeAttachment) {
+          showToast(t().toasts.downloadSim + state.activeAttachment.name);
+        }
+      });
+      dom.attachmentModal.addEventListener('click', e => {
+        if (e.target === dom.attachmentModal) closeAttachmentModal();
+      });
+
+      // Escape key closes open modals
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+          if (dom.composeModal.classList.contains('open')) closeComposeModal();
+          if (dom.attachmentModal.classList.contains('open')) closeAttachmentModal();
+          closeMobileSidebar();
+        }
+      });
+
+      // Initial Render
+      renderAll();
+    })();
+  </script>
+</body>
+</html>
